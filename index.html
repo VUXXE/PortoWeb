@@ -13,7 +13,6 @@
   <!-- Modular Stylesheets -->
   <link rel="stylesheet" href="/styles/reset.css">
   <link rel="stylesheet" href="/styles/themes.css">
-  <link rel="stylesheet" href="/styles/monitor.css">
   <link rel="stylesheet" href="/styles/crt.css">
   <link rel="stylesheet" href="/styles/terminal.css">
 </head>
@@ -37,114 +36,94 @@
     </defs>
   </svg>
 
-  <!-- Floating Terminal Window Assembly -->
-  <main class="window-wrapper" role="main">
-    <div class="terminal-window">
+  <!-- Full-Page Immersive CRT Terminal Screen -->
+  <main class="crt-screen-container" role="main">
+    
+    <!-- The Convex Glass CRT Screen -->
+    <div class="crt-screen scanlines-active has-barrel" id="crt-screen" tabindex="0" aria-label="CRT Terminal Screen">
       
-      <!-- Modern Window Titlebar -->
-      <header class="window-titlebar">
-        <div class="window-controls" aria-label="Window actions">
-          <button type="button" class="window-dot dot-close" id="dot-close" title="Power Standby"></button>
-          <button type="button" class="window-dot dot-minimize" id="dot-degauss" title="Degauss Screen"></button>
-          <button type="button" class="window-dot dot-maximize" id="dot-curvature" title="Cycle Curvature"></button>
-        </div>
+      <!-- Atmospheric Overlays -->
+      <div class="crt-vignette" aria-hidden="true"></div>
+      <div class="crt-glare" aria-hidden="true"></div>
+      <div class="crt-scanlines" aria-hidden="true"></div>
 
-        <div class="window-title">
-          <span>exu@portoweb: ~</span>
-          <strong>[PORTO-OS v3.2]</strong>
-        </div>
+      <!-- Screensaver Canvas Overlays -->
+      <canvas id="matrix-canvas" aria-hidden="true"></canvas>
+      <div id="fire-overlay" aria-hidden="true"></div>
 
-        <div class="window-actions">
-          <button type="button" class="action-btn" id="btn-theme" title="Cycle Phosphor Color">PHOSPHOR</button>
-          <button type="button" class="action-btn" id="btn-curvature" title="Adjust Barrel Distortion">CURVATURE</button>
-          <button type="button" class="action-btn control-active" id="btn-audio" title="Toggle Mechanical Audio">SOUND FX</button>
-          <button type="button" class="action-btn" id="btn-degauss" title="Electromagnetic Degauss Coil">DEGAUSS</button>
-          <button type="button" class="action-btn" id="btn-power" title="Terminal Power Toggle">
-            <span class="power-indicator led-active" id="power-led" aria-hidden="true"></span>
-            POWER
-          </button>
-        </div>
-      </header>
-
-      <!-- Window Body Housing the Curved CRT Screen -->
-      <div class="window-body">
-        <div class="crt-screen-container">
-          
-          <!-- The Convex Glass CRT Screen -->
-          <div class="crt-screen scanlines-active has-barrel" id="crt-screen" tabindex="0" aria-label="CRT Terminal Screen">
-            
-            <!-- Atmospheric Overlays -->
-            <div class="crt-vignette" aria-hidden="true"></div>
-            <div class="crt-glare" aria-hidden="true"></div>
-            <div class="crt-scanlines" aria-hidden="true"></div>
-
-            <!-- Screensaver Canvas Overlays -->
-            <canvas id="matrix-canvas" aria-hidden="true"></canvas>
-            <div id="fire-overlay" aria-hidden="true"></div>
-
-            <!-- Screen Content (Distorted by Barrel Shader) -->
-            <div class="crt-content" id="crt-content">
-              
-              <!-- CRT Header Status Bar -->
-              <header class="crt-header-bar">
-                <div class="header-meta">
-                  <span class="meta-item">SYS: <strong>PORTO-OS</strong></span>
-                  <span class="meta-item">USER: <strong>guest@portoweb</strong></span>
-                  <span class="meta-item">TTY: <strong>tty0 (9600)</strong></span>
-                </div>
-                <div class="header-meta">
-                  <span class="meta-item">THEME: <strong id="status-theme">GREEN</strong></span>
-                  <span class="meta-item">BARREL: <strong id="status-curvature">AUTHENTIC</strong></span>
-                  <span class="meta-item">AUDIO: <strong id="status-audio">ON</strong></span>
-                  <span class="meta-item"><strong id="status-clock">00:00:00 UTC</strong></span>
-                </div>
-              </header>
-
-              <!-- Quick Navigation Command Chips -->
-              <nav class="quick-cmd-bar" aria-label="Quick Terminal Commands">
-                <button type="button" class="quick-cmd-btn" data-cmd="about">[ 1: ABOUT ]</button>
-                <button type="button" class="quick-cmd-btn" data-cmd="skills">[ 2: SKILLS ]</button>
-                <button type="button" class="quick-cmd-btn" data-cmd="projects">[ 3: PROJECTS ]</button>
-                <button type="button" class="quick-cmd-btn" data-cmd="experience">[ 4: HISTORY ]</button>
-                <button type="button" class="quick-cmd-btn" data-cmd="contact">[ 5: CONTACT ]</button>
-                <button type="button" class="quick-cmd-btn" data-cmd="resume">[ 6: RESUME ]</button>
-                <button type="button" class="quick-cmd-btn" data-cmd="matrix">[ 7: MATRIX ]</button>
-                <button type="button" class="quick-cmd-btn" data-cmd="degauss">[ 8: DEGAUSS ]</button>
-                <button type="button" class="quick-cmd-btn" data-cmd="help">[ 9: HELP ]</button>
-              </nav>
-
-              <!-- Terminal Output Buffer -->
-              <div class="terminal-output" id="terminal-output" role="log" aria-live="polite"></div>
-
-              <!-- Interactive Prompt Input Line -->
-              <div class="cli-prompt-line">
-                <label for="cli-input" class="prompt-label">
-                  <span class="prompt-user">guest@portoweb</span>
-                  <span class="prompt-sep">:</span>
-                  <span class="prompt-path">~</span>
-                  <span class="prompt-char">$</span>
-                </label>
-                <div class="input-container">
-                  <input 
-                    type="text" 
-                    id="cli-input" 
-                    class="cli-input" 
-                    autocomplete="off" 
-                    autocorrect="off" 
-                    autocapitalize="off" 
-                    spellcheck="false" 
-                    aria-label="Terminal command input"
-                  />
-                  <span class="custom-cursor" aria-hidden="true"></span>
-                </div>
-              </div>
-
-            </div>
+      <!-- Screen Content (Distorted by Barrel Shader) -->
+      <div class="crt-content" id="crt-content">
+        
+        <!-- CRT Header Status Bar & Integrated HUD Controls -->
+        <header class="crt-header-bar">
+          <div class="header-meta">
+            <span class="meta-item">SYS: <strong>PORTO-OS</strong></span>
+            <span class="meta-item">USER: <strong>guest@portoweb</strong></span>
+            <span class="meta-item">TTY: <strong>tty0 (9600)</strong></span>
+            <span class="meta-item"><strong id="status-clock">00:00:00 UTC</strong></span>
           </div>
 
-        </div>
-      </div>
+          <!-- Integrated CRT Controls -->
+          <div class="header-controls" aria-label="CRT Controls">
+            <button type="button" class="hud-btn" id="btn-theme" title="Cycle Phosphor Color">
+              THEME: <strong id="status-theme">GREEN</strong>
+            </button>
+            <button type="button" class="hud-btn" id="btn-curvature" title="Adjust Barrel Distortion">
+              BARREL: <strong id="status-curvature">AUTHENTIC</strong>
+            </button>
+            <button type="button" class="hud-btn control-active" id="btn-audio" title="Toggle Mechanical Audio">
+              AUDIO: <strong id="status-audio">ON</strong>
+            </button>
+            <button type="button" class="hud-btn" id="btn-degauss" title="Electromagnetic Degauss Coil">
+              DEGAUSS
+            </button>
+            <button type="button" class="hud-btn" id="btn-power" title="Terminal Power Toggle">
+              <span class="power-indicator led-active" id="power-led" aria-hidden="true"></span>
+              POWER
+            </button>
+          </div>
+        </header>
 
+        <!-- Quick Navigation Command Chips -->
+        <nav class="quick-cmd-bar" aria-label="Quick Terminal Commands">
+          <button type="button" class="quick-cmd-btn" data-cmd="about">[ 1: ABOUT ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="skills">[ 2: SKILLS ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="projects">[ 3: PROJECTS ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="experience">[ 4: HISTORY ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="contact">[ 5: CONTACT ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="resume">[ 6: RESUME ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="matrix">[ 7: MATRIX ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="degauss">[ 8: DEGAUSS ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="help">[ 9: HELP ]</button>
+        </nav>
+
+        <!-- Terminal Output Buffer -->
+        <div class="terminal-output" id="terminal-output" role="log" aria-live="polite"></div>
+
+        <!-- Interactive Prompt Input Line -->
+        <div class="cli-prompt-line">
+          <label for="cli-input" class="prompt-label">
+            <span class="prompt-user">guest@portoweb</span>
+            <span class="prompt-sep">:</span>
+            <span class="prompt-path">~</span>
+            <span class="prompt-char">$</span>
+          </label>
+          <div class="input-container">
+            <input 
+              type="text" 
+              id="cli-input" 
+              class="cli-input" 
+              autocomplete="off" 
+              autocorrect="off" 
+              autocapitalize="off" 
+              spellcheck="false" 
+              aria-label="Terminal command input"
+            />
+            <span class="custom-cursor" aria-hidden="true"></span>
+          </div>
+        </div>
+
+      </div>
     </div>
   </main>
 

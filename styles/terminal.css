@@ -17,10 +17,71 @@
 .header-meta {
   display: flex;
   gap: 16px;
+  flex-wrap: wrap;
 }
 
 .meta-item strong {
   color: var(--crt-color);
+}
+
+/* Integrated Header HUD Controls */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hud-btn {
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--crt-color);
+  border: 1px solid var(--crt-dim);
+  padding: 3px 8px;
+  font-family: 'VT323', monospace;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hud-btn:hover {
+  background: var(--crt-color);
+  color: var(--crt-bg);
+  box-shadow: 0 0 8px var(--crt-glow);
+}
+
+.hud-btn:focus-visible {
+  outline: 2px solid var(--crt-color);
+  outline-offset: 2px;
+  box-shadow: 0 0 10px var(--crt-glow);
+}
+
+.hud-btn strong {
+  color: var(--crt-bright);
+}
+
+.hud-btn.control-active {
+  border-color: var(--crt-color);
+}
+
+.power-indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.power-indicator:not(.led-active) {
+  background: #ef4444;
+  box-shadow: 0 0 6px #ef4444;
 }
 
 /* Quick Navigation Command Chips */
@@ -571,11 +632,25 @@
     font-size: 13px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
+    gap: 8px;
   }
   .header-meta {
     gap: 8px;
     flex-wrap: wrap;
+    width: 100%;
+  }
+  .header-controls {
+    width: 100%;
+    gap: 6px;
+  }
+  .hud-btn {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    font-size: 14px;
   }
   .quick-cmd-btn {
     min-height: 44px;

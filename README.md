@@ -30,10 +30,9 @@ npm run preview
 * **Curved Glass Vignette & Specular Glare**: Inset dark edge falloff combined with an overhead glass glare gradient simulating fluorescent light bouncing off convex glass.
 * **Scanlines & Aperture Grille**: Razor-sharp alternating raster scanlines and microscopic vertical RGB subpixel aperture lines.
 
-### 2. Modern Floating Glass Terminal Window
-* **Clean Windowed Presentation**: Sleek floating dark glass window with subtle specular highlights, replacing bulky plastic bezels.
-* **Window Control Dots**: Functional traffic-light controls (Red: Power/Standby, Yellow: Degauss, Green: Curvature cycle).
-* **Titlebar Quick Action Toolbar**:
+### 2. Full-Page Edge-to-Edge CRT Display
+* **Borderless Viewport Presentation**: Zero outer frames or window containers; the entire browser window is the living CRT screen.
+* **Integrated CRT Header Toolbar**:
   - **`PHOSPHOR`**: Cycles between 4 authentic monochrome phosphor colorways:
     - **P1 Green** (`#33ff33` classic terminal glow)
     - **P3 Amber** (`#ffb000` warm DEC VT220 orange)

@@ -1,15 +1,16 @@
 /* CRT Screen Visuals, Barrel Distortion, Scanlines & Phosphor FX */
 
 .crt-screen-container {
-  position: relative;
-  width: 100%;
-  height: 640px;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
   background: #000;
-  border-radius: 28px;
+  border-radius: 0;
 }
 
-/* The Curved CRT Cathode Tube */
+/* The Full-Viewport Curved CRT Screen */
 .crt-screen {
   position: relative;
   width: 100%;
@@ -18,14 +19,11 @@
   color: var(--crt-color);
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 24px 32px 32px 32px;
-  border-radius: 38px / 26px;
+  padding: 24px 36px 36px 36px;
   box-shadow: 
-    inset 0 0 120px rgba(0, 0, 0, 0.98),
-    inset 0 0 40px rgba(0, 0, 0, 0.95),
-    inset 0 0 6px var(--crt-glow),
-    0 0 15px rgba(0, 0, 0, 0.9);
-  transition: border-radius 0.3s ease;
+    inset 0 0 140px rgba(0, 0, 0, 0.98),
+    inset 0 0 45px rgba(0, 0, 0, 0.92),
+    inset 0 0 4px var(--crt-glow);
   scroll-behavior: smooth;
 }
 
@@ -276,14 +274,9 @@
   }
 }
 
-/* Mobile Screen Height Adjustments */
+/* Mobile Screen Adjustments */
 @media (max-width: 850px) {
-  .crt-screen-container {
-    height: 540px;
-    border-radius: 18px;
-  }
   .crt-screen {
-    padding: 16px 16px 24px 16px;
-    border-radius: 20px / 14px;
+    padding: 14px 16px 20px 16px;
   }
 }

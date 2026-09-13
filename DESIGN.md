@@ -4,10 +4,10 @@
 
 - **Product / Context:** Personal developer and systems engineering portfolio website.
 - **Audience:** Engineering leaders, technical recruiters, systems developers, and retro-computing enthusiasts.
-- **Visual Language:** Modern floating glass terminal window housing an authentic curved CRT cathode tube display with optical barrel distortion.
-- **Personality:** Sleek, craft-focused, hacker-refined, pairing a modern floating window with tactile vintage CRT physics.
+- **Visual Language:** Full-page edge-to-edge CRT terminal screen with optical barrel distortion and seamless status bar controls.
+- **Personality:** Immersive, clean, hacker-refined, turning the entire browser window into a living retro CRT display.
 - **Design Read:** 
-  > Reading this as: Developer & Systems Portfolio for software engineers and technical recruiters, in a modern floating glass window visual language with authentic CRT barrel distortion, dial ENERGY 2 / RHYTHM 2 / MOTION 2.
+  > Reading this as: Developer & Systems Portfolio for software engineers and technical recruiters, in a full-page edge-to-edge CRT visual language with optical barrel distortion, dial ENERGY 2 / RHYTHM 2 / MOTION 2.
 
 ---
 
@@ -15,7 +15,7 @@
 
 | Dial | Level | Implementation Rationale |
 |---|---|---|
-| **ENERGY** | **2 (Balanced)** | Clean floating glass window with interactive titlebar controls (Degauss, Phosphor, Curvature, Audio, Power). Expressive CRT glass effects without distracting skeuomorphic plastic bulk. |
+| **ENERGY** | **2 (Balanced)** | Full-page borderless CRT viewport with integrated header controls (Degauss, Phosphor, Curvature, Audio, Power). Immersive CRT glass effects with zero distracting outer frames. |
 | **RHYTHM** | **2 (Structured Breaks)** | Terminal command-line prompt anchored by structured ASCII project cards, categorized skill tables, and career trees. |
 | **MOTION** | **2 (Purposeful Transitions)** | Real-time SVG barrel distortion, physical CRT power-on expansion, dot collapse power-off, scanline raster sweep, and electromagnetic coil degauss wobble. |
 
