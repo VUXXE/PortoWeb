@@ -37,25 +37,37 @@
     </defs>
   </svg>
 
-  <!-- Main Hardware Monitor Assembly -->
-  <main class="monitor-wrapper" role="main">
-    
-    <div class="monitor-casing">
+  <!-- Floating Terminal Window Assembly -->
+  <main class="window-wrapper" role="main">
+    <div class="terminal-window">
       
-      <!-- Top Ventilation Slots -->
-      <div class="monitor-vent-top" aria-hidden="true">
-        <div class="vent-slot"></div>
-        <div class="vent-slot"></div>
-        <div class="vent-slot"></div>
-        <div class="vent-slot"></div>
-        <div class="vent-slot"></div>
-        <div class="vent-slot"></div>
-        <div class="vent-slot"></div>
-        <div class="vent-slot"></div>
-      </div>
+      <!-- Modern Window Titlebar -->
+      <header class="window-titlebar">
+        <div class="window-controls" aria-label="Window actions">
+          <button type="button" class="window-dot dot-close" id="dot-close" title="Power Standby"></button>
+          <button type="button" class="window-dot dot-minimize" id="dot-degauss" title="Degauss Screen"></button>
+          <button type="button" class="window-dot dot-maximize" id="dot-curvature" title="Cycle Curvature"></button>
+        </div>
 
-      <!-- Sunken Screen Well Holding the CRT Cathode Tube -->
-      <div class="screen-well">
+        <div class="window-title">
+          <span>exu@portoweb: ~</span>
+          <strong>[PORTO-OS v3.2]</strong>
+        </div>
+
+        <div class="window-actions">
+          <button type="button" class="action-btn" id="btn-theme" title="Cycle Phosphor Color">PHOSPHOR</button>
+          <button type="button" class="action-btn" id="btn-curvature" title="Adjust Barrel Distortion">CURVATURE</button>
+          <button type="button" class="action-btn control-active" id="btn-audio" title="Toggle Mechanical Audio">SOUND FX</button>
+          <button type="button" class="action-btn" id="btn-degauss" title="Electromagnetic Degauss Coil">DEGAUSS</button>
+          <button type="button" class="action-btn" id="btn-power" title="Terminal Power Toggle">
+            <span class="power-indicator led-active" id="power-led" aria-hidden="true"></span>
+            POWER
+          </button>
+        </div>
+      </header>
+
+      <!-- Window Body Housing the Curved CRT Screen -->
+      <div class="window-body">
         <div class="crt-screen-container">
           
           <!-- The Convex Glass CRT Screen -->
@@ -133,44 +145,7 @@
         </div>
       </div>
 
-      <!-- Monitor Chin Hardware Controls -->
-      <footer class="monitor-chin">
-        
-        <!-- Retro Brand Badge -->
-        <div class="brand-plate">
-          <span class="brand-title">TELEVIDEO 950</span>
-          <span class="brand-sub">VIDEO DISPLAY TERMINAL</span>
-        </div>
-
-        <!-- Speaker Grille Cutouts -->
-        <div class="speaker-grille" aria-hidden="true">
-          <div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div>
-          <div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div>
-          <div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div>
-          <div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div>
-        </div>
-
-        <!-- Hardware Knobs and Buttons -->
-        <div class="control-cluster">
-          <button type="button" class="bezel-btn" id="btn-degauss" title="Electromagnetic Degauss Coil">DEGAUSS</button>
-          <button type="button" class="bezel-btn" id="btn-theme" title="Cycle Phosphor Color">PHOSPHOR</button>
-          <button type="button" class="bezel-btn" id="btn-curvature" title="Adjust Barrel Distortion">CURVATURE</button>
-          <button type="button" class="bezel-btn control-active" id="btn-audio" title="Toggle Mechanical Audio">SOUND FX</button>
-          
-          <!-- Power Section -->
-          <div class="power-section">
-            <div class="power-led led-active" id="power-led" title="Cathode Tube High Voltage Indicator"></div>
-            <button type="button" class="btn-power-switch" id="btn-power" title="Main AC Power Toggle">POWER</button>
-          </div>
-        </div>
-
-      </footer>
-
     </div>
-
-    <!-- Monitor Desk Pedestal Stand -->
-    <div class="monitor-stand" aria-hidden="true"></div>
-
   </main>
 
   <!-- Application Entrypoint -->

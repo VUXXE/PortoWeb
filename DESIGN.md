@@ -4,10 +4,10 @@
 
 - **Product / Context:** Personal developer and systems engineering portfolio website.
 - **Audience:** Engineering leaders, technical recruiters, systems developers, and retro-computing enthusiasts.
-- **Visual Language:** 1980s DEC VT100 / TeleVideo 950 CRT Video Display Terminal.
-- **Personality:** Tactile, authentic, craft-focused, nostalgic yet modern in web execution.
+- **Visual Language:** Modern floating glass terminal window housing an authentic curved CRT cathode tube display with optical barrel distortion.
+- **Personality:** Sleek, craft-focused, hacker-refined, pairing a modern floating window with tactile vintage CRT physics.
 - **Design Read:** 
-  > Reading this as: Developer & Systems Portfolio for software engineers and technical recruiters, in an authentic 1980s CRT video display terminal visual language, dial ENERGY 2 / RHYTHM 2 / MOTION 2.
+  > Reading this as: Developer & Systems Portfolio for software engineers and technical recruiters, in a modern floating glass window visual language with authentic CRT barrel distortion, dial ENERGY 2 / RHYTHM 2 / MOTION 2.
 
 ---
 
@@ -15,7 +15,7 @@
 
 | Dial | Level | Implementation Rationale |
 |---|---|---|
-| **ENERGY** | **2 (Balanced)** | Tactile physical monitor chassis with real hardware controls (Degauss, Phosphor, Curvature, Audio, Power). Expressive but focused on readable developer content. |
+| **ENERGY** | **2 (Balanced)** | Clean floating glass window with interactive titlebar controls (Degauss, Phosphor, Curvature, Audio, Power). Expressive CRT glass effects without distracting skeuomorphic plastic bulk. |
 | **RHYTHM** | **2 (Structured Breaks)** | Terminal command-line prompt anchored by structured ASCII project cards, categorized skill tables, and career trees. |
 | **MOTION** | **2 (Purposeful Transitions)** | Real-time SVG barrel distortion, physical CRT power-on expansion, dot collapse power-off, scanline raster sweep, and electromagnetic coil degauss wobble. |
 

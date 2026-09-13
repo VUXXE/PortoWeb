@@ -30,19 +30,19 @@ npm run preview
 * **Curved Glass Vignette & Specular Glare**: Inset dark edge falloff combined with an overhead glass glare gradient simulating fluorescent light bouncing off convex glass.
 * **Scanlines & Aperture Grille**: Razor-sharp alternating raster scanlines and microscopic vertical RGB subpixel aperture lines.
 
-### 2. Physical Monitor Hardware Chassis
-* Modeled after 1980s industrial video display terminals (**TeleVideo 950**, **DEC VT100**).
-* **Molded Front Bezel**: Chamfered edges, heat ventilation slots, speaker cutouts, and vintage metallic badge.
-* **Working Hardware Controls**:
-  - **`DEGAUSS`**: Discharges the CRT electromagnetic coil: vibrates the screen, flashes chromatic aberration, and settles back into crisp focus with sound.
+### 2. Modern Floating Glass Terminal Window
+* **Clean Windowed Presentation**: Sleek floating dark glass window with subtle specular highlights, replacing bulky plastic bezels.
+* **Window Control Dots**: Functional traffic-light controls (Red: Power/Standby, Yellow: Degauss, Green: Curvature cycle).
+* **Titlebar Quick Action Toolbar**:
   - **`PHOSPHOR`**: Cycles between 4 authentic monochrome phosphor colorways:
     - **P1 Green** (`#33ff33` classic terminal glow)
     - **P3 Amber** (`#ffb000` warm DEC VT220 orange)
     - **P4 White** (`#d8f0f8` cold monochrome paper-white)
     - **Cyberpunk** (`#00ffcc` cyan with magenta neon highlights)
-  - **`CURVATURE`**: Cycles barrel distortion intensity.
-  - **`SOUND FX`**: Toggles real-time mechanical audio.
-  - **`POWER`**: Main rocker switch with power-down horizontal line and dot collapse animation!
+  - **`CURVATURE`**: Cycles optical barrel distortion intensity (Authentic, Heavy, Subtle, Flat).
+  - **`SOUND FX`**: Toggles real-time mechanical audio feedback.
+  - **`DEGAUSS`**: Discharges the CRT coil with chromatic screen shake and acoustic thump.
+  - **`POWER`**: Standby toggle with classic CRT horizontal line and dot collapse animation.
 
 ### 3. Synthesized Web Audio Engine
 * **100% Zero External Audio Files**: Everything is synthesized in real time via the Web Audio API.

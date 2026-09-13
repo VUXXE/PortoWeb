@@ -320,6 +320,22 @@ export class CRTEngine {
         audioLabel.textContent = audio.isMuted() ? 'MUTED' : 'ON';
       }
     }
+
+    // Window control dots
+    const dotClose = document.getElementById('dot-close');
+    if (dotClose) {
+      dotClose.addEventListener('click', () => this.togglePower());
+    }
+
+    const dotDegauss = document.getElementById('dot-degauss');
+    if (dotDegauss) {
+      dotDegauss.addEventListener('click', () => this.degauss());
+    }
+
+    const dotCurvature = document.getElementById('dot-curvature');
+    if (dotCurvature) {
+      dotCurvature.addEventListener('click', () => this.cycleCurvature());
+    }
   }
 }
 
