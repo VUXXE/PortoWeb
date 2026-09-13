@@ -7,7 +7,7 @@
   justify-content: space-between;
   padding-bottom: 6px;
   margin-bottom: 6px;
-  border-bottom: 1px dashed var(--crt-dim);
+  border-bottom: 1px solid var(--crt-dim);
   font-size: 14px;
   letter-spacing: 0.8px;
   color: var(--crt-dim);
@@ -180,7 +180,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px dashed var(--crt-dim);
+  border-top: 1px solid var(--crt-dim);
   padding: 3px 12px;
   font-size: 13px;
   color: var(--crt-dim);
@@ -244,7 +244,7 @@
   flex-wrap: wrap;
   gap: 8px;
   padding-top: 6px;
-  border-top: 1px dotted rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--crt-dim);
 }
 
 /* =========================================
@@ -258,7 +258,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  border: 1px dashed var(--crt-dim);
+  border: 1px solid var(--crt-dim);
   padding: 6px 12px;
   background: rgba(0, 0, 0, 0.25);
 }
@@ -399,7 +399,7 @@
    VIEW 1: ABOUT
    ========================================= */
 .about-card-hero {
-  border-bottom: 1px dashed var(--crt-dim);
+  border-bottom: 1px solid var(--crt-dim);
   padding-bottom: 6px;
   margin-bottom: 8px;
 }
@@ -487,7 +487,7 @@
 }
 
 .skills-col {
-  border: 1px dashed var(--crt-dim);
+  border: 1px solid var(--crt-dim);
   padding: 6px 8px;
   background: rgba(0, 0, 0, 0.2);
   display: flex;
@@ -595,7 +595,7 @@
 }
 
 .project-active-display {
-  border: 1px dashed var(--crt-dim);
+  border: 1px solid var(--crt-dim);
   padding: 8px 12px;
   background: rgba(0, 0, 0, 0.3);
   flex: 1;
@@ -768,7 +768,7 @@
 
 .contact-channels-panel,
 .contact-direct-panel {
-  border: 1px dashed var(--crt-dim);
+  border: 1px solid var(--crt-dim);
   padding: 8px 12px;
   background: rgba(0, 0, 0, 0.25);
   height: 100%;
@@ -818,7 +818,7 @@
    VIEW 6: RESUME
    ========================================= */
 .resume-hero {
-  border-bottom: 1px dashed var(--crt-dim);
+  border-bottom: 1px solid var(--crt-dim);
   padding-bottom: 4px;
   margin-bottom: 6px;
 }
@@ -843,7 +843,7 @@
 }
 
 .resume-section {
-  border: 1px dashed var(--crt-dim);
+  border: 1px solid var(--crt-dim);
   padding: 6px 10px;
   background: rgba(0, 0, 0, 0.2);
 }
@@ -949,7 +949,7 @@
   font-size: 14px;
   letter-spacing: 0.6px;
   color: var(--crt-dim);
-  border-top: 1px dashed var(--crt-dim);
+  border-top: 1px solid var(--crt-dim);
   padding-top: 4px;
   white-space: nowrap;
   overflow: hidden;

@@ -21,13 +21,13 @@
   <!-- Hidden SVG Optical Barrel Distortion Filter -->
   <svg class="crt-filters" aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none;">
     <defs>
-      <filter id="crt-barrel-filter" x="-5%" y="-5%" width="110%" height="110%" filterUnits="objectBoundingBox" color-interpolation-filters="sRGB">
+      <filter id="crt-barrel-filter" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox" color-interpolation-filters="sRGB">
         <feImage id="barrel-map-img" x="0%" y="0%" width="100%" height="100%" href="" xlink:href="" result="barrel-map" preserveAspectRatio="none" style="image-rendering: auto;" />
         <feDisplacementMap 
           id="barrel-displacement"
           in="SourceGraphic" 
           in2="barrel-map" 
-          scale="18" 
+          scale="8" 
           xChannelSelector="R" 
           yChannelSelector="G" 
           result="displaced" 

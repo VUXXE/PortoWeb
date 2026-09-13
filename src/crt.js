@@ -17,9 +17,9 @@ export class CRTEngine {
     // Curvature presets: [id, label, k-factor, svg-scale, border-radius-x, border-radius-y]
     this.curvatureLevels = [
       { id: 'flat', label: 'FLAT', k: 0, scale: 0, brX: 10, brY: 10 },
-      { id: 'subtle', label: 'SUBTLE', k: 0.22, scale: 10, brX: 22, brY: 16 },
-      { id: 'authentic', label: 'AUTHENTIC', k: 0.42, scale: 18, brX: 38, brY: 26 },
-      { id: 'heavy', label: 'HEAVY', k: 0.62, scale: 24, brX: 52, brY: 36 }
+      { id: 'subtle', label: 'SUBTLE', k: 0.25, scale: 5, brX: 20, brY: 16 },
+      { id: 'authentic', label: 'AUTHENTIC', k: 0.45, scale: 8, brX: 36, brY: 26 },
+      { id: 'heavy', label: 'HEAVY', k: 0.70, scale: 12, brX: 50, brY: 36 }
     ];
     this.currentCurvatureIndex = 2; // Default: Authentic
 
@@ -97,8 +97,9 @@ export class CRTEngine {
 
   /**
    * Generates a 512x512 spherical lens barrel displacement map in memory.
-   * Employs atan damping to prevent derivative explosion at screen edges,
-   * guaranteeing continuous, unbroken font strokes and crisp borders.
+   * Utilizes atan damping, anamorphic 16:9 aspect correction, and a Hermite edge attenuation window
+   * that smoothly drops displacement to identically 0 at all screen boundaries (u, v = ±1.0).
+   * This permanently eliminates edge wrapping, bottom ghosting, and line severing.
    */
   generateBarrelMap() {
     if (!this.barrelFeImage) return;
@@ -116,10 +117,24 @@ export class CRTEngine {
     const k = this.curvatureLevels[this.currentCurvatureIndex].k;
     const kMul = k * 1.5;
 
+    // Boundary attenuation function:
+    // Keeps authentic barrel curvature over the central viewing area (0 to 65%),
+    // and smoothly drops displacement to identically 0 at outer edges (u, v = ±1.0)
+    // using smooth Hermite interpolation. This guarantees zero out-of-bounds sampling,
+    // zero edge wrapping, zero bottom ghosting, and unbroken continuous borders.
+    const edgeWeight = (val) => {
+      const a = Math.abs(val);
+      if (a <= 0.65) return 1.0;
+      if (a >= 0.98) return 0.0;
+      const t = (a - 0.65) / (0.98 - 0.65);
+      return 1.0 - t * t * (3 - 2 * t);
+    };
+
     for (let y = 0; y < size; y++) {
       const v = (y - cy) / cy;
       const v2 = v * v;
       const yOffset = y * size;
+      const edgeY = edgeWeight(v);
 
       for (let x = 0; x < size; x++) {
         const idx = (yOffset + x) << 2;
@@ -133,14 +148,18 @@ export class CRTEngine {
         }
 
         const u = (x - cx) / cx;
-        const r2 = u * u + v2;
+        const edgeX = edgeWeight(u);
+        const edgeFade = edgeX * edgeY;
 
-        // Smooth spherical lens projection with atan damping:
-        // As r increases toward corners, atan curve prevents the derivative
-        // from exceeding 1.0, preserving continuous font strokes and unbroken border lines.
-        const curve = Math.atan(r2 * kMul) / (1.5 * (1 + r2 * 0.15));
+        // Anamorphic aspect ratio scaling:
+        // Screens are wider than tall (16:9). Scaling v2 and dy by 0.6 prevents
+        // excessive vertical gradient, keeping horizontal borders smooth and continuous.
+        const r2 = u * u + v2 * 0.6;
+
+        // Smooth spherical lens projection with atan damping and edge fade
+        const curve = (Math.atan(r2 * kMul) / (1.5 * (1 + r2 * 0.15))) * edgeFade;
         const dx = u * curve;
-        const dy = v * curve;
+        const dy = v * curve * 0.6;
 
         data[idx] = Math.min(255, Math.max(0, (128 + dx * 127 + 0.5) | 0));     // R (X offset)
         data[idx + 1] = Math.min(255, Math.max(0, (128 + dy * 127 + 0.5) | 0)); // G (Y offset)
