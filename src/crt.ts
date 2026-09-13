@@ -31,6 +31,7 @@ export class CRTEngine {
 
   public isPoweredOn: boolean = true;
   public scanlinesEnabled: boolean = false; // Disabled by default for maximum readability & a11y
+  public currentScale: number = 2.0; // Default: 200% Bigger Scale
 
   constructor() {}
 
@@ -50,6 +51,7 @@ export class CRTEngine {
     this.applyTheme();
     this.applyFont();
     this.applyScanlines();
+    this.applyScale(this.currentScale);
 
     // Bind controls
     this.bindHardwareControls();
@@ -79,6 +81,14 @@ export class CRTEngine {
       if (savedScanlines !== null) {
         this.scanlinesEnabled = savedScanlines === 'true';
       }
+
+      const savedScale = localStorage.getItem('portoweb_crt_scale');
+      if (savedScale !== null) {
+        const parsed = parseFloat(savedScale);
+        if (!isNaN(parsed) && parsed >= 0.75 && parsed <= 3.5) {
+          this.currentScale = parsed;
+        }
+      }
     } catch {
       // Ignore storage errors
     }
@@ -90,9 +100,20 @@ export class CRTEngine {
       localStorage.setItem('portoweb_crt_curvature', String(this.currentCurvatureIndex));
       localStorage.setItem('portoweb_crt_font', this.fonts[this.currentFontIndex]);
       localStorage.setItem('portoweb_crt_scanlines', String(this.scanlinesEnabled));
+      localStorage.setItem('portoweb_crt_scale', String(this.currentScale));
     } catch {
       // Ignore
     }
+  }
+
+  public applyScale(scale: number): void {
+    this.currentScale = Math.max(0.75, Math.min(3.5, scale));
+    document.documentElement.style.setProperty('--terminal-scale', String(this.currentScale));
+    this.savePreferences();
+  }
+
+  public getScale(): number {
+    return this.currentScale;
   }
 
   /**

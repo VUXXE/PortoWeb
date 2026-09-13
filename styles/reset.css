@@ -13,12 +13,16 @@ html, body {
   color: #fff;
 }
 
+:root {
+  --terminal-scale: 2.0; /* 200% Bigger Scale */
+}
+
 /* 1. Authentic 1980s Retro Pixel / Bitmap Terminal Font (Default) */
 body.font-pixel {
   font-family: 'VT323', Monaco, monospace;
-  font-size: 19px;
+  font-size: calc(18px * var(--terminal-scale, 2.0));
   line-height: 1.25;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.8px;
   /* Disable subpixel blur for crisp 1-bit solid terminal pixels */
   -webkit-font-smoothing: none;
   -moz-osx-font-smoothing: none;
@@ -28,9 +32,9 @@ body.font-pixel {
 /* 2. Modern Clean Engineering Monospace Font */
 body.font-clean {
   font-family: 'Share Tech Mono', 'Courier Prime', Monaco, monospace;
-  font-size: 16px;
-  line-height: 1.45;
-  letter-spacing: 0.2px;
+  font-size: calc(14px * var(--terminal-scale, 2.0));
+  line-height: 1.4;
+  letter-spacing: 0.3px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: geometricPrecision;

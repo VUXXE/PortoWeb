@@ -52,6 +52,7 @@ export class Terminal {
     { cmd: 'cat', args: '<file>', desc: 'Read a virtual file (e.g. cat bio.txt)' },
     { cmd: 'theme', args: '[color]', desc: 'Set phosphor color [green|amber|white|cyber]' },
     { cmd: 'font', args: '[mode]', desc: 'Toggle font [pixel|clean]' },
+    { cmd: 'scale', aliases: ['zoom'], args: '[100|150|200|250]', desc: 'Adjust terminal magnification scale (default: 200%)' },
     { cmd: 'barrel', args: '[mode]', desc: 'Set CRT barrel distortion [flat|subtle|authentic|heavy]' },
     { cmd: 'scanlines', args: '[on|off]', desc: 'Toggle CRT scanlines' },
     { cmd: 'degauss', desc: 'Trigger CRT magnetic degauss coil pulse' },
@@ -315,6 +316,11 @@ export class Terminal {
         this.cmdFont(args);
         break;
 
+      case 'scale':
+      case 'zoom':
+        this.cmdScale(args);
+        break;
+
       case 'barrel':
         this.cmdBarrel(args);
         break;
@@ -433,6 +439,7 @@ export class Terminal {
           <button type="button" class="cli-chip" data-cmd="history">history</button>
           <button type="button" class="cli-chip" data-cmd="contact">contact</button>
           <button type="button" class="cli-chip" data-cmd="resume">resume</button>
+          <button type="button" class="cli-chip" data-cmd="scale">scale (200%)</button>
           <button type="button" class="cli-chip" data-cmd="ls">ls</button>
           <button type="button" class="cli-chip" data-cmd="help">help</button>
           <button type="button" class="cli-chip" data-cmd="clear">clear</button>
@@ -461,8 +468,8 @@ export class Terminal {
         <table class="cli-help-table">
           <thead>
             <tr>
-              <th style="text-align: left; width: 180px; padding-bottom: 4px;">COMMAND</th>
-              <th style="text-align: left; padding-bottom: 4px;">DESCRIPTION</th>
+              <th class="cli-help-td-cmd" style="text-align: left; padding-bottom: 4px;">COMMAND</th>
+              <th class="cli-help-td-desc" style="text-align: left; padding-bottom: 4px;">DESCRIPTION</th>
             </tr>
           </thead>
           <tbody>
@@ -769,6 +776,40 @@ export class Terminal {
     } else {
       this.appendOutput(`<div class="cli-row cli-error">Usage: scanlines &lt;on|off&gt;</div>`);
     }
+  }
+
+  private cmdScale(arg: string): void {
+    if (!arg) {
+      const currentPct = Math.round(crt.getScale() * 100);
+      this.appendOutput(`
+        <div class="cli-row cli-info">
+          [SYS]: Current terminal scale: <strong>${currentPct}%</strong> (${crt.getScale()}x).
+        </div>
+        <div class="cli-suggest-row">
+          PRESETS:
+          <button type="button" class="cli-chip" data-cmd="scale 100">100% (Compact)</button>
+          <button type="button" class="cli-chip" data-cmd="scale 150">150% (Medium)</button>
+          <button type="button" class="cli-chip" data-cmd="scale 200">200% (Retro 24-Line CRT)</button>
+          <button type="button" class="cli-chip" data-cmd="scale 250">250% (Ultra)</button>
+        </div>
+        <div class="cli-row cli-dim">Type "scale &lt;percent&gt;" to set custom magnification.</div>
+      `);
+      return;
+    }
+
+    let val = parseFloat(arg.replace('%', ''));
+    if (val >= 50 && val <= 400) {
+      val = val / 100;
+    } else if (val >= 0.5 && val <= 4.0) {
+      // already a ratio
+    } else {
+      this.appendOutput(`<div class="cli-row cli-error">Invalid scale "${this.escapeHtml(arg)}". Supported range: 75% to 300% (e.g. scale 200).</div>`);
+      return;
+    }
+
+    crt.applyScale(val);
+    const newPct = Math.round(crt.getScale() * 100);
+    this.appendOutput(`<div class="cli-row cli-info">[SYS]: Terminal scale set to <strong>${newPct}%</strong> (${crt.getScale()}x).</div>`);
   }
 
   private cmdAudio(arg: string): void {

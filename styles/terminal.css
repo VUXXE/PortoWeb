@@ -25,9 +25,9 @@
   -ms-overflow-style: none; /* IE/Edge */
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 4px 6px;
-  font-size: 16px;
+  gap: calc(4px * var(--terminal-scale, 2.0));
+  padding: calc(4px * var(--terminal-scale, 2.0)) calc(8px * var(--terminal-scale, 2.0));
+  font-size: calc(16px * var(--terminal-scale, 2.0));
   line-height: 1.35;
 }
 
@@ -38,7 +38,7 @@
 .cli-output-entry {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: calc(4px * var(--terminal-scale, 2.0));
   flex-shrink: 0;
 }
 
@@ -48,8 +48,8 @@
 .cli-prompt-line {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 2px 0;
+  gap: calc(8px * var(--terminal-scale, 2.0));
+  padding: calc(2px * var(--terminal-scale, 2.0)) 0;
   background: transparent;
   flex-shrink: 0;
 }
@@ -57,9 +57,9 @@
 .prompt-label {
   display: inline-flex;
   align-items: center;
-  font-size: 16px;
+  font-size: calc(16px * var(--terminal-scale, 2.0));
   font-weight: bold;
-  letter-spacing: 0.5px;
+  letter-spacing: calc(0.5px * var(--terminal-scale, 2.0));
   user-select: none;
   cursor: text;
   white-space: nowrap;
@@ -96,8 +96,8 @@
   outline: none;
   color: var(--crt-bright);
   font-family: inherit;
-  font-size: 16px;
-  letter-spacing: 0.6px;
+  font-size: calc(16px * var(--terminal-scale, 2.0));
+  letter-spacing: calc(0.6px * var(--terminal-scale, 2.0));
   caret-color: var(--crt-bright);
   padding: 0;
   margin: 0;
@@ -152,8 +152,8 @@
   user-select: none;
   overflow: hidden;
   white-space: nowrap;
-  font-size: 13px;
-  margin: 2px 0;
+  font-size: calc(13px * var(--terminal-scale, 2.0));
+  margin: calc(2px * var(--terminal-scale, 2.0)) 0;
 }
 
 /* =========================================
@@ -162,16 +162,16 @@
 .cli-chip {
   background: rgba(0, 0, 0, 0.5);
   color: var(--crt-bright);
-  border: 1px solid var(--crt-dim);
-  padding: 1px 6px;
+  border: calc(1px * var(--terminal-scale, 1.0)) solid var(--crt-dim);
+  padding: calc(2px * var(--terminal-scale, 2.0)) calc(8px * var(--terminal-scale, 2.0));
   font-family: inherit;
-  font-size: 13px;
-  letter-spacing: 0.5px;
+  font-size: calc(13px * var(--terminal-scale, 2.0));
+  letter-spacing: calc(0.5px * var(--terminal-scale, 2.0));
   border-radius: 0;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  margin: 0 2px;
+  margin: 0 calc(2px * var(--terminal-scale, 2.0));
   transition: all 0.1s ease;
   user-select: none;
   vertical-align: middle;
@@ -181,22 +181,22 @@
   background: var(--crt-color);
   color: var(--crt-bg);
   border-color: var(--crt-bright);
-  box-shadow: 0 0 6px var(--crt-glow);
+  box-shadow: 0 0 calc(6px * var(--terminal-scale, 2.0)) var(--crt-glow);
   text-shadow: none;
 }
 
 .cli-chip:focus-visible {
-  outline: 2px solid var(--crt-bright);
+  outline: calc(2px * var(--terminal-scale, 1.0)) solid var(--crt-bright);
   outline-offset: 1px;
 }
 
 .cli-file-chip {
   background: transparent;
   color: var(--crt-color);
-  border: 1px solid var(--crt-dim);
-  padding: 1px 6px;
+  border: calc(1px * var(--terminal-scale, 1.0)) solid var(--crt-dim);
+  padding: calc(2px * var(--terminal-scale, 2.0)) calc(8px * var(--terminal-scale, 2.0));
   font-family: inherit;
-  font-size: 14px;
+  font-size: calc(14px * var(--terminal-scale, 2.0));
   cursor: pointer;
   transition: all 0.1s ease;
   text-decoration: underline;
@@ -208,7 +208,7 @@
   background: var(--crt-color);
   color: var(--crt-bg);
   border-color: var(--crt-bright);
-  box-shadow: 0 0 6px var(--crt-glow);
+  box-shadow: 0 0 calc(6px * var(--terminal-scale, 2.0)) var(--crt-glow);
   text-shadow: none;
 }
 
@@ -221,16 +221,16 @@
 
 .cli-link:hover {
   color: #ffffff;
-  text-shadow: 0 0 8px var(--crt-glow);
+  text-shadow: 0 0 calc(8px * var(--terminal-scale, 2.0)) var(--crt-glow);
 }
 
 .cli-btn-primary {
   background: var(--crt-color);
   color: var(--crt-bg);
-  border: 1px solid var(--crt-bright);
-  padding: 3px 10px;
+  border: calc(1px * var(--terminal-scale, 1.0)) solid var(--crt-bright);
+  padding: calc(4px * var(--terminal-scale, 2.0)) calc(12px * var(--terminal-scale, 2.0));
   font-family: inherit;
-  font-size: 14px;
+  font-size: calc(14px * var(--terminal-scale, 2.0));
   font-weight: bold;
   cursor: pointer;
   text-decoration: none;
@@ -243,16 +243,16 @@
 
 .cli-btn-primary:hover {
   background: var(--crt-bright);
-  box-shadow: 0 0 10px var(--crt-glow);
+  box-shadow: 0 0 calc(10px * var(--terminal-scale, 2.0)) var(--crt-glow);
 }
 
 .cli-btn-secondary {
   background: rgba(0, 0, 0, 0.4);
   color: var(--crt-color);
-  border: 1px solid var(--crt-dim);
-  padding: 3px 10px;
+  border: calc(1px * var(--terminal-scale, 1.0)) solid var(--crt-dim);
+  padding: calc(4px * var(--terminal-scale, 2.0)) calc(12px * var(--terminal-scale, 2.0));
   font-family: inherit;
-  font-size: 14px;
+  font-size: calc(14px * var(--terminal-scale, 2.0));
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
@@ -266,20 +266,20 @@
   background: var(--crt-color);
   color: var(--crt-bg);
   border-color: var(--crt-bright);
-  box-shadow: 0 0 8px var(--crt-glow);
+  box-shadow: 0 0 calc(8px * var(--terminal-scale, 2.0)) var(--crt-glow);
 }
 
 /* =========================================
    5. ASCII CARDS & BOX DRAWING
    ========================================= */
 .cli-banner-container {
-  padding: 2px 0;
+  padding: calc(2px * var(--terminal-scale, 2.0)) 0;
 }
 
 .cli-ascii-logo {
   font-family: inherit;
   color: var(--crt-bright);
-  font-size: 14px;
+  font-size: calc(12px * var(--terminal-scale, 2.0));
   line-height: 1.15;
   margin: 0;
   white-space: pre;
@@ -287,22 +287,22 @@
 }
 
 .cli-sys-info {
-  margin: 4px 0;
+  margin: calc(4px * var(--terminal-scale, 2.0)) 0;
   color: var(--crt-color);
   line-height: 1.4;
 }
 
 .cli-quick-links {
-  margin: 4px 0;
+  margin: calc(4px * var(--terminal-scale, 2.0)) 0;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: calc(6px * var(--terminal-scale, 2.0));
   flex-wrap: wrap;
   color: var(--crt-dim);
 }
 
 .cli-card-box {
-  margin: 3px 0;
+  margin: calc(3px * var(--terminal-scale, 2.0)) 0;
   background: rgba(0, 0, 0, 0.25);
   border-radius: 0;
 }
@@ -310,18 +310,18 @@
 .cli-box-header,
 .cli-box-footer {
   color: var(--crt-bright);
-  font-size: 14px;
-  letter-spacing: 0.5px;
+  font-size: calc(13px * var(--terminal-scale, 2.0));
+  letter-spacing: calc(0.5px * var(--terminal-scale, 2.0));
   user-select: none;
   white-space: pre;
   overflow: hidden;
 }
 
 .cli-card-body {
-  padding: 5px 10px;
+  padding: calc(5px * var(--terminal-scale, 2.0)) calc(10px * var(--terminal-scale, 2.0));
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: calc(4px * var(--terminal-scale, 2.0));
 }
 
 .cli-line {
@@ -329,7 +329,7 @@
 }
 
 .cli-bio-text p {
-  margin: 3px 0;
+  margin: calc(3px * var(--terminal-scale, 2.0)) 0;
   color: var(--crt-color);
   line-height: 1.4;
 }
@@ -337,49 +337,49 @@
 .cli-actions-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: calc(8px * var(--terminal-scale, 2.0));
   flex-wrap: wrap;
-  padding-top: 4px;
+  padding-top: calc(4px * var(--terminal-scale, 2.0));
 }
 
 /* Skills Matrix */
 .cli-skill-category {
-  margin-bottom: 5px;
+  margin-bottom: calc(5px * var(--terminal-scale, 2.0));
 }
 
 .cli-cat-title {
   color: var(--crt-bright);
   font-weight: bold;
-  margin-bottom: 2px;
-  letter-spacing: 0.6px;
+  margin-bottom: calc(2px * var(--terminal-scale, 2.0));
+  letter-spacing: calc(0.6px * var(--terminal-scale, 2.0));
 }
 
 .cli-skill-item {
   display: flex;
-  gap: 8px;
+  gap: calc(8px * var(--terminal-scale, 2.0));
   flex-wrap: wrap;
   line-height: 1.35;
 }
 
 .cli-skill-name {
   font-weight: bold;
-  min-width: 200px;
+  min-width: calc(140px * var(--terminal-scale, 2.0));
 }
 
 .cli-skill-tier {
-  letter-spacing: 0.5px;
+  letter-spacing: calc(0.5px * var(--terminal-scale, 2.0));
 }
 
 /* Projects */
 .cli-project-row {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding: 3px 0;
+  gap: calc(3px * var(--terminal-scale, 2.0));
+  padding: calc(3px * var(--terminal-scale, 2.0)) 0;
 }
 
 .cli-proj-header {
-  font-size: 16px;
+  font-size: calc(16px * var(--terminal-scale, 2.0));
   color: var(--crt-bright);
 }
 
@@ -389,24 +389,24 @@
 }
 
 .cli-proj-meta {
-  font-size: 13px;
+  font-size: calc(13px * var(--terminal-scale, 2.0));
 }
 
 .cli-proj-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: calc(10px * var(--terminal-scale, 2.0));
   flex-wrap: wrap;
-  margin-top: 3px;
+  margin-top: calc(3px * var(--terminal-scale, 2.0));
 }
 
 .cli-highlights-list {
-  margin: 3px 0 3px 18px;
+  margin: calc(3px * var(--terminal-scale, 2.0)) 0 calc(3px * var(--terminal-scale, 2.0)) calc(18px * var(--terminal-scale, 2.0));
   padding: 0;
 }
 
 .cli-highlights-list li {
-  margin-bottom: 2px;
+  margin-bottom: calc(2px * var(--terminal-scale, 2.0));
   line-height: 1.35;
 }
 
@@ -423,51 +423,51 @@
 }
 
 .cli-help-td-cmd {
-  padding: 2px 0;
-  width: 200px;
+  padding: calc(2px * var(--terminal-scale, 2.0)) 0;
+  width: calc(130px * var(--terminal-scale, 2.0));
 }
 
 .cli-help-td-desc {
-  padding: 2px 0;
+  padding: calc(2px * var(--terminal-scale, 2.0)) 0;
   color: var(--crt-color);
 }
 
 .cli-contact-name {
-  padding: 3px 0;
-  width: 140px;
+  padding: calc(3px * var(--terminal-scale, 2.0)) 0;
+  width: calc(100px * var(--terminal-scale, 2.0));
   color: var(--crt-bright);
 }
 
 .cli-contact-handle {
-  padding: 3px 0;
+  padding: calc(3px * var(--terminal-scale, 2.0)) 0;
   color: var(--crt-color);
 }
 
 .cli-contact-link {
-  padding: 3px 0;
+  padding: calc(3px * var(--terminal-scale, 2.0)) 0;
   text-align: right;
 }
 
 /* Virtual File Display */
 .cli-file-display {
   background: rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--crt-dim);
-  padding: 6px 10px;
-  margin: 3px 0;
+  border: calc(1px * var(--terminal-scale, 1.0)) solid var(--crt-dim);
+  padding: calc(6px * var(--terminal-scale, 2.0)) calc(10px * var(--terminal-scale, 2.0));
+  margin: calc(3px * var(--terminal-scale, 2.0)) 0;
 }
 
 .cli-file-header {
   color: var(--crt-bright);
   font-weight: bold;
-  border-bottom: 1px solid var(--crt-dim);
-  padding-bottom: 2px;
-  margin-bottom: 3px;
+  border-bottom: calc(1px * var(--terminal-scale, 1.0)) solid var(--crt-dim);
+  padding-bottom: calc(2px * var(--terminal-scale, 2.0));
+  margin-bottom: calc(3px * var(--terminal-scale, 2.0));
 }
 
 .cli-file-content {
   margin: 0;
   font-family: inherit;
-  font-size: 14px;
+  font-size: calc(14px * var(--terminal-scale, 2.0));
   line-height: 1.4;
   white-space: pre-wrap;
 }
@@ -476,37 +476,47 @@
 .cli-suggest-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  padding: 3px 0;
+  gap: calc(4px * var(--terminal-scale, 2.0));
+  padding: calc(3px * var(--terminal-scale, 2.0)) 0;
 }
 
 /* =========================================
    6. FONT MODES & RESPONSIVE
    ========================================= */
 body.font-pixel .cli-output-buffer {
-  font-size: 18px;
+  font-size: calc(18px * var(--terminal-scale, 2.0));
   line-height: 1.25;
 }
 
 body.font-pixel .cli-prompt-line,
 body.font-pixel .cli-input,
 body.font-pixel .prompt-label {
-  font-size: 18px;
+  font-size: calc(18px * var(--terminal-scale, 2.0));
 }
 
 body.font-pixel .cli-chip {
-  font-size: 16px;
+  font-size: calc(16px * var(--terminal-scale, 2.0));
 }
 
 body.font-clean .cli-output-buffer {
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: calc(14px * var(--terminal-scale, 2.0));
+  line-height: 1.4;
+}
+
+body.font-clean .cli-prompt-line,
+body.font-clean .cli-input,
+body.font-clean .prompt-label {
+  font-size: calc(14px * var(--terminal-scale, 2.0));
+}
+
+body.font-clean .cli-chip {
+  font-size: calc(13px * var(--terminal-scale, 2.0));
 }
 
 @media (max-width: 768px) {
   .cli-output-buffer {
     padding: 2px;
-    font-size: 14px;
+    font-size: calc(14px * var(--terminal-scale, 2.0));
   }
 
   .cli-chip {
