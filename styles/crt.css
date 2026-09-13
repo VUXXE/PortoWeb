@@ -41,6 +41,11 @@
     radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.45) 80%, rgba(0, 0, 0, 0.95) 100%);
 }
 
+.crt-screen.curvature-heavy .crt-vignette {
+  background: 
+    radial-gradient(ellipse at 50% 50%, transparent 48%, rgba(0, 0, 0, 0.55) 75%, rgba(0, 0, 0, 0.98) 100%);
+}
+
 /* 3. Convex Glass Surface Specular Reflection / Glare */
 .crt-glare {
   position: absolute;
@@ -95,6 +100,10 @@
   overflow: hidden; /* STRICTLY NON-SCROLLABLE */
   display: flex;
   flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+  transform: translateZ(0);
   text-shadow: 
     0 0 2px var(--crt-color),
     0 0 8px var(--crt-glow),

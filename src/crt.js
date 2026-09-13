@@ -14,12 +14,12 @@ export class CRTEngine {
     this.barrelDisplacement = null;
     this.powerLed = null;
 
-    // Curvature presets: [name, k-factor, svg-scale, border-radius-x, border-radius-y]
+    // Curvature presets: [id, label, k-factor, svg-scale, border-radius-x, border-radius-y]
     this.curvatureLevels = [
-      { id: 'flat', label: 'FLAT', k: 0, scale: 0, brX: 12, brY: 12 },
-      { id: 'subtle', label: 'SUBTLE', k: 0.15, scale: 12, brX: 24, brY: 18 },
-      { id: 'authentic', label: 'AUTHENTIC', k: 0.28, scale: 24, brX: 38, brY: 26 },
-      { id: 'heavy', label: 'HEAVY', k: 0.42, scale: 38, brX: 52, brY: 34 }
+      { id: 'flat', label: 'FLAT', k: 0, scale: 0, brX: 10, brY: 10 },
+      { id: 'subtle', label: 'SUBTLE', k: 0.22, scale: 10, brX: 22, brY: 16 },
+      { id: 'authentic', label: 'AUTHENTIC', k: 0.42, scale: 18, brX: 38, brY: 26 },
+      { id: 'heavy', label: 'HEAVY', k: 0.62, scale: 24, brX: 52, brY: 36 }
     ];
     this.currentCurvatureIndex = 2; // Default: Authentic
 
@@ -80,14 +80,14 @@ export class CRTEngine {
   }
 
   /**
-   * Generates a 256x256 spherical barrel displacement map in memory.
-   * Red channel = X displacement from center.
-   * Green channel = Y displacement from center.
+   * Generates a 512x512 spherical lens barrel displacement map in memory.
+   * Employs atan damping to prevent derivative explosion at screen edges,
+   * guaranteeing continuous, unbroken font strokes and crisp borders.
    */
   generateBarrelMap() {
     if (!this.barrelFeImage) return;
 
-    const size = 256;
+    const size = 512;
     const canvas = document.createElement('canvas');
     canvas.width = size;
     canvas.height = size;
@@ -98,21 +98,36 @@ export class CRTEngine {
     const cx = size / 2;
     const cy = size / 2;
     const k = this.curvatureLevels[this.currentCurvatureIndex].k;
+    const kMul = k * 1.5;
 
     for (let y = 0; y < size; y++) {
+      const v = (y - cy) / cy;
+      const v2 = v * v;
+      const yOffset = y * size;
+
       for (let x = 0; x < size; x++) {
-        const idx = (y * size + x) * 4;
+        const idx = (yOffset + x) << 2;
+
+        if (k === 0) {
+          data[idx] = 128;
+          data[idx + 1] = 128;
+          data[idx + 2] = 128;
+          data[idx + 3] = 255;
+          continue;
+        }
+
         const u = (x - cx) / cx;
-        const v = (y - cy) / cy;
-        const r2 = u * u + v * v;
+        const r2 = u * u + v2;
 
-        // Optical spherical barrel distortion displacement:
-        // Center pushes outward to create convex bubble glass
-        const dx = u * r2 * k;
-        const dy = v * r2 * k;
+        // Smooth spherical lens projection with atan damping:
+        // As r increases toward corners, atan curve prevents the derivative
+        // from exceeding 1.0, preserving continuous font strokes and unbroken border lines.
+        const curve = Math.atan(r2 * kMul) / (1.5 * (1 + r2 * 0.15));
+        const dx = u * curve;
+        const dy = v * curve;
 
-        data[idx] = Math.min(255, Math.max(0, Math.round(128 + dx * 127)));     // R (X offset)
-        data[idx + 1] = Math.min(255, Math.max(0, Math.round(128 + dy * 127))); // G (Y offset)
+        data[idx] = Math.min(255, Math.max(0, (128 + dx * 127 + 0.5) | 0));     // R (X offset)
+        data[idx + 1] = Math.min(255, Math.max(0, (128 + dy * 127 + 0.5) | 0)); // G (Y offset)
         data[idx + 2] = 128; // B neutral
         data[idx + 3] = 255; // Alpha
       }
@@ -139,10 +154,9 @@ export class CRTEngine {
       // Curved CRT tube convex border radii
       this.screenElement.style.borderRadius = `${config.brX}px / ${config.brY}px`;
       
+      this.screenElement.classList.remove('has-barrel', 'curvature-subtle', 'curvature-authentic', 'curvature-heavy');
       if (config.scale > 0) {
-        this.screenElement.classList.add('has-barrel');
-      } else {
-        this.screenElement.classList.remove('has-barrel');
+        this.screenElement.classList.add('has-barrel', `curvature-${config.id}`);
       }
     }
 
