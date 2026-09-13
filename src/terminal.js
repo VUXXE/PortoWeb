@@ -38,6 +38,7 @@ export class Terminal {
       { cmd: 'next', num: 'N', desc: 'Switch to next project card' },
       { cmd: 'prev', num: 'P', desc: 'Switch to previous project card' },
       { cmd: 'theme', num: 'T', desc: 'Set phosphor color [green|amber|white|cyber]' },
+      { cmd: 'font', num: 'F', desc: 'Toggle font [pixel (1980s DEC VT220) | clean (mono)]' },
       { cmd: 'barrel', num: 'B', desc: 'Set CRT barrel distortion [flat|subtle|authentic|heavy]' },
       { cmd: 'scanlines', num: 'S', desc: 'Toggle CRT raster scanlines on/off' },
       { cmd: 'a11y', num: '', desc: 'Activate maximum readability mode (flat, scanlines off)' },
@@ -479,6 +480,22 @@ export class Terminal {
         } else {
           const nextTheme = crt.cycleTheme();
           this.setStatus(`[SYS]: Phosphor color cycled to: ${nextTheme.toUpperCase()}`);
+        }
+        return;
+
+      case 'font':
+      case 'typeface':
+        if (args.length > 0) {
+          if (crt.setFont(args[0])) {
+            audio.playKeyClick(350);
+            this.setStatus(`[SYS]: Font switched to: ${args[0].toUpperCase()}`);
+          } else {
+            audio.playBell();
+            this.setStatus(`[ERR]: Unknown font "${args[0]}". Options: pixel, clean`, true);
+          }
+        } else {
+          const nextFont = crt.cycleFont();
+          this.setStatus(`[SYS]: Font switched to: ${nextFont === 'pixel' ? 'PIXEL 80s (DEC VT220)' : 'CLEAN MONO (SHARE TECH)'}`);
         }
         return;
 

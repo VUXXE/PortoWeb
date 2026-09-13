@@ -26,6 +26,9 @@ export class CRTEngine {
     this.themes = ['green', 'amber', 'white', 'cyber'];
     this.currentThemeIndex = 0; // Default: Green Phosphor
 
+    this.fonts = ['pixel', 'clean'];
+    this.currentFontIndex = 0; // Default: Pixel 80s (DEC VT220 / VT323)
+
     this.isPoweredOn = true;
     this.scanlinesEnabled = false; // Disabled by default for maximum readability & a11y
     this.flickerEnabled = false;
@@ -45,6 +48,7 @@ export class CRTEngine {
     this.generateBarrelMap();
     this.applyCurvature();
     this.applyTheme();
+    this.applyFont();
     this.applyScanlines();
 
     // Bind controls
@@ -66,6 +70,11 @@ export class CRTEngine {
         }
       }
 
+      const savedFont = localStorage.getItem('portoweb_crt_font');
+      if (savedFont && this.fonts.includes(savedFont)) {
+        this.currentFontIndex = this.fonts.indexOf(savedFont);
+      }
+
       const savedScanlines = localStorage.getItem('portoweb_crt_scanlines');
       if (savedScanlines !== null) {
         this.scanlinesEnabled = savedScanlines === 'true';
@@ -79,6 +88,7 @@ export class CRTEngine {
     try {
       localStorage.setItem('portoweb_crt_theme', this.themes[this.currentThemeIndex]);
       localStorage.setItem('portoweb_crt_curvature', String(this.currentCurvatureIndex));
+      localStorage.setItem('portoweb_crt_font', this.fonts[this.currentFontIndex]);
       localStorage.setItem('portoweb_crt_scanlines', String(this.scanlinesEnabled));
     } catch {
       // Ignore
@@ -234,6 +244,40 @@ export class CRTEngine {
   }
 
   /**
+   * Cycle between authentic 1980s DEC VT220 pixel font and modern clean monospace
+   */
+  cycleFont() {
+    this.currentFontIndex = (this.currentFontIndex + 1) % this.fonts.length;
+    this.applyFont();
+    audio.playKeyClick(350);
+    return this.fonts[this.currentFontIndex];
+  }
+
+  setFont(name) {
+    const idx = this.fonts.indexOf(name.toLowerCase());
+    if (idx !== -1) {
+      this.currentFontIndex = idx;
+      this.applyFont();
+      audio.playKeyClick(350);
+      return true;
+    }
+    return false;
+  }
+
+  applyFont() {
+    const font = this.fonts[this.currentFontIndex];
+    document.body.classList.remove('font-pixel', 'font-clean');
+    document.body.classList.add(`font-${font}`);
+
+    const fontLabel = document.getElementById('status-font');
+    if (fontLabel) {
+      fontLabel.textContent = font === 'pixel' ? 'PIXEL 80s' : 'CLEAN MONO';
+    }
+
+    this.savePreferences();
+  }
+
+  /**
    * Toggle scanlines on/off
    */
   toggleScanlines() {
@@ -328,6 +372,11 @@ export class CRTEngine {
     const btnTheme = document.getElementById('btn-theme');
     if (btnTheme) {
       btnTheme.addEventListener('click', () => this.cycleTheme());
+    }
+
+    const btnFont = document.getElementById('btn-font');
+    if (btnFont) {
+      btnFont.addEventListener('click', () => this.cycleFont());
     }
 
     const btnCurvature = document.getElementById('btn-curvature');

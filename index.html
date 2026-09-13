@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="/styles/crt.css">
   <link rel="stylesheet" href="/styles/terminal.css">
 </head>
-<body class="theme-green">
+<body class="theme-green font-pixel">
 
   <!-- Hidden SVG Optical Barrel Distortion Filter -->
   <svg class="crt-filters" aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none;">
@@ -67,6 +67,9 @@
           <div class="header-controls" aria-label="CRT Controls">
             <button type="button" class="hud-btn" id="btn-theme" title="Cycle Phosphor Color">
               THEME: <strong id="status-theme">GREEN</strong>
+            </button>
+            <button type="button" class="hud-btn" id="btn-font" title="Toggle 1980s Pixel Font vs Clean Monospace">
+              FONT: <strong id="status-font">PIXEL 80s</strong>
             </button>
             <button type="button" class="hud-btn" id="btn-curvature" title="Adjust Barrel Distortion">
               BARREL: <strong id="status-curvature">AUTHENTIC</strong>
