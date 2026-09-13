@@ -279,9 +279,9 @@
 .cli-ascii-logo {
   font-family: inherit;
   color: var(--crt-bright);
-  font-size: calc(12px * var(--terminal-scale, 2.0));
-  line-height: 1.05;
-  letter-spacing: 0;
+  font-size: calc(13px * var(--terminal-scale, 2.0));
+  line-height: 1.2;
+  letter-spacing: 0.5px;
   margin: 0;
   white-space: pre;
   overflow-x: auto;
