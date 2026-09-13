@@ -86,42 +86,49 @@
 
         <!-- Quick Navigation Command Chips -->
         <nav class="quick-cmd-bar" aria-label="Quick Terminal Commands">
-          <button type="button" class="quick-cmd-btn" data-cmd="about">[ 1: ABOUT ]</button>
-          <button type="button" class="quick-cmd-btn" data-cmd="skills">[ 2: SKILLS ]</button>
-          <button type="button" class="quick-cmd-btn" data-cmd="projects">[ 3: PROJECTS ]</button>
-          <button type="button" class="quick-cmd-btn" data-cmd="experience">[ 4: HISTORY ]</button>
-          <button type="button" class="quick-cmd-btn" data-cmd="contact">[ 5: CONTACT ]</button>
-          <button type="button" class="quick-cmd-btn" data-cmd="resume">[ 6: RESUME ]</button>
-          <button type="button" class="quick-cmd-btn" data-cmd="matrix">[ 7: MATRIX ]</button>
-          <button type="button" class="quick-cmd-btn" data-cmd="degauss">[ 8: DEGAUSS ]</button>
-          <button type="button" class="quick-cmd-btn" data-cmd="help">[ 9: HELP ]</button>
+          <button type="button" class="quick-cmd-btn active-tab" data-cmd="dashboard" id="nav-btn-dashboard">[ 0: DASHBOARD ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="about" id="nav-btn-about">[ 1: ABOUT ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="skills" id="nav-btn-skills">[ 2: SKILLS ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="projects" id="nav-btn-projects">[ 3: PROJECTS ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="experience" id="nav-btn-experience">[ 4: HISTORY ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="contact" id="nav-btn-contact">[ 5: CONTACT ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="resume" id="nav-btn-resume">[ 6: RESUME ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="matrix" id="nav-btn-matrix">[ 7: MATRIX ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="fire" id="nav-btn-fire">[ 8: FIRE ]</button>
+          <button type="button" class="quick-cmd-btn" data-cmd="help" id="nav-btn-help">[ 9: HELP ]</button>
         </nav>
 
-        <!-- Terminal Output Buffer -->
-        <div class="terminal-output" id="terminal-output" role="log" aria-live="polite"></div>
+        <!-- Main Curses TUI Viewport Window (Strictly Non-Scrollable) -->
+        <section class="term-viewport" id="term-viewport" aria-label="Terminal Display Viewport"></section>
 
-        <!-- Interactive Prompt Input Line -->
-        <div class="cli-prompt-line">
-          <label for="cli-input" class="prompt-label">
-            <span class="prompt-user">guest@portoweb</span>
-            <span class="prompt-sep">:</span>
-            <span class="prompt-path">~</span>
-            <span class="prompt-char">$</span>
-          </label>
-          <div class="input-container">
-            <input 
-              type="text" 
-              id="cli-input" 
-              class="cli-input" 
-              autocomplete="off" 
-              autocorrect="off" 
-              autocapitalize="off" 
-              spellcheck="false" 
-              aria-label="Terminal command input"
-            />
-            <span class="custom-cursor" aria-hidden="true"></span>
+        <!-- Interactive CLI Footer -->
+        <footer class="term-cli-footer">
+          <div class="cli-status-line" id="cli-status-line" aria-live="polite">
+            [SYS]: SYSTEM READY // SELECT VIEW [0-9] OR TYPE COMMAND
           </div>
-        </div>
+          <div class="cli-prompt-line">
+            <label for="cli-input" class="prompt-label">
+              <span class="prompt-user">guest@portoweb</span>
+              <span class="prompt-sep">:</span>
+              <span class="prompt-path">~</span>
+              <span class="prompt-char">$</span>
+            </label>
+            <div class="input-container">
+              <input 
+                type="text" 
+                id="cli-input" 
+                class="cli-input" 
+                autocomplete="off" 
+                autocorrect="off" 
+                autocapitalize="off" 
+                spellcheck="false" 
+                aria-label="Terminal command input"
+                placeholder="type a command or shortcut number..."
+              />
+              <span class="custom-cursor" aria-hidden="true"></span>
+            </div>
+          </div>
+        </footer>
 
       </div>
     </div>

@@ -1,7 +1,6 @@
 /**
- * Terminal Emulator Engine
- * Handles interactive CLI input, tab completion, command history,
- * typewriter effects, virtual filesystem, and formatted retro outputs.
+ * Retro CRT Curses TUI & Interactive CLI Controller
+ * Strictly Non-Scrollable Full-Page Viewport with Full Click-and-Type Parity
  */
 
 import { PORTFOLIO_DATA } from './data.js';
@@ -12,63 +11,71 @@ import { asciiFire } from './ascii-fire.js';
 
 export class Terminal {
   constructor() {
-    this.outputContainer = null;
+    this.viewportContainer = null;
     this.inputElement = null;
+    this.statusLineElement = null;
     this.promptUser = "guest";
     this.promptHost = PORTFOLIO_DATA.profile.host;
+
+    this.currentView = 'dashboard';
+    this.activeProjectIndex = 0;
 
     this.history = [];
     this.historyIndex = -1;
 
     this.commandList = [
-      { cmd: 'help', desc: 'Display all available commands' },
-      { cmd: 'about', desc: 'Developer background, bio & status' },
-      { cmd: 'skills', desc: 'Technical proficiency & toolsets' },
-      { cmd: 'projects', desc: 'Showcase of selected works & systems' },
-      { cmd: 'experience', desc: 'Career history and milestones' },
-      { cmd: 'contact', desc: 'Communication channels & social links' },
-      { cmd: 'resume', desc: 'Curriculum Vitae / resume overview' },
-      { cmd: 'theme', desc: 'Switch phosphor color [green|amber|white|cyber]' },
-      { cmd: 'curvature', desc: 'Set CRT barrel distortion [flat|subtle|authentic|heavy]' },
-      { cmd: 'degauss', desc: 'Trigger CRT magnetic degauss coil pulse' },
-      { cmd: 'matrix', desc: 'Launch Matrix digital rain screensaver' },
-      { cmd: 'fire', desc: 'Launch 90s demoscene ASCII Doom fire demo' },
-      { cmd: 'ls', desc: 'List files in virtual directory' },
-      { cmd: 'cat', desc: 'Read a virtual file (e.g. cat bio.txt)' },
-      { cmd: 'clear', desc: 'Clear the terminal buffer' },
-      { cmd: 'date', desc: 'Print system date and time' },
-      { cmd: 'whoami', desc: 'Display current user identity' },
-      { cmd: 'sudo', desc: 'Execute superuser privilege' }
+      { cmd: 'dashboard', num: '0', desc: 'System overview and quick access menu' },
+      { cmd: 'about', num: '1', desc: 'Developer background, bio and status' },
+      { cmd: 'skills', num: '2', desc: 'Technical proficiencies and tools' },
+      { cmd: 'projects', num: '3', desc: 'Showcase of selected works and systems' },
+      { cmd: 'history', num: '4', desc: 'Career history and milestones' },
+      { cmd: 'contact', num: '5', desc: 'Communication channels and social links' },
+      { cmd: 'resume', num: '6', desc: 'Curriculum Vitae / resume overview' },
+      { cmd: 'matrix', num: '7', desc: 'Launch Matrix digital rain screensaver' },
+      { cmd: 'fire', num: '8', desc: 'Launch 90s demoscene ASCII Doom fire demo' },
+      { cmd: 'help', num: '9', desc: 'Display all available commands' },
+      { cmd: 'project', num: '1-4', desc: 'Jump to project [1-4] or ID (e.g. project 2)' },
+      { cmd: 'next', num: 'N', desc: 'Switch to next project card' },
+      { cmd: 'prev', num: 'P', desc: 'Switch to previous project card' },
+      { cmd: 'theme', num: 'T', desc: 'Set phosphor color [green|amber|white|cyber]' },
+      { cmd: 'barrel', num: 'B', desc: 'Set CRT barrel distortion [flat|subtle|authentic|heavy]' },
+      { cmd: 'degauss', num: 'D', desc: 'Trigger CRT magnetic degauss coil pulse' },
+      { cmd: 'audio', num: 'A', desc: 'Toggle CRT mechanical sound synthesizer' },
+      { cmd: 'ls', num: '', desc: 'List files in virtual directory' },
+      { cmd: 'cat', num: '', desc: 'Read a virtual file (e.g. cat bio.txt)' },
+      { cmd: 'clear', num: 'C', desc: 'Refresh the active display buffer' },
+      { cmd: 'date', num: '', desc: 'Print system date and time' },
+      { cmd: 'whoami', num: '', desc: 'Display current user identity' },
+      { cmd: 'sudo', num: '', desc: 'Execute superuser privilege' }
     ];
 
     this.virtualFiles = {
       'bio.txt': PORTFOLIO_DATA.profile.bio.join('\n\n'),
-      'skills.txt': 'Run "skills" for the interactive visual display.',
-      'projects.txt': 'Run "projects" for full project cards and repository links.',
-      'contact.txt': PORTFOLIO_DATA.socials.map(s => `${s.name.padEnd(12)} : ${s.handle} (${s.url})`).join('\n'),
-      'flag.txt': 'CTF{cRt_b4rr3l_d1st0rt10n_1984} - You found the secret flag!'
+      'skills.txt': 'Run "skills" or click [ 2: SKILLS ] for interactive matrix.',
+      'projects.txt': 'Run "projects" or click [ 3: PROJECTS ] for interactive project deck.',
+      'contact.txt': PORTFOLIO_DATA.socials.map(s => `${s.name.padEnd(14)} : ${s.handle} (${s.url})`).join('\n'),
+      'flag.txt': 'CTF{cRt_b4rr3l_d1st0rt10n_1984} // You found the secret terminal flag!'
     };
-
-    this.isBooting = false;
   }
 
   init() {
-    this.outputContainer = document.getElementById('terminal-output');
+    this.viewportContainer = document.getElementById('term-viewport');
     this.inputElement = document.getElementById('cli-input');
+    this.statusLineElement = document.getElementById('cli-status-line');
 
-    if (!this.inputElement || !this.outputContainer) return;
+    if (!this.viewportContainer || !this.inputElement) return;
 
-    this.bindEvents();
-    this.runBootSequence();
+    this.bindGlobalEvents();
+    this.setView('dashboard', null, false);
+    this.setStatus('[SYS]: SYSTEM INITIALIZED // MODEL 84-CRT READY // SELECT VIEW [0-9] OR TYPE COMMAND');
   }
 
-  bindEvents() {
-    // Keep input focused when clicking screen
+  bindGlobalEvents() {
+    // Keep input focused when clicking screen canvas/background
     const screen = document.getElementById('crt-screen');
     if (screen) {
       screen.addEventListener('click', (e) => {
-        // Only focus if user didn't click an actual link or button
-        if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
+        if (!e.target.closest('button') && !e.target.closest('a') && !e.target.closest('input')) {
           this.inputElement.focus();
         }
       });
@@ -82,13 +89,13 @@ export class Terminal {
       audio.playKeyClick();
     });
 
-    // Quick Command Buttons in UI
+    // Quick Command Navigation Buttons in Top Bar
     const quickButtons = document.querySelectorAll('.quick-cmd-btn');
     quickButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const cmd = btn.getAttribute('data-cmd');
         if (cmd) {
-          audio.playKeyClick(200);
+          audio.playKeyClick(220);
           this.executeCommand(cmd);
         }
       });
@@ -96,8 +103,6 @@ export class Terminal {
   }
 
   handleKeyDown(e) {
-    if (this.isBooting) return;
-
     if (e.key === 'Enter') {
       e.preventDefault();
       const rawCmd = this.inputElement.value.trim();
@@ -107,7 +112,7 @@ export class Terminal {
         this.historyIndex = this.history.length;
         this.executeCommand(rawCmd);
       } else {
-        this.printPromptLine('');
+        audio.playKeyClick(120);
       }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
@@ -127,14 +132,14 @@ export class Terminal {
         this.inputElement.value = '';
       }
     } else if (e.key === 'Tab') {
+      // Auto-complete commands if input has text
       if (!e.shiftKey && this.inputElement.value.trim().length > 0) {
         e.preventDefault();
         this.handleTabCompletion();
       }
-      // If input is empty, let native Tab focus cycle to navigation buttons
     } else if (e.key === 'l' && e.ctrlKey) {
       e.preventDefault();
-      this.clear();
+      this.setView(this.currentView);
     }
   }
 
@@ -148,517 +153,898 @@ export class Terminal {
 
     if (matches.length === 1) {
       this.inputElement.value = matches[0] + ' ';
-      audio.playKeyClick(300);
+      audio.playKeyClick(280);
+      this.setStatus(`[TAB]: Autocompleted to "${matches[0]}"`);
     } else if (matches.length > 1) {
       audio.playBell();
-      this.printPromptLine(current);
-      this.println(`Matching: ${matches.join('   ')}`, 'cmd-info');
+      this.setStatus(`[TAB MATCHES]: ${matches.join('   ')}`);
     } else {
       audio.playBell();
     }
   }
 
-  printPromptLine(cmdText) {
-    const line = document.createElement('div');
-    line.className = 'term-line prompt-line';
-    line.innerHTML = `<span class="prompt-user">${this.promptUser}@${this.promptHost}</span><span class="prompt-sep">:</span><span class="prompt-path">~</span><span class="prompt-char">$</span> <span class="prompt-input-text">${this.escapeHtml(cmdText)}</span>`;
-    this.outputContainer.appendChild(line);
-    this.scrollToBottom();
-  }
-
-  println(html, className = '') {
-    const line = document.createElement('div');
-    line.className = `term-line ${className}`;
-    line.innerHTML = html;
-    this.outputContainer.appendChild(line);
-    this.scrollToBottom();
-    return line;
-  }
-
-  scrollToBottom() {
-    const wrapper = document.getElementById('crt-screen');
-    if (wrapper) {
-      wrapper.scrollTop = wrapper.scrollHeight;
+  setStatus(message, isError = false) {
+    if (!this.statusLineElement) return;
+    this.statusLineElement.textContent = message;
+    if (isError) {
+      this.statusLineElement.classList.add('status-error');
+      setTimeout(() => {
+        if (this.statusLineElement) this.statusLineElement.classList.remove('status-error');
+      }, 2500);
     }
-  }
-
-  clear() {
-    this.outputContainer.innerHTML = '';
-    this.scrollToBottom();
-  }
-
-  escapeHtml(str) {
-    return str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
   }
 
   /**
-   * Command dispatcher
+   * Main View Controller
+   * Switches views inside the non-scrollable viewport frame
    */
-  executeCommand(rawCmd) {
-    this.printPromptLine(rawCmd);
+  setView(viewName, arg = null, playAudio = true) {
+    const normalized = viewName.toLowerCase();
+    const validViews = ['dashboard', 'about', 'skills', 'projects', 'experience', 'contact', 'resume', 'help'];
 
-    const parts = rawCmd.trim().split(/\s+/);
-    const command = parts[0].toLowerCase();
-    const args = parts.slice(1);
+    if (!validViews.includes(normalized)) {
+      return false;
+    }
 
-    switch (command) {
-      case 'help':
-      case '?':
-        this.cmdHelp();
+    if (playAudio) {
+      audio.playKeyClick(240);
+    }
+
+    this.currentView = normalized;
+
+    // Handle project index argument if switching to projects
+    if (normalized === 'projects' && arg !== null) {
+      this.setProjectIndex(arg, false);
+    }
+
+    // Update navigation bar tabs highlighting
+    document.querySelectorAll('.quick-cmd-btn').forEach(btn => {
+      const cmd = btn.getAttribute('data-cmd');
+      if (cmd === normalized) {
+        btn.classList.add('active-tab');
+      } else {
+        btn.classList.remove('active-tab');
+      }
+    });
+
+    // Render HTML template for the active view
+    let html = '';
+    switch (normalized) {
+      case 'dashboard':
+        html = this.renderDashboard();
         break;
-
       case 'about':
-      case 'bio':
-      case 'who':
-        this.cmdAbout();
+        html = this.renderAbout();
         break;
-
       case 'skills':
-        this.cmdSkills();
+        html = this.renderSkills();
         break;
-
       case 'projects':
-      case 'proj':
-        this.cmdProjects();
+        html = this.renderProjects();
         break;
-
-      case 'project':
-        this.cmdProjectDetail(args[0]);
-        break;
-
       case 'experience':
-      case 'history':
-      case 'work':
-        this.cmdExperience();
+        html = this.renderExperience();
         break;
-
       case 'contact':
-      case 'email':
-      case 'socials':
-        this.cmdContact();
+        html = this.renderContact();
         break;
-
       case 'resume':
-      case 'cv':
-        this.cmdResume();
+        html = this.renderResume();
         break;
-
-      case 'theme':
-        this.cmdTheme(args[0]);
-        break;
-
-      case 'curvature':
-      case 'barrel':
-      case 'distortion':
-        this.cmdCurvature(args[0]);
-        break;
-
-      case 'degauss':
-        this.println(`[+] INITIATING ELECTROMAGNETIC DEGAUSS COIL DISCHARGE...`, 'cmd-info');
-        crt.degauss();
-        break;
-
-      case 'matrix':
-        this.println(`[+] ACTIVATING NEURAL CIPHER STREAM... [ESC OR CLICK TO EXIT]`, 'cmd-success');
-        matrix.start();
-        break;
-
-      case 'fire':
-        this.println(`[+] LAUNCHING 1993 DEMOSCENE ASCII FLAME BUFFER... [ESC TO EXIT]`, 'cmd-success');
-        asciiFire.start();
-        break;
-
-      case 'scanlines':
-        const state = crt.toggleScanlines();
-        this.println(`Scanlines: ${state ? 'ENABLED' : 'DISABLED'}`, 'cmd-info');
-        break;
-
-      case 'audio':
-      case 'sound':
-        const muted = audio.toggleMute();
-        this.println(`CRT Audio Synthesizer: ${muted ? 'MUTED' : 'ENABLED'}`, 'cmd-info');
-        break;
-
-      case 'ls':
-      case 'dir':
-        this.cmdLs();
-        break;
-
-      case 'cat':
-        this.cmdCat(args[0]);
-        break;
-
-      case 'clear':
-      case 'cls':
-        this.clear();
-        break;
-
-      case 'date':
-        this.println(`Current System Time: ${new Date().toUTCString()}`, 'cmd-info');
-        break;
-
-      case 'whoami':
-        this.println(`${this.promptUser} (authorized portfolio visitor - permission level: GUEST_RO)`, 'cmd-info');
-        break;
-
-      case 'echo':
-        this.println(this.escapeHtml(args.join(' ')));
-        break;
-
-      case 'sudo':
-        audio.playBell();
-        this.println(`sudo: user "${this.promptUser}" is not in the sudoers file. This incident will be reported.`, 'cmd-error');
-        break;
-
-      case 'exit':
-      case 'quit':
-        this.println(`[!] Cannot disconnect active TTY console. Power switch is on the monitor bezel.`, 'cmd-warning');
-        break;
-
-      default:
-        audio.playBell();
-        this.println(`command not found: "${this.escapeHtml(command)}". Type <span class="term-clickable" data-run="help">help</span> for a list of commands.`, 'cmd-error');
+      case 'help':
+        html = this.renderHelp();
         break;
     }
 
-    this.bindClickableCommands();
-    this.scrollToBottom();
+    this.viewportContainer.innerHTML = html;
+    this.bindViewEvents();
+
+    if (this.inputElement) {
+      this.inputElement.focus();
+    }
+
+    return true;
   }
 
-  bindClickableCommands() {
-    const clickables = this.outputContainer.querySelectorAll('.term-clickable:not(.bound)');
-    clickables.forEach(el => {
-      el.classList.add('bound');
+  /**
+   * Project Index Controller
+   */
+  setProjectIndex(indexOrId, shouldRerender = true) {
+    const projects = PORTFOLIO_DATA.projects;
+    let targetIdx = -1;
+
+    if (typeof indexOrId === 'number') {
+      targetIdx = Math.max(0, Math.min(projects.length - 1, indexOrId));
+    } else if (typeof indexOrId === 'string') {
+      const parsedNum = parseInt(indexOrId, 10);
+      if (!isNaN(parsedNum) && parsedNum >= 1 && parsedNum <= projects.length) {
+        targetIdx = parsedNum - 1;
+      } else {
+        targetIdx = projects.findIndex(p => p.id.toLowerCase() === indexOrId.toLowerCase() || p.num === indexOrId);
+      }
+    }
+
+    if (targetIdx !== -1) {
+      this.activeProjectIndex = targetIdx;
+      if (shouldRerender && this.currentView === 'projects') {
+        this.setView('projects', null, true);
+      }
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Bind all click actions inside the newly rendered viewport
+   */
+  bindViewEvents() {
+    // Elements with data-cmd (execute command or switch view)
+    const cmdElements = this.viewportContainer.querySelectorAll('[data-cmd]');
+    cmdElements.forEach(el => {
       el.addEventListener('click', (e) => {
         e.preventDefault();
-        const toRun = el.getAttribute('data-run');
-        if (toRun) {
+        const cmd = el.getAttribute('data-cmd');
+        if (cmd) {
           audio.playKeyClick(200);
-          this.executeCommand(toRun);
+          this.executeCommand(cmd);
+        }
+      });
+    });
+
+    // Project tabs
+    const projTabs = this.viewportContainer.querySelectorAll('.project-tab-btn');
+    projTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const idx = parseInt(tab.getAttribute('data-idx'), 10);
+        if (!isNaN(idx)) {
+          audio.playKeyClick(250);
+          this.activeProjectIndex = idx;
+          this.setView('projects', null, false);
+          this.setStatus(`[SYS]: DISPLAYING PROJECT [${PORTFOLIO_DATA.projects[idx].num} // ${PORTFOLIO_DATA.projects[idx].title}]`);
+        }
+      });
+    });
+
+    // Project Prev / Next Pagers
+    const pagerButtons = this.viewportContainer.querySelectorAll('[data-nav]');
+    pagerButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const nav = btn.getAttribute('data-nav');
+        const count = PORTFOLIO_DATA.projects.length;
+        if (nav === 'next') {
+          this.activeProjectIndex = (this.activeProjectIndex + 1) % count;
+        } else if (nav === 'prev') {
+          this.activeProjectIndex = (this.activeProjectIndex - 1 + count) % count;
+        }
+        audio.playKeyClick(220);
+        this.setView('projects', null, false);
+        this.setStatus(`[SYS]: DISPLAYING PROJECT [${PORTFOLIO_DATA.projects[this.activeProjectIndex].num} // ${PORTFOLIO_DATA.projects[this.activeProjectIndex].title}]`);
+      });
+    });
+
+    // Clickable command pills in Help table
+    const helpPills = this.viewportContainer.querySelectorAll('.help-cmd-pill');
+    helpPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const cmd = pill.getAttribute('data-run');
+        if (cmd) {
+          audio.playKeyClick(200);
+          this.executeCommand(cmd);
         }
       });
     });
   }
 
-  // COMMAND IMPLEMENTATIONS
+  /**
+   * Master CLI Command Dispatcher
+   */
+  executeCommand(rawInput) {
+    const trimmed = rawInput.trim();
+    if (!trimmed) return;
 
-  cmdHelp() {
-    let out = `<div class="cmd-box">
-<div class="box-title">AVAILABLE COMMANDS</div>
-<table class="term-table">`;
-    this.commandList.forEach(c => {
-      out += `<tr>
-        <td class="cmd-cell"><span class="term-clickable" data-run="${c.cmd}">${c.cmd}</span></td>
-        <td class="desc-cell">${c.desc}</td>
-      </tr>`;
-    });
-    out += `</table>
-<div class="table-footer">Tip: Click any command above or press <kbd>TAB</kbd> for auto-completion.</div>
-</div>`;
-    this.println(out);
+    const parts = trimmed.split(/\s+/);
+    const command = parts[0].toLowerCase();
+    const args = parts.slice(1);
+
+    // 1. Shortcut numbers 0-9
+    switch (command) {
+      case '0':
+      case 'dashboard':
+      case 'home':
+        this.setView('dashboard');
+        this.setStatus('[SYS]: VIEW [0: DASHBOARD] ACTIVE // SELECT VIEW OR TYPE COMMAND');
+        return;
+
+      case '1':
+      case 'about':
+      case 'bio':
+      case 'who':
+        this.setView('about');
+        this.setStatus('[SYS]: VIEW [1: ABOUT] ACTIVE // PROFILE DATA LOADED');
+        return;
+
+      case '2':
+      case 'skills':
+      case 'skill':
+        this.setView('skills');
+        this.setStatus('[SYS]: VIEW [2: SKILLS] ACTIVE // PRODUCTION CAPABILITIES MATRIX');
+        return;
+
+      case '3':
+      case 'projects':
+      case 'proj':
+        if (args.length > 0) {
+          this.setProjectIndex(args[0], false);
+        }
+        this.setView('projects');
+        this.setStatus(`[SYS]: VIEW [3: PROJECTS] ACTIVE // CARD [${PORTFOLIO_DATA.projects[this.activeProjectIndex].num} OF 04] LOADED`);
+        return;
+
+      case 'project':
+        if (args.length > 0) {
+          if (this.setProjectIndex(args[0], true)) {
+            if (this.currentView !== 'projects') {
+              this.setView('projects');
+            }
+            this.setStatus(`[SYS]: JUMPED TO PROJECT [${PORTFOLIO_DATA.projects[this.activeProjectIndex].num} // ${PORTFOLIO_DATA.projects[this.activeProjectIndex].title}]`);
+          } else {
+            audio.playBell();
+            this.setStatus(`[ERR]: Project "${args[0]}" not found. Valid options: 1, 2, 3, 4 or project IDs.`, true);
+          }
+        } else {
+          this.setView('projects');
+          this.setStatus('[SYS]: Usage: "project <1-4>" or use [PREV] / [NEXT] buttons.');
+        }
+        return;
+
+      case 'next':
+      case 'n':
+        if (this.currentView === 'projects') {
+          const count = PORTFOLIO_DATA.projects.length;
+          this.activeProjectIndex = (this.activeProjectIndex + 1) % count;
+          this.setView('projects');
+          this.setStatus(`[SYS]: JUMPED TO PROJECT [${PORTFOLIO_DATA.projects[this.activeProjectIndex].num} // ${PORTFOLIO_DATA.projects[this.activeProjectIndex].title}]`);
+        } else {
+          this.cycleNextView();
+        }
+        return;
+
+      case 'prev':
+      case 'p':
+        if (this.currentView === 'projects') {
+          const count = PORTFOLIO_DATA.projects.length;
+          this.activeProjectIndex = (this.activeProjectIndex - 1 + count) % count;
+          this.setView('projects');
+          this.setStatus(`[SYS]: JUMPED TO PROJECT [${PORTFOLIO_DATA.projects[this.activeProjectIndex].num} // ${PORTFOLIO_DATA.projects[this.activeProjectIndex].title}]`);
+        } else {
+          this.cyclePrevView();
+        }
+        return;
+
+      case '4':
+      case 'experience':
+      case 'history':
+      case 'work':
+        this.setView('experience');
+        this.setStatus('[SYS]: VIEW [4: HISTORY] ACTIVE // CAREER TIMELINE LOADED');
+        return;
+
+      case '5':
+      case 'contact':
+      case 'email':
+      case 'socials':
+        this.setView('contact');
+        this.setStatus('[SYS]: VIEW [5: CONTACT] ACTIVE // COMMUNICATION MATRIX READY');
+        return;
+
+      case '6':
+      case 'resume':
+      case 'cv':
+        this.setView('resume');
+        this.setStatus('[SYS]: VIEW [6: RESUME] ACTIVE // QUALIFICATIONS AND CV OVERVIEW');
+        return;
+
+      case '7':
+      case 'matrix':
+        audio.playKeyClick(300);
+        this.setStatus('[SYS]: ACTIVATING NEURAL CIPHER STREAM... [PRESS ESC TO EXIT]');
+        matrix.start();
+        return;
+
+      case '8':
+      case 'fire':
+        audio.playKeyClick(300);
+        this.setStatus('[SYS]: LAUNCHING 1993 DEMOSCENE ASCII FLAME BUFFER... [PRESS ESC TO EXIT]');
+        asciiFire.start();
+        return;
+
+      case '9':
+      case 'help':
+      case '?':
+        this.setView('help');
+        this.setStatus('[SYS]: VIEW [9: HELP] ACTIVE // COMMAND DIRECTORY LOADED');
+        return;
+
+      case 'theme':
+        if (args.length > 0) {
+          if (crt.setTheme(args[0])) {
+            audio.playKeyClick(400);
+            this.setStatus(`[SYS]: Phosphor color switched to: ${args[0].toUpperCase()}`);
+          } else {
+            audio.playBell();
+            this.setStatus(`[ERR]: Unknown theme "${args[0]}". Options: green, amber, white, cyber`, true);
+          }
+        } else {
+          const nextTheme = crt.cycleTheme();
+          this.setStatus(`[SYS]: Phosphor color cycled to: ${nextTheme.toUpperCase()}`);
+        }
+        return;
+
+      case 'barrel':
+      case 'curvature':
+      case 'distortion':
+        if (args.length > 0) {
+          if (crt.setCurvatureByName(args[0])) {
+            audio.playKeyClick(300);
+            this.setStatus(`[SYS]: CRT Barrel Distortion curvature set to: ${args[0].toUpperCase()}`);
+          } else {
+            audio.playBell();
+            this.setStatus(`[ERR]: Invalid mode "${args[0]}". Options: flat, subtle, authentic, heavy`, true);
+          }
+        } else {
+          const nextCurvature = crt.cycleCurvature();
+          this.setStatus(`[SYS]: CRT Barrel Distortion cycled to: ${nextCurvature.label}`);
+        }
+        return;
+
+      case 'degauss':
+        this.setStatus('[SYS]: INITIATING ELECTROMAGNETIC DEGAUSS COIL DISCHARGE...');
+        crt.degauss();
+        return;
+
+      case 'audio':
+      case 'sound':
+        const muted = audio.toggleMute();
+        this.setStatus(`[SYS]: CRT Audio Synthesizer: ${muted ? 'MUTED' : 'ENABLED'}`);
+        const btnAudio = document.getElementById('btn-audio');
+        if (btnAudio) {
+          btnAudio.classList.toggle('control-active', !muted);
+          const audioLabel = document.getElementById('status-audio');
+          if (audioLabel) audioLabel.textContent = muted ? 'MUTED' : 'ON';
+        }
+        return;
+
+      case 'ls':
+      case 'dir':
+        this.setStatus(`[VFS-ROOT]: Files found: ${Object.keys(this.virtualFiles).join('   ')}  (Type "cat <file>")`);
+        return;
+
+      case 'cat':
+        if (args.length > 0) {
+          const file = args[0].toLowerCase();
+          if (file === 'bio.txt') {
+            this.setView('about');
+            this.setStatus('[VFS-CAT]: bio.txt loaded -> Displayed in [ABOUT] view.');
+          } else if (file === 'skills.txt') {
+            this.setView('skills');
+            this.setStatus('[VFS-CAT]: skills.txt loaded -> Displayed in [SKILLS] view.');
+          } else if (file === 'projects.txt') {
+            this.setView('projects');
+            this.setStatus('[VFS-CAT]: projects.txt loaded -> Displayed in [PROJECTS] view.');
+          } else if (file === 'contact.txt') {
+            this.setView('contact');
+            this.setStatus('[VFS-CAT]: contact.txt loaded -> Displayed in [CONTACT] view.');
+          } else if (file === 'flag.txt') {
+            audio.playKeyClick(400);
+            this.setStatus(`[SECRET FLAG]: ${this.virtualFiles['flag.txt']}`);
+          } else {
+            audio.playBell();
+            this.setStatus(`[ERR]: cat: ${args[0]}: No such file. Type "ls" for file index.`, true);
+          }
+        } else {
+          this.setStatus('[SYS]: Usage: "cat <filename>" (e.g. cat bio.txt, cat flag.txt)');
+        }
+        return;
+
+      case 'clear':
+      case 'cls':
+        this.setView(this.currentView);
+        this.setStatus('[SYS]: Screen buffer refreshed.');
+        return;
+
+      case 'date':
+        this.setStatus(`[SYS-TIME]: ${new Date().toUTCString()}`);
+        return;
+
+      case 'whoami':
+        this.setStatus(`[SYS-AUTH]: ${this.promptUser}@${this.promptHost} // PERMISSION: GUEST_RO // STATUS: AUTHORIZED`);
+        return;
+
+      case 'sudo':
+        audio.playBell();
+        this.setStatus(`[SECURITY ALERT]: sudo: user "${this.promptUser}" is not in sudoers file. Incident reported.`, true);
+        return;
+
+      default:
+        audio.playBell();
+        this.setStatus(`[ERR]: Command "${command}" not recognized. Type "help" or select [0-9].`, true);
+        return;
+    }
   }
 
-  cmdAbout() {
+  cycleNextView() {
+    const views = ['dashboard', 'about', 'skills', 'projects', 'experience', 'contact', 'resume'];
+    const idx = views.indexOf(this.currentView);
+    const nextIdx = (idx + 1) % views.length;
+    this.setView(views[nextIdx]);
+    this.setStatus(`[SYS]: JUMPED TO VIEW [${views[nextIdx].toUpperCase()}]`);
+  }
+
+  cyclePrevView() {
+    const views = ['dashboard', 'about', 'skills', 'projects', 'experience', 'contact', 'resume'];
+    const idx = views.indexOf(this.currentView);
+    const prevIdx = (idx - 1 + views.length) % views.length;
+    this.setView(views[prevIdx]);
+    this.setStatus(`[SYS]: JUMPED TO VIEW [${views[prevIdx].toUpperCase()}]`);
+  }
+
+  // ==========================================
+  // VIEW RENDER TEMPLATES (CURSES TUI LAYOUTS)
+  // Strictly fits within viewport height
+  // ==========================================
+
+  renderDashboard() {
     const p = PORTFOLIO_DATA.profile;
-    let bioHtml = p.bio.map(b => `<p class="bio-para">${b}</p>`).join('');
 
-    let out = `
-<div class="cmd-box">
-  <div class="box-header">
-    <span class="box-tag">SYS-ID: ${p.systemName}</span>
-    <span class="box-tag status-pill">${p.status}</span>
+    return `
+<div class="viewport-frame view-dashboard">
+  <div class="viewport-header">
+    <span class="v-header-title">┌── [ VIEW 0: SYSTEM DASHBOARD ] ──</span>
+    <span class="v-header-meta">[ PORTO-OS ${p.version} ] ──┐</span>
   </div>
-  <div class="about-hero">
-    <div class="about-name">${p.handle.toUpperCase()}</div>
-    <div class="about-title">${p.title}</div>
-    <div class="about-loc">Location: ${p.location}</div>
+
+  <div class="viewport-body">
+    <div class="dash-top-section">
+      <div class="dash-hero-box">
+        <div class="dash-avatar-col">
+          <div class="retro-user-badge">
+            <span class="badge-role">OPERATOR</span>
+            <span class="badge-name">${p.handle.toUpperCase()}</span>
+          </div>
+          <div class="retro-status-indicator">
+            <span class="status-pulse-dot" aria-hidden="true"></span>
+            <span class="status-txt">${p.status}</span>
+          </div>
+        </div>
+
+        <div class="dash-profile-info">
+          <h1 class="dash-title">${p.title}</h1>
+          <p class="dash-loc">Location: <strong>${p.location}</strong> // System: <strong>${p.systemName}</strong></p>
+          <p class="dash-bio-summary">${p.bio[0]}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-menu-section">
+      <div class="dash-menu-title">SELECT OPERATION // CLICK ANY OPTION OR TYPE SHORTCUT KEY</div>
+      <div class="dash-actions-grid">
+        <button type="button" class="term-btn dash-action-btn" data-cmd="about">
+          <span class="action-num">[ 1 ]</span>
+          <span class="action-label">ABOUT DEVELOPER</span>
+          <span class="action-desc">Bio, focus &amp; specs</span>
+        </button>
+        <button type="button" class="term-btn dash-action-btn" data-cmd="skills">
+          <span class="action-num">[ 2 ]</span>
+          <span class="action-label">SKILLS MATRIX</span>
+          <span class="action-desc">Languages &amp; systems</span>
+        </button>
+        <button type="button" class="term-btn dash-action-btn" data-cmd="projects">
+          <span class="action-num">[ 3 ]</span>
+          <span class="action-label">PORTFOLIO PROJECTS</span>
+          <span class="action-desc">4 interactive cards</span>
+        </button>
+        <button type="button" class="term-btn dash-action-btn" data-cmd="experience">
+          <span class="action-num">[ 4 ]</span>
+          <span class="action-label">CAREER HISTORY</span>
+          <span class="action-desc">Engineering timeline</span>
+        </button>
+        <button type="button" class="term-btn dash-action-btn" data-cmd="contact">
+          <span class="action-num">[ 5 ]</span>
+          <span class="action-label">CONTACT &amp; SOCIALS</span>
+          <span class="action-desc">Email, GitHub &amp; links</span>
+        </button>
+        <button type="button" class="term-btn dash-action-btn" data-cmd="resume">
+          <span class="action-num">[ 6 ]</span>
+          <span class="action-label">CURRICULUM VITAE</span>
+          <span class="action-desc">Resume overview</span>
+        </button>
+      </div>
+    </div>
   </div>
-  <div class="about-body">
-    ${bioHtml}
-  </div>
-  <div class="box-actions">
-    <button class="term-btn term-clickable" data-run="skills">[ VIEW SKILLS ]</button>
-    <button class="term-btn term-clickable" data-run="projects">[ VIEW PROJECTS ]</button>
-    <button class="term-btn term-clickable" data-run="contact">[ GET IN TOUCH ]</button>
+
+  <div class="viewport-footer">
+    <span>Tip: Press [0-9] or click any button above // Full page TUI mode active</span>
+    <span>STATUS: OPERATIONAL</span>
   </div>
 </div>`;
-    this.println(out);
   }
 
-  cmdSkills() {
-    let out = `<div class="cmd-box"><div class="box-title">TECHNICAL PROFICIENCY &amp; PRODUCTION TOOLING</div>`;
+  renderAbout() {
+    const p = PORTFOLIO_DATA.profile;
+    const bios = p.bio.map(b => `<li class="about-point">${b}</li>`).join('');
+
+    return `
+<div class="viewport-frame view-about">
+  <div class="viewport-header">
+    <span class="v-header-title">┌── [ VIEW 1: DEVELOPER BACKGROUND // ABOUT ] ──</span>
+    <span class="v-header-meta">[ IDENTITY: ${p.handle.toUpperCase()} ] ──┐</span>
+  </div>
+
+  <div class="viewport-body">
+    <div class="about-card-hero">
+      <div class="about-handle-line">
+        <span class="about-handle">${p.handle.toUpperCase()}</span>
+        <span class="about-title-tag">${p.title}</span>
+        <span class="about-status-pill">${p.status}</span>
+      </div>
+      <div class="about-meta-row">
+        <span>Location: <strong>${p.location}</strong></span>
+        <span>Environment: <strong>Linux / POSIX / Web Platform</strong></span>
+        <span>Core Stack: <strong>TypeScript, Rust, Go, WebGL</strong></span>
+      </div>
+    </div>
+
+    <div class="about-content-box">
+      <div class="content-box-heading">ENGINEERING FOCUS &amp; EXPERIENCE</div>
+      <ul class="about-list">
+        ${bios}
+      </ul>
+    </div>
+
+    <div class="view-actions-bar">
+      <button type="button" class="term-btn" data-cmd="skills">[ 2: VIEW SKILLS MATRIX ]</button>
+      <button type="button" class="term-btn" data-cmd="projects">[ 3: BROWSE PROJECTS ]</button>
+      <button type="button" class="term-btn" data-cmd="contact">[ 5: GET IN TOUCH ]</button>
+      <button type="button" class="term-btn" data-cmd="dashboard">[ 0: RETURN TO DASHBOARD ]</button>
+    </div>
+  </div>
+
+  <div class="viewport-footer">
+    <span>Navigation: Type "skills", "projects", or "0" // Click any button</span>
+    <span>SYS-ID: ${p.systemName}</span>
+  </div>
+</div>`;
+  }
+
+  renderSkills() {
+    let columnsHtml = '';
 
     PORTFOLIO_DATA.skills.forEach(group => {
-      out += `<div class="skill-category">
-        <div class="skill-cat-title">=== ${group.category} ===</div>
-        <div class="skill-grid">`;
+      let rowsHtml = group.items.map(s => `
+        <div class="skill-entry">
+          <div class="skill-line-primary">
+            <span class="skill-badge">[${s.tier}]</span>
+            <strong class="skill-name">${s.name}</strong>
+            <span class="skill-exp">${s.exp}</span>
+          </div>
+          <div class="skill-focus-line">${s.focus}</div>
+        </div>
+      `).join('');
 
-      group.items.forEach(skill => {
-        const tierBadge = `[${skill.tier}]`.padEnd(11);
-        out += `<div class="skill-row">
-          <span class="skill-tier">${tierBadge}</span>
-          <span class="skill-name">${skill.name.padEnd(24)}</span>
-          <span class="skill-exp">${skill.exp.padEnd(8)}</span>
-          <span class="skill-focus">${skill.focus}</span>
-        </div>`;
-      });
-
-      out += `</div></div>`;
+      columnsHtml += `
+        <div class="skills-col">
+          <div class="skills-col-header">=== ${group.category} ===</div>
+          <div class="skills-col-body">
+            ${rowsHtml}
+          </div>
+        </div>
+      `;
     });
 
-    out += `</div>`;
-    this.println(out);
-  }
-
-  cmdProjects() {
-    let out = `<div class="cmd-box"><div class="box-title">SELECTED ARCHITECTURE & PRODUCTION WORKS</div>`;
-
-    PORTFOLIO_DATA.projects.forEach(p => {
-      const tagBadges = p.tags.map(t => `<span class="tag-badge">${t}</span>`).join(' ');
-      const highlightList = p.highlights.map(h => `<li>${h}</li>`).join('');
-
-      out += `
-<div class="project-card">
-  <div class="project-header">
-    <span class="project-num">[${p.num}]</span>
-    <span class="project-title">${p.title}</span>
-    <span class="project-year">${p.year}</span>
+    return `
+<div class="viewport-frame view-skills">
+  <div class="viewport-header">
+    <span class="v-header-title">┌── [ VIEW 2: TECHNICAL PROFICIENCIES &amp; TOOLSETS ] ──</span>
+    <span class="v-header-meta">[ PRODUCTION MATRIX ] ──┐</span>
   </div>
-  <div class="project-tags">${tagBadges}</div>
-  <div class="project-desc">${p.description}</div>
-  <ul class="project-highlights">${highlightList}</ul>
-  <div class="project-links">
-    ${p.links.demo ? `<a href="${p.links.demo}" target="_blank" rel="noopener" class="term-link">&gt; RUN LIVE DEMO</a>` : ''}
-    ${p.links.github ? `<a href="${p.links.github}" target="_blank" rel="noopener" class="term-link">&gt; VIEW REPO (GITHUB)</a>` : ''}
-    <span class="term-clickable" data-run="project ${p.id}">&gt; INSPECT SPECS</span>
+
+  <div class="viewport-body">
+    <div class="skills-grid-container">
+      ${columnsHtml}
+    </div>
+
+    <div class="view-actions-bar">
+      <button type="button" class="term-btn" data-cmd="projects">[ 3: VIEW PROJECTS IN ACTION ]</button>
+      <button type="button" class="term-btn" data-cmd="contact">[ 5: CONTACT DEVELOPER ]</button>
+      <button type="button" class="term-btn" data-cmd="dashboard">[ 0: DASHBOARD ]</button>
+    </div>
+  </div>
+
+  <div class="viewport-footer">
+    <span>Proficiency Legend: [PRIMARY] = Daily driver, [ACTIVE] = Production deployed</span>
+    <span>TOTAL STACKS: 13</span>
   </div>
 </div>`;
-    });
-
-    out += `</div>`;
-    this.println(out);
   }
 
-  cmdProjectDetail(id) {
-    if (!id) {
-      this.println(`Usage: project &lt;id&gt; (e.g. <span class="term-clickable" data-run="project neural-mesh">project neural-mesh</span>)`, 'cmd-warning');
-      return;
-    }
+  renderProjects() {
+    const projects = PORTFOLIO_DATA.projects;
+    const current = projects[this.activeProjectIndex];
 
-    const proj = PORTFOLIO_DATA.projects.find(p => p.id === id.toLowerCase() || p.num === id);
-    if (!proj) {
-      audio.playBell();
-      this.println(`Project "${this.escapeHtml(id)}" not found. Type <span class="term-clickable" data-run="projects">projects</span> for list.`, 'cmd-error');
-      return;
-    }
+    // Build project tabs row
+    let tabsHtml = projects.map((p, idx) => {
+      const isActive = idx === this.activeProjectIndex;
+      return `<button type="button" class="project-tab-btn ${isActive ? 'active-tab' : ''}" data-idx="${idx}">
+        [ ${p.num}: ${p.id.toUpperCase()} ]
+      </button>`;
+    }).join(' ');
 
-    let out = `
-<div class="cmd-box">
-  <div class="box-title">DETAILED SYSTEM SPEC // ${proj.title}</div>
-  <p><strong>Category:</strong> ${proj.category} | <strong>Year:</strong> ${proj.year}</p>
-  <p><strong>Overview:</strong> ${proj.description}</p>
-  <div class="spec-section">
-    <div class="spec-title">Key Architectural Highlights:</div>
-    <ul>
-      ${proj.highlights.map(h => `<li>${h}</li>`).join('')}
-    </ul>
+    const tagBadges = current.tags.map(t => `<span class="tag-badge">${t}</span>`).join(' ');
+    const highlights = current.highlights.map(h => `<li>${h}</li>`).join('');
+
+    return `
+<div class="viewport-frame view-projects">
+  <div class="viewport-header">
+    <span class="v-header-title">┌── [ VIEW 3: SELECTED WORKS // PROJECT ${current.num} OF 0${projects.length} ] ──</span>
+    <span class="v-header-meta">[ USE TABS OR PREV/NEXT ] ──┐</span>
   </div>
-  <p><strong>Technologies:</strong> ${proj.tags.join(', ')}</p>
-  <div class="project-links">
-    ${proj.links.demo ? `<a href="${proj.links.demo}" target="_blank" rel="noopener" class="term-link">&gt; OPEN LIVE DEPLOYMENT</a>` : ''}
-    ${proj.links.github ? `<a href="${proj.links.github}" target="_blank" rel="noopener" class="term-link">&gt; BROWSE SOURCE CODE</a>` : ''}
+
+  <div class="viewport-body">
+    <!-- Sub-navigation Tabs -->
+    <div class="project-tabs-row" aria-label="Project Selector Tabs">
+      ${tabsHtml}
+    </div>
+
+    <!-- Active Project Card -->
+    <div class="project-active-display">
+      <div class="project-headline">
+        <div class="project-title-group">
+          <span class="project-num-tag">[PROJECT ${current.num}]</span>
+          <h2 class="project-title-text">${current.title}</h2>
+        </div>
+        <div class="project-meta-tags">
+          <span class="project-category-tag">${current.category}</span>
+          <span class="project-year-tag">${current.year}</span>
+        </div>
+      </div>
+
+      <div class="project-tag-strip">
+        <span class="tag-label">STACK:</span>
+        ${tagBadges}
+      </div>
+
+      <p class="project-description-paragraph">
+        ${current.description}
+      </p>
+
+      <div class="project-highlights-box">
+        <div class="highlights-heading">KEY ARCHITECTURAL HIGHLIGHTS:</div>
+        <ul class="highlights-bullet-list">
+          ${highlights}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Project Action Controls & Pager -->
+    <div class="project-action-strip">
+      <div class="project-links-left">
+        <a href="${current.links.github}" target="_blank" rel="noopener" class="term-btn term-link">
+          &gt; VIEW PROJECT REPOSITORY (GITHUB)
+        </a>
+      </div>
+
+      <div class="project-pager-right">
+        <button type="button" class="term-btn proj-nav-btn" data-nav="prev">[ &lt; PREV PROJECT ]</button>
+        <span class="pager-indicator">${this.activeProjectIndex + 1} / ${projects.length}</span>
+        <button type="button" class="term-btn proj-nav-btn" data-nav="next">[ NEXT PROJECT &gt; ]</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="viewport-footer">
+    <span>CLI Shortcut: Type "project 1", "project 2", "next", "prev", or click any tab above</span>
+    <span>REPO: AVAILABLE</span>
   </div>
 </div>`;
-    this.println(out);
   }
 
-  cmdExperience() {
-    let out = `<div class="cmd-box"><div class="box-title">CAREER TIMELINE & ROLES</div><div class="timeline-tree">`;
-
-    PORTFOLIO_DATA.experience.forEach((exp, idx) => {
+  renderExperience() {
+    let timelineHtml = PORTFOLIO_DATA.experience.map((exp, idx) => {
       const isLast = idx === PORTFOLIO_DATA.experience.length - 1;
       const branchChar = isLast ? '└──' : '├──';
       const pipeChar = isLast ? '   ' : '│  ';
 
-      out += `
-<div class="timeline-item">
-  <div class="timeline-header">${branchChar} [${exp.period}] <strong>${exp.role}</strong> @ ${exp.company}</div>
-  <div class="timeline-body">${pipeChar} ${exp.description}</div>
-</div>`;
-    });
-
-    out += `</div></div>`;
-    this.println(out);
-  }
-
-  cmdContact() {
-    let linksHtml = PORTFOLIO_DATA.socials.map(s => {
-      return `<div class="contact-row">
-        <span class="contact-name">${s.name.padEnd(14)}</span>
-        <span class="contact-arrow">&gt;&gt;</span>
-        <a href="${s.url}" target="_blank" rel="noopener" class="term-link">${s.handle}</a>
-      </div>`;
+      return `
+        <div class="history-item">
+          <div class="history-header">
+            <span class="history-branch">${branchChar}</span>
+            <span class="history-period">[ ${exp.period} ]</span>
+            <strong class="history-role">${exp.role}</strong>
+            <span class="history-company">@ ${exp.company}</span>
+          </div>
+          <div class="history-desc">
+            <span class="history-pipe">${pipeChar}</span>
+            <span class="history-text">${exp.description}</span>
+          </div>
+        </div>
+      `;
     }).join('');
 
-    let out = `
-<div class="cmd-box">
-  <div class="box-title">COMMUNICATION CHANNELS</div>
-  <div class="contact-matrix">
-    ${linksHtml}
+    return `
+<div class="viewport-frame view-experience">
+  <div class="viewport-header">
+    <span class="v-header-title">┌── [ VIEW 4: CAREER TIMELINE &amp; MILESTONES ] ──</span>
+    <span class="v-header-meta">[ EXPERIENCE TREE ] ──┐</span>
   </div>
-  <div class="contact-prompt-box">
-    <p>Feel free to reach out for collaborations, architecture discussions, or contract opportunities!</p>
-    <a href="mailto:contact@example.com" class="term-btn term-link">[ COMPOSE DIRECT TRANSMISSION (EMAIL) ]</a>
-  </div>
-</div>`;
-    this.println(out);
-  }
 
-  cmdResume() {
-    let out = `
-<div class="cmd-box">
-  <div class="box-title">CURRICULUM VITAE // RESUME</div>
-  <div class="resume-summary">
-    <p><strong>Candidate:</strong> ${PORTFOLIO_DATA.profile.handle} (${PORTFOLIO_DATA.profile.title})</p>
-    <p><strong>Specializations:</strong> Full-stack web architecture, real-time networking, WebGL/Canvas graphics, systems programming.</p>
-    <p><strong>Experience:</strong> 6+ years professional engineering across web platforms and backend services.</p>
+  <div class="viewport-body">
+    <div class="history-container">
+      <div class="history-tree">
+        ${timelineHtml}
+      </div>
+    </div>
+
+    <div class="view-actions-bar">
+      <button type="button" class="term-btn" data-cmd="resume">[ 6: VIEW RESUME SUMMARY ]</button>
+      <button type="button" class="term-btn" data-cmd="projects">[ 3: BROWSE PROJECTS ]</button>
+      <button type="button" class="term-btn" data-cmd="contact">[ 5: CONTACT DEVELOPER ]</button>
+      <button type="button" class="term-btn" data-cmd="dashboard">[ 0: DASHBOARD ]</button>
+    </div>
   </div>
-  <div class="box-actions">
-    <a href="mailto:contact@example.com?subject=Resume%20Request%20for%20${encodeURIComponent(PORTFOLIO_DATA.profile.handle)}" class="term-btn term-link">[ REQUEST FULL RESUME (EMAIL) ]</a>
-    <button class="term-btn term-clickable" data-run="skills">[ VIEW SKILLS MATRIX ]</button>
-    <button class="term-btn term-clickable" data-run="projects">[ VIEW PORTFOLIO PROJECTS ]</button>
+
+  <div class="viewport-footer">
+    <span>Engineering Experience: 6+ Years across Web, Systems &amp; Real-time Networking</span>
+    <span>STATUS: VERIFIED</span>
   </div>
 </div>`;
-    this.println(out);
   }
 
-  cmdTheme(themeName) {
-    if (!themeName) {
-      const cur = crt.themes[crt.currentThemeIndex];
-      this.println(`Current phosphor: <strong>${cur.toUpperCase()}</strong>. Available: green, amber, white, cyber. (e.g. <span class="term-clickable" data-run="theme amber">theme amber</span>)`, 'cmd-info');
-      return;
-    }
+  renderContact() {
+    let contactsHtml = PORTFOLIO_DATA.socials.map(s => {
+      return `
+        <div class="contact-row">
+          <span class="contact-channel">${s.name.padEnd(16)}</span>
+          <span class="contact-arrow">&gt;&gt;</span>
+          <a href="${s.url}" target="_blank" rel="noopener" class="term-link contact-val">${s.handle}</a>
+        </div>
+      `;
+    }).join('');
 
-    if (crt.setTheme(themeName)) {
-      audio.playKeyClick(400);
-      this.println(`Phosphor spectrum switched to: <strong>${themeName.toUpperCase()}</strong>`, 'cmd-success');
-    } else {
-      audio.playBell();
-      this.println(`Unknown theme "${this.escapeHtml(themeName)}". Options: green, amber, white, cyber`, 'cmd-error');
-    }
-  }
-
-  cmdCurvature(mode) {
-    if (!mode) {
-      const cur = crt.curvatureLevels[crt.currentCurvatureIndex];
-      this.println(`Current CRT Curvature: <strong>${cur.label}</strong>. Available: flat, subtle, authentic, heavy. (e.g. <span class="term-clickable" data-run="curvature authentic">curvature authentic</span>)`, 'cmd-info');
-      return;
-    }
-
-    if (crt.setCurvatureByName(mode)) {
-      audio.playKeyClick(300);
-      this.println(`CRT Barrel Distortion curvature set to: <strong>${mode.toUpperCase()}</strong>`, 'cmd-success');
-    } else {
-      audio.playBell();
-      this.println(`Invalid mode "${this.escapeHtml(mode)}". Options: flat, subtle, authentic, heavy`, 'cmd-error');
-    }
-  }
-
-  cmdLs() {
-    const files = Object.keys(this.virtualFiles);
-    let out = `<div class="file-list">`;
-    files.forEach(f => {
-      out += `<span class="file-item term-clickable" data-run="cat ${f}">-rw-r--r-- 1 guest guest 1024 ${f}</span>\n`;
-    });
-    out += `</div>\n<div class="cmd-hint">Click any file or type "cat &lt;filename&gt;" to inspect.</div>`;
-    this.println(out);
-  }
-
-  cmdCat(fileName) {
-    if (!fileName) {
-      this.println(`Usage: cat &lt;filename&gt; (e.g. <span class="term-clickable" data-run="cat bio.txt">cat bio.txt</span>)`, 'cmd-warning');
-      return;
-    }
-
-    const content = this.virtualFiles[fileName.toLowerCase()];
-    if (content) {
-      this.println(`<pre class="file-content">${this.escapeHtml(content)}</pre>`);
-    } else {
-      audio.playBell();
-      this.println(`cat: ${this.escapeHtml(fileName)}: No such file or directory`, 'cmd-error');
-    }
-  }
-
-  /**
-   * Boot sequence simulation with skip capability
-   */
-  runBootSequence() {
-    this.isBooting = true;
-    audio.playPowerOn();
-
-    const bootMessages = [
-      "PORTO-BIOS v3.20 (C) 1984-2026 RETRO SYSTEMS CORP.",
-      "CPU: MOTOROLA 68000 @ 12.0 MHz // BUS WIDTH: 16-BIT",
-      "CHECKING BASE RAM: 640 KB ........... OK",
-      "CHECKING EXTENDED VRAM: 512 KB ...... OK",
-      "PRIMARY DISPLAY: CRT CATHODE TUBE // BARREL DISTORTION ACTIVE",
-      "DETECTING SERIAL TTY0 ON PORT RS-232 @ 9600 BAUD ... ESTABLISHED",
-      "MOUNTING ROOT VIRTUAL FILESYSTEM (ROFS) .............. OK",
-      "LOADING SYSTEM PROFILE: EXU // READY."
-    ];
-
-    let step = 0;
-    const bootInterval = setInterval(() => {
-      if (step < bootMessages.length) {
-        this.println(bootMessages[step], 'boot-line');
-        audio.playKeyClick(150);
-        step++;
-      } else {
-        clearInterval(bootInterval);
-        this.finishBoot();
-      }
-    }, 120);
-
-    // Skip boot on click or key
-    const skipHandler = () => {
-      clearInterval(bootInterval);
-      window.removeEventListener('keydown', skipHandler);
-      this.outputContainer.removeEventListener('click', skipHandler);
-      if (this.isBooting) {
-        this.clear();
-        this.finishBoot();
-      }
-    };
-
-    window.addEventListener('keydown', skipHandler, { once: true });
-    this.outputContainer.addEventListener('click', skipHandler, { once: true });
-  }
-
-  finishBoot() {
-    this.isBooting = false;
-    this.println(`<pre class="ascii-banner">${PORTFOLIO_DATA.asciiLogo}</pre>`, 'banner-line');
-    this.println(`
-<div class="welcome-banner">
-  <div class="welcome-text">
-    Welcome to <strong>${PORTFOLIO_DATA.profile.handle}'s</strong> vintage interactive CRT terminal portfolio.
+    return `
+<div class="viewport-frame view-contact">
+  <div class="viewport-header">
+    <span class="v-header-title">┌── [ VIEW 5: COMMUNICATION CHANNELS // CONTACT ] ──</span>
+    <span class="v-header-meta">[ TRANSMISSION MATRIX ] ──┐</span>
   </div>
-  <div class="welcome-sub">
-    Use the <strong>quick buttons</strong> below or type commands directly into the terminal prompt.
-  </div>
-  <div class="welcome-cmd-hint">
-    Type <span class="term-clickable" data-run="help">help</span> for all commands, or try <span class="term-clickable" data-run="about">about</span>, <span class="term-clickable" data-run="skills">skills</span>, <span class="term-clickable" data-run="projects">projects</span>, or <span class="term-clickable" data-run="matrix">matrix</span>.
-  </div>
-</div>`, 'welcome-box');
 
-    this.bindClickableCommands();
-    if (this.inputElement) {
-      this.inputElement.focus();
-    }
+  <div class="viewport-body">
+    <div class="contact-box-grid">
+      <div class="contact-channels-panel">
+        <div class="contact-panel-title">ESTABLISHED EXTERNAL CHANNELS:</div>
+        <div class="contact-list">
+          ${contactsHtml}
+        </div>
+      </div>
+
+      <div class="contact-direct-panel">
+        <div class="contact-panel-title">DIRECT INQUIRIES &amp; CONTRACTS:</div>
+        <p class="contact-note">
+          Open for contract engagements, systems consulting, full-stack architecture roles, and creative web experiments.
+        </p>
+        <div class="contact-btn-wrapper">
+          <a href="mailto:contact@example.com" class="term-btn term-link direct-mail-btn">
+            [ COMPOSE DIRECT EMAIL TRANSMISSION ]
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="view-actions-bar">
+      <button type="button" class="term-btn" data-cmd="projects">[ 3: REVIEW PROJECTS ]</button>
+      <button type="button" class="term-btn" data-cmd="skills">[ 2: REVIEW SKILLS ]</button>
+      <button type="button" class="term-btn" data-cmd="dashboard">[ 0: DASHBOARD ]</button>
+    </div>
+  </div>
+
+  <div class="viewport-footer">
+    <span>Encryption: Standard TLS // Direct response turnaround: &lt; 24h</span>
+    <span>TTY: READY</span>
+  </div>
+</div>`;
+  }
+
+  renderResume() {
+    const p = PORTFOLIO_DATA.profile;
+
+    return `
+<div class="viewport-frame view-resume">
+  <div class="viewport-header">
+    <span class="v-header-title">┌── [ VIEW 6: CURRICULUM VITAE // RESUME ] ──</span>
+    <span class="v-header-meta">[ CANDIDATE CREDENTIALS ] ──┐</span>
+  </div>
+
+  <div class="viewport-body">
+    <div class="resume-hero">
+      <div class="resume-candidate-name">${p.handle.toUpperCase()} // ${p.title}</div>
+      <div class="resume-meta">Location: ${p.location} | Status: ${p.status}</div>
+    </div>
+
+    <div class="resume-sections-container">
+      <div class="resume-section">
+        <div class="resume-sec-title">=== CORE SPECIALIZATIONS ===</div>
+        <p class="resume-sec-text">Full-stack web architecture, real-time networking, WebGL/Canvas graphics, systems programming in Rust &amp; Go, Linux devops.</p>
+      </div>
+      <div class="resume-section">
+        <div class="resume-sec-title">=== SUMMARY OF EXPERIENCE ===</div>
+        <p class="resume-sec-text">6+ years designing scalable client-server applications, building high-framerate browser visualizers, and implementing low-latency protocols.</p>
+      </div>
+    </div>
+
+    <div class="resume-actions-group">
+      <a href="mailto:contact@example.com?subject=Resume%20Request%20for%20${encodeURIComponent(p.handle)}" class="term-btn term-link">
+        [ REQUEST OFFICIAL PDF RESUME VIA EMAIL ]
+      </a>
+      <button type="button" class="term-btn" data-cmd="skills">[ 2: VIEW SKILLS MATRIX ]</button>
+      <button type="button" class="term-btn" data-cmd="projects">[ 3: VIEW PROJECTS ]</button>
+      <button type="button" class="term-btn" data-cmd="dashboard">[ 0: DASHBOARD ]</button>
+    </div>
+  </div>
+
+  <div class="viewport-footer">
+    <span>Full verifiable resume documentation available upon direct transmission request</span>
+    <span>FORMAT: ASCII/PDF</span>
+  </div>
+</div>`;
+  }
+
+  renderHelp() {
+    let rowsHtml = this.commandList.map(c => `
+      <tr class="help-row">
+        <td class="help-key-cell">
+          <button type="button" class="help-cmd-pill" data-run="${c.cmd}">
+            ${c.cmd}
+          </button>
+        </td>
+        <td class="help-num-cell">${c.num ? `[ ${c.num} ]` : ''}</td>
+        <td class="help-desc-cell">${c.desc}</td>
+      </tr>
+    `).join('');
+
+    return `
+<div class="viewport-frame view-help">
+  <div class="viewport-header">
+    <span class="v-header-title">┌── [ VIEW 9: COMMAND REFERENCE &amp; SHORTCUTS ] ──</span>
+    <span class="v-header-meta">[ CLICK COMMAND TO RUN ] ──┐</span>
+  </div>
+
+  <div class="viewport-body">
+    <div class="help-table-container">
+      <table class="help-table">
+        <thead>
+          <tr>
+            <th>COMMAND</th>
+            <th>KEY</th>
+            <th>DESCRIPTION / ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="view-actions-bar">
+      <button type="button" class="term-btn" data-cmd="dashboard">[ 0: RETURN TO DASHBOARD ]</button>
+      <button type="button" class="term-btn" data-cmd="matrix">[ 7: MATRIX SCREENSAVER ]</button>
+      <button type="button" class="term-btn" data-cmd="fire">[ 8: ASCII FIRE DEMO ]</button>
+    </div>
+  </div>
+
+  <div class="viewport-footer">
+    <span>Tip: You can click any command pill above, type it in the prompt, or press Tab to auto-complete</span>
+    <span>HELP: COMPLETE</span>
+  </div>
+</div>`;
   }
 }
 
