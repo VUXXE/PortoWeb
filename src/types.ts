@@ -74,6 +74,7 @@ export interface PortfolioData {
   projects: Project[];
   experience: ExperienceItem[];
   asciiLogo: string;
+  vectorLogo?: string;
 }
 
 export interface CommandDefinition {

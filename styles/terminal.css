@@ -276,6 +276,27 @@
   padding: calc(2px * var(--terminal-scale, 2.0)) 0;
 }
 
+.cli-brand-banner {
+  display: flex;
+  align-items: center;
+  margin: calc(4px * var(--terminal-scale, 2.0)) 0;
+}
+
+.cli-vector-logo {
+  display: block;
+  width: calc(180px * var(--terminal-scale, 2.0));
+  max-width: 100%;
+  height: auto;
+  color: var(--crt-bright);
+  filter: drop-shadow(0 0 calc(2px * var(--terminal-scale, 2.0)) var(--crt-glow))
+          drop-shadow(0 0 calc(6px * var(--terminal-scale, 2.0)) var(--crt-glow-soft));
+  transition: all 0.2s ease;
+}
+
+.cli-vector-logo path {
+  fill: currentColor;
+}
+
 .cli-ascii-logo {
   font-family: inherit;
   color: var(--crt-bright);

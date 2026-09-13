@@ -36,6 +36,7 @@ export class Terminal {
       `${s.name.padEnd(12)} : ${s.handle} (${s.url})`
     ).join('\n'),
     'resume.txt': `${PORTFOLIO_DATA.profile.handle.toUpperCase()} - CURRICULUM VITAE\nTitle: ${PORTFOLIO_DATA.profile.title}\nLocation: ${PORTFOLIO_DATA.profile.location}\n\nType "resume" for full interactive layout.`,
+    'logo.svg': PORTFOLIO_DATA.vectorLogo || '',
     'flag.txt': 'CTF{cRt_b4rr3l_d1st0rt10n_1984} // You found the secret terminal flag!'
   };
 
@@ -429,7 +430,9 @@ export class Terminal {
   private printBootBanner(): void {
     this.appendOutput(`
       <div class="cli-banner-container">
-        <pre class="cli-ascii-logo">${PORTFOLIO_DATA.asciiLogo.trim()}</pre>
+        <div class="cli-brand-banner">
+          ${PORTFOLIO_DATA.vectorLogo || `<pre class="cli-ascii-logo">${PORTFOLIO_DATA.asciiLogo.trim()}</pre>`}
+        </div>
         <div class="cli-divider">================================================================================</div>
         <div class="cli-sys-info">
           <strong>PORTO-OS</strong> (UNIX System V Release 4 // Model 84-CRT Terminal)<br>
@@ -457,7 +460,9 @@ export class Terminal {
   private cmdLogo(): void {
     this.appendOutput(`
       <div class="cli-banner-container">
-        <pre class="cli-ascii-logo">${PORTFOLIO_DATA.asciiLogo.trim()}</pre>
+        <div class="cli-brand-banner">
+          ${PORTFOLIO_DATA.vectorLogo || `<pre class="cli-ascii-logo">${PORTFOLIO_DATA.asciiLogo.trim()}</pre>`}
+        </div>
       </div>
     `);
   }
@@ -718,6 +723,17 @@ export class Terminal {
 
     const content = this.virtualFiles[filename.toLowerCase()];
     if (content !== undefined) {
+      if (filename.toLowerCase().endsWith('.svg')) {
+        this.appendOutput(`
+          <div class="cli-file-display">
+            <div class="cli-file-header">::: ${filename} (VECTOR GRAPHIC) :::</div>
+            <div class="cli-brand-banner">
+              ${content}
+            </div>
+          </div>
+        `);
+        return;
+      }
       this.appendOutput(`
         <div class="cli-file-display">
           <div class="cli-file-header">::: ${filename} :::</div>
