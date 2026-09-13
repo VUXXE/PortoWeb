@@ -5,40 +5,40 @@
  */
 
 import { audio } from './audio.js';
+import type { CurvaturePreset, PhosphorTheme, FontMode } from './types.js';
 
 export class CRTEngine {
-  constructor() {
-    this.screenElement = null;
-    this.contentElement = null;
-    this.barrelFeImage = null;
-    this.barrelDisplacement = null;
-    this.powerLed = null;
+  private screenElement: HTMLElement | null = null;
+  private contentElement: HTMLElement | null = null;
+  private barrelFeImage: SVGElement | null = null;
+  private barrelDisplacement: SVGElement | null = null;
+  private powerLed: HTMLElement | null = null;
 
-    // Curvature presets: [id, label, k-factor, svg-scale, border-radius-x, border-radius-y]
-    this.curvatureLevels = [
-      { id: 'flat', label: 'FLAT', k: 0, scale: 0, brX: 10, brY: 10 },
-      { id: 'subtle', label: 'SUBTLE', k: 0.25, scale: 5, brX: 20, brY: 16 },
-      { id: 'authentic', label: 'AUTHENTIC', k: 0.45, scale: 8, brX: 36, brY: 26 },
-      { id: 'heavy', label: 'HEAVY', k: 0.70, scale: 12, brX: 50, brY: 36 }
-    ];
-    this.currentCurvatureIndex = 2; // Default: Authentic
+  // Curvature presets: [id, label, k-factor, svg-scale, border-radius-x, border-radius-y]
+  public readonly curvatureLevels: CurvaturePreset[] = [
+    { id: 'flat', label: 'FLAT', k: 0, scale: 0, brX: 10, brY: 10 },
+    { id: 'subtle', label: 'SUBTLE', k: 0.25, scale: 5, brX: 20, brY: 16 },
+    { id: 'authentic', label: 'AUTHENTIC', k: 0.45, scale: 8, brX: 36, brY: 26 },
+    { id: 'heavy', label: 'HEAVY', k: 0.70, scale: 12, brX: 50, brY: 36 }
+  ];
+  public currentCurvatureIndex: number = 2; // Default: Authentic
 
-    this.themes = ['green', 'amber', 'white', 'cyber'];
-    this.currentThemeIndex = 0; // Default: Green Phosphor
+  public readonly themes: PhosphorTheme[] = ['green', 'amber', 'white', 'cyber'];
+  public currentThemeIndex: number = 0; // Default: Green Phosphor
 
-    this.fonts = ['pixel', 'clean'];
-    this.currentFontIndex = 0; // Default: Pixel 80s (DEC VT220 / VT323)
+  public readonly fonts: FontMode[] = ['pixel', 'clean'];
+  public currentFontIndex: number = 0; // Default: Pixel 80s (DEC VT220 / VT323)
 
-    this.isPoweredOn = true;
-    this.scanlinesEnabled = false; // Disabled by default for maximum readability & a11y
-    this.flickerEnabled = false;
-  }
+  public isPoweredOn: boolean = true;
+  public scanlinesEnabled: boolean = false; // Disabled by default for maximum readability & a11y
 
-  init() {
+  constructor() {}
+
+  public init(): void {
     this.screenElement = document.getElementById('crt-screen');
     this.contentElement = document.getElementById('crt-content');
-    this.barrelFeImage = document.getElementById('barrel-map-img');
-    this.barrelDisplacement = document.getElementById('barrel-displacement');
+    this.barrelFeImage = document.getElementById('barrel-map-img') as unknown as SVGElement;
+    this.barrelDisplacement = document.getElementById('barrel-displacement') as unknown as SVGElement;
     this.powerLed = document.getElementById('power-led');
 
     // Load saved preferences
@@ -55,9 +55,9 @@ export class CRTEngine {
     this.bindHardwareControls();
   }
 
-  loadPreferences() {
+  private loadPreferences(): void {
     try {
-      const savedTheme = localStorage.getItem('portoweb_crt_theme');
+      const savedTheme = localStorage.getItem('portoweb_crt_theme') as PhosphorTheme;
       if (savedTheme && this.themes.includes(savedTheme)) {
         this.currentThemeIndex = this.themes.indexOf(savedTheme);
       }
@@ -70,7 +70,7 @@ export class CRTEngine {
         }
       }
 
-      const savedFont = localStorage.getItem('portoweb_crt_font');
+      const savedFont = localStorage.getItem('portoweb_crt_font') as FontMode;
       if (savedFont && this.fonts.includes(savedFont)) {
         this.currentFontIndex = this.fonts.indexOf(savedFont);
       }
@@ -84,7 +84,7 @@ export class CRTEngine {
     }
   }
 
-  savePreferences() {
+  private savePreferences(): void {
     try {
       localStorage.setItem('portoweb_crt_theme', this.themes[this.currentThemeIndex]);
       localStorage.setItem('portoweb_crt_curvature', String(this.currentCurvatureIndex));
@@ -101,7 +101,7 @@ export class CRTEngine {
    * that smoothly drops displacement to identically 0 at all screen boundaries (u, v = ±1.0).
    * This permanently eliminates edge wrapping, bottom ghosting, and line severing.
    */
-  generateBarrelMap() {
+  public generateBarrelMap(): void {
     if (!this.barrelFeImage) return;
 
     const size = 512;
@@ -109,6 +109,7 @@ export class CRTEngine {
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     const imgData = ctx.createImageData(size, size);
     const data = imgData.data;
 
@@ -122,7 +123,7 @@ export class CRTEngine {
     // and smoothly drops displacement to identically 0 at outer edges (u, v = ±1.0)
     // using smooth Hermite interpolation. This guarantees zero out-of-bounds sampling,
     // zero edge wrapping, zero bottom ghosting, and unbroken continuous borders.
-    const edgeWeight = (val) => {
+    const edgeWeight = (val: number): number => {
       const a = Math.abs(val);
       if (a <= 0.65) return 1.0;
       if (a >= 0.98) return 0.0;
@@ -178,7 +179,7 @@ export class CRTEngine {
   /**
    * Apply current barrel curvature and convex geometry
    */
-  applyCurvature() {
+  public applyCurvature(): void {
     const config = this.curvatureLevels[this.currentCurvatureIndex];
 
     if (this.barrelDisplacement) {
@@ -210,7 +211,7 @@ export class CRTEngine {
     this.savePreferences();
   }
 
-  cycleCurvature() {
+  public cycleCurvature(): CurvaturePreset {
     this.currentCurvatureIndex = (this.currentCurvatureIndex + 1) % this.curvatureLevels.length;
     this.generateBarrelMap();
     this.applyCurvature();
@@ -218,7 +219,7 @@ export class CRTEngine {
     return this.curvatureLevels[this.currentCurvatureIndex];
   }
 
-  setCurvatureByName(name) {
+  public setCurvatureByName(name: string): boolean {
     const idx = this.curvatureLevels.findIndex(c => c.id === name.toLowerCase());
     if (idx !== -1) {
       this.currentCurvatureIndex = idx;
@@ -229,18 +230,15 @@ export class CRTEngine {
     return false;
   }
 
-  /**
-   * Cycle phosphor themes: P1 Green -> P3 Amber -> P4 White -> Cyberpunk
-   */
-  cycleTheme() {
+  public cycleTheme(): PhosphorTheme {
     this.currentThemeIndex = (this.currentThemeIndex + 1) % this.themes.length;
     this.applyTheme();
     audio.playKeyClick(400);
     return this.themes[this.currentThemeIndex];
   }
 
-  setTheme(themeName) {
-    const idx = this.themes.indexOf(themeName.toLowerCase());
+  public setTheme(themeName: string): boolean {
+    const idx = this.themes.indexOf(themeName.toLowerCase() as PhosphorTheme);
     if (idx !== -1) {
       this.currentThemeIndex = idx;
       this.applyTheme();
@@ -249,7 +247,7 @@ export class CRTEngine {
     return false;
   }
 
-  applyTheme() {
+  public applyTheme(): void {
     const theme = this.themes[this.currentThemeIndex];
     document.body.classList.remove('theme-green', 'theme-amber', 'theme-white', 'theme-cyber');
     document.body.classList.add(`theme-${theme}`);
@@ -262,18 +260,15 @@ export class CRTEngine {
     this.savePreferences();
   }
 
-  /**
-   * Cycle between authentic 1980s DEC VT220 pixel font and modern clean monospace
-   */
-  cycleFont() {
+  public cycleFont(): FontMode {
     this.currentFontIndex = (this.currentFontIndex + 1) % this.fonts.length;
     this.applyFont();
     audio.playKeyClick(350);
     return this.fonts[this.currentFontIndex];
   }
 
-  setFont(name) {
-    const idx = this.fonts.indexOf(name.toLowerCase());
+  public setFont(name: string): boolean {
+    const idx = this.fonts.indexOf(name.toLowerCase() as FontMode);
     if (idx !== -1) {
       this.currentFontIndex = idx;
       this.applyFont();
@@ -283,7 +278,7 @@ export class CRTEngine {
     return false;
   }
 
-  applyFont() {
+  public applyFont(): void {
     const font = this.fonts[this.currentFontIndex];
     document.body.classList.remove('font-pixel', 'font-clean');
     document.body.classList.add(`font-${font}`);
@@ -296,17 +291,14 @@ export class CRTEngine {
     this.savePreferences();
   }
 
-  /**
-   * Toggle scanlines on/off
-   */
-  toggleScanlines() {
+  public toggleScanlines(): boolean {
     this.scanlinesEnabled = !this.scanlinesEnabled;
     this.applyScanlines();
     audio.playKeyClick(250);
     return this.scanlinesEnabled;
   }
 
-  applyScanlines() {
+  public applyScanlines(): void {
     if (!this.screenElement) return;
     if (this.scanlinesEnabled) {
       this.screenElement.classList.add('scanlines-active');
@@ -327,17 +319,13 @@ export class CRTEngine {
     this.savePreferences();
   }
 
-  /**
-   * Classic CRT magnetic degauss effect
-   */
-  degauss() {
+  public degauss(): void {
     if (!this.isPoweredOn || !this.screenElement) return;
 
     audio.playDegauss();
     
-    // Add violent electromagnetic coil vibration and chromatic flash
     this.screenElement.classList.remove('is-degaussing');
-    void this.screenElement.offsetWidth; // Force reflow
+    void this.screenElement.offsetWidth;
     this.screenElement.classList.add('is-degaussing');
 
     setTimeout(() => {
@@ -347,10 +335,7 @@ export class CRTEngine {
     }, 1200);
   }
 
-  /**
-   * Toggle CRT Power Switch with classic horizontal-line-and-dot collapse
-   */
-  togglePower() {
+  public togglePower(): boolean {
     this.isPoweredOn = !this.isPoweredOn;
     audio.playPowerSwitch();
 
@@ -363,7 +348,9 @@ export class CRTEngine {
           this.powerLed.classList.add('led-active');
         }
         setTimeout(() => {
-          this.screenElement.classList.remove('crt-power-on');
+          if (this.screenElement) {
+            this.screenElement.classList.remove('crt-power-on');
+          }
         }, 1000);
       } else {
         this.screenElement.classList.add('crt-power-off');
@@ -376,8 +363,7 @@ export class CRTEngine {
     return this.isPoweredOn;
   }
 
-  bindHardwareControls() {
-    // Bezel hardware buttons
+  private bindHardwareControls(): void {
     const btnPower = document.getElementById('btn-power');
     if (btnPower) {
       btnPower.addEventListener('click', () => this.togglePower());
@@ -418,7 +404,6 @@ export class CRTEngine {
           audioLabel.textContent = muted ? 'MUTED' : 'ON';
         }
       });
-      // Initial state
       btnAudio.classList.toggle('control-active', !audio.isMuted());
       const audioLabel = document.getElementById('status-audio');
       if (audioLabel) {

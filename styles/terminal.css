@@ -1,6 +1,8 @@
-/* Curses TUI Terminal Layout, Viewport Windows & Interactive CLI */
+/* Retro CRT Pure Interactive CLI Shell Stylesheet */
 
-/* CRT Header Bar */
+/* =========================================
+   1. CRT HEADER HUD & HARDWARE CONTROLS
+   ========================================= */
 .crt-header-bar {
   display: flex;
   align-items: center;
@@ -12,6 +14,7 @@
   letter-spacing: 0.8px;
   color: var(--crt-dim);
   user-select: none;
+  flex-shrink: 0;
 }
 
 .header-meta {
@@ -24,7 +27,6 @@
   color: var(--crt-color);
 }
 
-/* Header Controls */
 .header-controls {
   display: flex;
   align-items: center;
@@ -47,6 +49,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  min-height: 28px;
 }
 
 .hud-btn:hover {
@@ -85,899 +88,485 @@
   box-shadow: 0 0 6px #ef4444;
 }
 
-/* Quick Navigation Command Chips Bar */
+/* Quick Navigation Command Chips Bar in HUD */
 .quick-cmd-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 8px;
+  gap: 6px;
+  margin-bottom: 6px;
   padding-bottom: 6px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
 }
 
-.quick-cmd-btn {
-  background: transparent;
+.hud-cmd-pill {
+  background: rgba(0, 0, 0, 0.35);
   color: var(--crt-color);
   border: 1px solid var(--crt-dim);
-  padding: 3px 8px;
+  padding: 2px 8px;
   font-family: inherit;
-  font-size: 15px;
+  font-size: 14px;
   letter-spacing: 0.6px;
   border-radius: 2px;
   cursor: pointer;
   transition: all 0.1s ease;
   user-select: none;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
 }
 
-.quick-cmd-btn:hover {
+.hud-cmd-pill:hover {
   background: var(--crt-color);
   color: var(--crt-bg);
+  border-color: var(--crt-bright);
   box-shadow: 0 0 8px var(--crt-glow);
   text-shadow: none;
 }
 
-.quick-cmd-btn:focus-visible {
+.hud-cmd-pill:focus-visible {
   outline: 2px solid var(--crt-bright);
-  outline-offset: 2px;
-  box-shadow: 0 0 10px var(--crt-glow);
+  outline-offset: 1px;
 }
 
-.quick-cmd-btn.active-tab {
-  background: var(--crt-color);
-  color: var(--crt-bg);
-  font-weight: bold;
-  border-color: var(--crt-bright);
-  box-shadow: 0 0 10px var(--crt-glow);
-  text-shadow: none;
-}
-
-/* Main Curses TUI Viewport Window (Strictly Non-Scrollable) */
-.term-viewport {
+/* =========================================
+   2. PURE CLI TERMINAL WINDOW & BUFFER
+   ========================================= */
+.cli-terminal-window {
   flex: 1;
   min-height: 0;
   width: 100%;
-  overflow: hidden; /* STRICTLY ZERO SCROLLBARS */
   display: flex;
   flex-direction: column;
-}
-
-/* Retro Frame Structure */
-.viewport-frame {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--crt-color);
+  overflow: hidden; /* STRICTLY NON-SCROLLABLE AT CONTAINER LEVEL */
   background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--crt-color);
+  border-radius: 2px;
   box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.6);
-  border-radius: 2px;
-}
-
-.viewport-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(51, 255, 51, 0.08);
-  border-bottom: 1px solid var(--crt-color);
-  padding: 3px 12px;
-  font-size: 15px;
-  letter-spacing: 1px;
-  color: var(--crt-bright);
-  user-select: none;
-}
-
-.viewport-body {
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  padding: 8px 14px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.viewport-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 1px solid var(--crt-dim);
-  padding: 3px 12px;
-  font-size: 13px;
-  color: var(--crt-dim);
-  letter-spacing: 0.5px;
-  user-select: none;
-}
-
-/* Interactive Buttons and Links */
-.term-btn {
-  background: rgba(0, 0, 0, 0.5);
-  color: var(--crt-color);
-  border: 1px solid var(--crt-color);
-  padding: 4px 10px;
-  font-family: inherit;
-  font-size: 15px;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.12s ease;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-}
-
-.term-btn:hover {
-  background: var(--crt-color);
-  color: var(--crt-bg);
-  box-shadow: 0 0 10px var(--crt-glow);
-  text-shadow: none;
-}
-
-.term-btn:focus-visible {
-  outline: 2px solid var(--crt-bright);
-  outline-offset: 2px;
-  box-shadow: 0 0 10px var(--crt-glow);
-}
-
-.term-link {
-  color: var(--crt-color);
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.1s ease;
-}
-
-.term-link:hover {
-  color: var(--crt-bright);
-  text-decoration: underline;
-  text-shadow: 0 0 8px var(--crt-glow);
-}
-
-.term-link:focus-visible {
-  outline: 2px solid var(--crt-bright);
-  outline-offset: 2px;
-  box-shadow: 0 0 10px var(--crt-glow);
-}
-
-.view-actions-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding-top: 6px;
-  border-top: 1px solid var(--crt-dim);
-}
-
-/* =========================================
-   VIEW 0: DASHBOARD
-   ========================================= */
-.dash-top-section {
-  margin-bottom: 6px;
-}
-
-.dash-hero-box {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  border: 1px solid var(--crt-dim);
-  padding: 6px 12px;
-  background: rgba(0, 0, 0, 0.25);
-}
-
-.dash-avatar-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.retro-user-badge {
-  border: 1px solid var(--crt-bright);
-  padding: 3px 8px;
-  text-align: center;
-  background: rgba(51, 255, 51, 0.08);
-}
-
-.badge-role {
-  display: block;
-  font-size: 11px;
-  color: var(--crt-dim);
-  letter-spacing: 1px;
-}
-
-.badge-name {
-  display: block;
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--crt-bright);
-  letter-spacing: 1.5px;
-}
-
-.retro-status-indicator {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  color: var(--crt-bright);
-}
-
-.status-pulse-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--crt-bright);
-  box-shadow: 0 0 6px var(--crt-bright);
-  animation: pulse-glow 1.4s infinite alternate;
-}
-
-@keyframes pulse-glow {
-  from { opacity: 0.5; }
-  to { opacity: 1; }
-}
-
-.dash-profile-info {
-  flex: 1;
-}
-
-.dash-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: var(--crt-bright);
-  margin-bottom: 2px;
-  letter-spacing: 1px;
-}
-
-.dash-loc {
-  font-size: 14px;
-  color: var(--crt-dim);
-  margin-bottom: 4px;
-}
-
-.dash-loc strong {
-  color: var(--crt-color);
-}
-
-.dash-bio-summary {
-  font-size: 15px;
-  color: var(--crt-color);
-  line-height: 1.3;
-}
-
-.dash-menu-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 4px;
-}
-
-.dash-menu-title {
-  font-size: 13px;
-  color: var(--crt-dim);
-  letter-spacing: 1px;
-  margin-bottom: 6px;
-}
-
-.dash-actions-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.dash-action-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 6px 10px;
-  min-height: 52px;
-  text-align: left;
-}
-
-.dash-action-btn .action-num {
-  font-size: 14px;
-  font-weight: bold;
-  color: var(--crt-bright);
-}
-
-.dash-action-btn .action-label {
-  font-size: 15px;
-  font-weight: bold;
-  color: var(--crt-color);
-}
-
-.dash-action-btn .action-desc {
-  font-size: 12px;
-  color: var(--crt-dim);
-}
-
-.dash-action-btn:hover .action-label,
-.dash-action-btn:hover .action-num,
-.dash-action-btn:hover .action-desc {
-  color: var(--crt-bg);
-}
-
-/* =========================================
-   VIEW 1: ABOUT
-   ========================================= */
-.about-card-hero {
-  border-bottom: 1px solid var(--crt-dim);
-  padding-bottom: 6px;
-  margin-bottom: 8px;
-}
-
-.about-handle-line {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 4px;
-}
-
-.about-handle {
-  font-size: 24px;
-  font-weight: bold;
-  color: var(--crt-bright);
-  letter-spacing: 1.5px;
-}
-
-.about-title-tag {
-  font-size: 16px;
-  color: var(--crt-color);
-}
-
-.about-status-pill {
-  border: 1px solid var(--crt-color);
-  padding: 1px 6px;
-  font-size: 12px;
-  color: var(--crt-bright);
-  border-radius: 2px;
-}
-
-.about-meta-row {
-  display: flex;
-  gap: 14px;
-  font-size: 14px;
-  color: var(--crt-dim);
-  flex-wrap: wrap;
-}
-
-.about-meta-row strong {
-  color: var(--crt-color);
-}
-
-.about-content-box {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6px;
-}
-
-.content-box-heading {
-  font-size: 14px;
-  font-weight: bold;
-  color: var(--crt-bright);
-  letter-spacing: 1px;
-}
-
-.about-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 16px;
-  line-height: 1.35;
-}
-
-.about-point::before {
-  content: ">> ";
-  color: var(--crt-bright);
-  font-weight: bold;
-}
-
-/* =========================================
-   VIEW 2: SKILLS
-   ========================================= */
-.skills-grid-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.skills-col {
-  border: 1px solid var(--crt-dim);
-  padding: 6px 8px;
-  background: rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-}
-
-.skills-col-header {
-  font-size: 14px;
-  font-weight: bold;
-  color: var(--crt-bright);
-  border-bottom: 1px solid var(--crt-dim);
-  padding-bottom: 3px;
-  margin-bottom: 4px;
-  letter-spacing: 0.8px;
-}
-
-.skills-col-body {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-  justify-content: space-around;
-}
-
-.skill-entry {
-  font-size: 14px;
-  line-height: 1.25;
-}
-
-.skill-line-primary {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.skill-badge {
-  font-weight: bold;
-  color: var(--crt-bright);
-  font-size: 12px;
-}
-
-.skill-name {
-  color: var(--crt-color);
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.skill-exp {
-  color: var(--crt-dim);
-  font-size: 12px;
-}
-
-.skill-focus-line {
-  color: var(--crt-dim);
-  font-size: 12px;
-  padding-left: 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* =========================================
-   VIEW 3: PROJECTS
-   ========================================= */
-.project-tabs-row {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 6px;
-  flex-wrap: wrap;
-}
-
-.project-tab-btn {
-  background: rgba(0, 0, 0, 0.4);
-  color: var(--crt-color);
-  border: 1px solid var(--crt-dim);
-  padding: 3px 8px;
-  font-family: inherit;
-  font-size: 14px;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.1s ease;
-}
-
-.project-tab-btn:hover {
-  background: var(--crt-color);
-  color: var(--crt-bg);
-  box-shadow: 0 0 8px var(--crt-glow);
-  text-shadow: none;
-}
-
-.project-tab-btn:focus-visible {
-  outline: 2px solid var(--crt-bright);
-  outline-offset: 2px;
-}
-
-.project-tab-btn.active-tab {
-  background: var(--crt-color);
-  color: var(--crt-bg);
-  font-weight: bold;
-  border-color: var(--crt-bright);
-  box-shadow: 0 0 8px var(--crt-glow);
-  text-shadow: none;
-}
-
-.project-active-display {
-  border: 1px solid var(--crt-dim);
   padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.3);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 
-.project-headline {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.project-title-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.project-num-tag {
-  color: var(--crt-dim);
-  font-size: 15px;
-  font-weight: bold;
-}
-
-.project-title-text {
-  font-size: 19px;
-  font-weight: bold;
-  color: var(--crt-bright);
-  margin: 0;
-  letter-spacing: 0.8px;
-}
-
-.project-meta-tags {
-  display: flex;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--crt-dim);
-}
-
-.project-tag-strip {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 4px;
-}
-
-.tag-label {
-  font-size: 12px;
-  color: var(--crt-dim);
-  font-weight: bold;
-}
-
-.tag-badge {
-  border: 1px solid var(--crt-dim);
-  background: rgba(255, 255, 255, 0.05);
-  padding: 0 5px;
-  font-size: 12px;
-  color: var(--crt-color);
-  border-radius: 2px;
-}
-
-.project-description-paragraph {
-  font-size: 15px;
-  line-height: 1.35;
-  margin-bottom: 4px;
-}
-
-.project-highlights-box {
-  font-size: 14px;
-  line-height: 1.3;
-}
-
-.highlights-heading {
-  font-size: 13px;
-  font-weight: bold;
-  color: var(--crt-bright);
-  margin-bottom: 2px;
-}
-
-.highlights-bullet-list {
-  list-style: none;
-  padding-left: 6px;
-}
-
-.highlights-bullet-list li::before {
-  content: "• ";
-  color: var(--crt-bright);
-  margin-right: 4px;
-}
-
-.project-action-strip {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 4px;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.project-pager-right {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.pager-indicator {
-  font-size: 14px;
-  color: var(--crt-bright);
-  font-weight: bold;
-  min-width: 40px;
-  text-align: center;
-}
-
-/* =========================================
-   VIEW 4: HISTORY
-   ========================================= */
-.history-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.history-tree {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.history-item {
-  font-size: 15px;
-  line-height: 1.35;
-}
-
-.history-header {
-  color: var(--crt-bright);
-}
-
-.history-period {
-  color: var(--crt-dim);
-  margin-right: 4px;
-}
-
-.history-company {
-  color: var(--crt-color);
-}
-
-.history-desc {
-  color: var(--crt-dim);
-  font-size: 14px;
-  padding-left: 2px;
-}
-
-/* =========================================
-   VIEW 5: CONTACT
-   ========================================= */
-.contact-box-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  flex: 1;
-  align-items: center;
-}
-
-.contact-channels-panel,
-.contact-direct-panel {
-  border: 1px solid var(--crt-dim);
-  padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.25);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.contact-panel-title {
-  font-size: 14px;
-  font-weight: bold;
-  color: var(--crt-bright);
-  margin-bottom: 6px;
-  letter-spacing: 0.8px;
-  border-bottom: 1px solid var(--crt-dim);
-  padding-bottom: 3px;
-}
-
-.contact-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 16px;
-  margin-bottom: 4px;
-}
-
-.contact-channel {
-  color: var(--crt-bright);
-  font-weight: bold;
-}
-
-.contact-arrow {
-  color: var(--crt-dim);
-}
-
-.contact-note {
-  font-size: 15px;
-  line-height: 1.35;
-  color: var(--crt-color);
-}
-
-.contact-btn-wrapper {
-  margin-top: 6px;
-}
-
-/* =========================================
-   VIEW 6: RESUME
-   ========================================= */
-.resume-hero {
-  border-bottom: 1px solid var(--crt-dim);
-  padding-bottom: 4px;
-  margin-bottom: 6px;
-}
-
-.resume-candidate-name {
-  font-size: 20px;
-  font-weight: bold;
-  color: var(--crt-bright);
-}
-
-.resume-meta {
-  font-size: 14px;
-  color: var(--crt-dim);
-}
-
-.resume-sections-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-}
-
-.resume-section {
-  border: 1px solid var(--crt-dim);
-  padding: 6px 10px;
-  background: rgba(0, 0, 0, 0.2);
-}
-
-.resume-sec-title {
-  font-size: 14px;
-  font-weight: bold;
-  color: var(--crt-bright);
-  margin-bottom: 2px;
-}
-
-.resume-sec-text {
-  font-size: 15px;
-  line-height: 1.3;
-}
-
-.resume-actions-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-/* =========================================
-   VIEW 9: HELP
-   ========================================= */
-.help-table-container {
+/* Output Buffer: Streams downward, auto-scrolls to prompt, NO visible scrollbars */
+.cli-output-buffer {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 2px;
+  font-size: 15px;
+  line-height: 1.4;
 }
 
-.help-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
+.cli-output-buffer::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
-.help-table th {
-  text-align: left;
-  border-bottom: 1px solid var(--crt-dim);
-  padding: 2px 6px;
+.cli-output-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* CLI Text Formatting */
+.cli-row {
+  word-break: break-word;
+}
+
+.cli-prompt-echo {
+  color: var(--crt-color);
+  padding: 2px 0;
+}
+
+.cli-prompt-echo strong {
   color: var(--crt-bright);
-  font-size: 13px;
 }
 
-.help-row td {
-  padding: 2px 6px;
+.cli-dim {
+  color: var(--crt-dim);
+}
+
+.cli-highlight {
+  color: var(--crt-bright);
+  font-weight: bold;
+}
+
+.cli-info {
+  color: var(--crt-color);
+  font-style: italic;
+}
+
+.cli-warn {
+  color: #fbbf24;
+}
+
+.cli-error {
+  color: #f87171;
+}
+
+.cli-divider {
+  color: var(--crt-dim);
+  user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 13px;
+  margin: 3px 0;
+}
+
+/* =========================================
+   3. CLICKABLE SHELL CHIPS & CONTROLS
+   ========================================= */
+.cli-chip {
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--crt-bright);
+  border: 1px solid var(--crt-dim);
+  padding: 1px 7px;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  margin: 0 2px;
+  transition: all 0.1s ease;
+  user-select: none;
   vertical-align: middle;
 }
 
-.help-key-cell {
-  width: 120px;
-}
-
-.help-cmd-pill {
-  background: rgba(0, 0, 0, 0.6);
-  color: var(--crt-bright);
-  border: 1px solid var(--crt-dim);
-  padding: 1px 6px;
-  font-family: inherit;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.1s ease;
-}
-
-.help-cmd-pill:hover {
+.cli-chip:hover {
   background: var(--crt-color);
   color: var(--crt-bg);
+  border-color: var(--crt-bright);
   box-shadow: 0 0 6px var(--crt-glow);
   text-shadow: none;
 }
 
-.help-cmd-pill:focus-visible {
+.cli-chip:focus-visible {
   outline: 2px solid var(--crt-bright);
-  outline-offset: 2px;
+  outline-offset: 1px;
 }
 
-.help-num-cell {
-  width: 50px;
-  color: var(--crt-dim);
-  font-weight: bold;
-}
-
-.help-desc-cell {
+.cli-file-chip {
+  background: transparent;
   color: var(--crt-color);
+  border: 1px solid var(--crt-dim);
+  padding: 2px 8px;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  border-radius: 2px;
 }
 
-/* =========================================
-   INTERACTIVE CLI FOOTER
-   ========================================= */
-.term-cli-footer {
-  margin-top: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+.cli-file-chip:hover {
+  background: var(--crt-color);
+  color: var(--crt-bg);
+  border-color: var(--crt-bright);
+  box-shadow: 0 0 6px var(--crt-glow);
+  text-shadow: none;
+}
+
+.cli-link {
+  color: var(--crt-bright);
+  text-decoration: underline;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.cli-link:hover {
+  color: #ffffff;
+  text-shadow: 0 0 8px var(--crt-glow);
+}
+
+.cli-btn-primary {
+  background: var(--crt-color);
+  color: var(--crt-bg);
+  border: 1px solid var(--crt-bright);
+  padding: 3px 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 2px;
+  transition: all 0.12s ease;
   user-select: none;
 }
 
-.cli-status-line {
+.cli-btn-primary:hover {
+  background: var(--crt-bright);
+  box-shadow: 0 0 10px var(--crt-glow);
+}
+
+.cli-btn-secondary {
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--crt-color);
+  border: 1px solid var(--crt-dim);
+  padding: 3px 10px;
+  font-family: inherit;
   font-size: 14px;
-  letter-spacing: 0.6px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 2px;
+  transition: all 0.12s ease;
+  user-select: none;
+}
+
+.cli-btn-secondary:hover {
+  background: var(--crt-color);
+  color: var(--crt-bg);
+  border-color: var(--crt-bright);
+  box-shadow: 0 0 8px var(--crt-glow);
+}
+
+/* =========================================
+   4. FORMATTED ASCII CARD BOXES
+   ========================================= */
+.cli-banner-container {
+  padding: 4px 0;
+}
+
+.cli-ascii-logo {
+  font-family: inherit;
+  color: var(--crt-bright);
+  font-size: 14px;
+  line-height: 1.15;
+  margin: 0;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.cli-sys-info {
+  margin: 4px 0;
+  color: var(--crt-color);
+  line-height: 1.4;
+}
+
+.cli-quick-links {
+  margin: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
   color: var(--crt-dim);
-  border-top: 1px solid var(--crt-dim);
-  padding-top: 4px;
-  white-space: nowrap;
+}
+
+.cli-card-box {
+  margin: 4px 0;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+}
+
+.cli-box-header,
+.cli-box-footer {
+  color: var(--crt-bright);
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  user-select: none;
+  white-space: pre;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.cli-status-line.status-error {
-  color: #f87171 !important;
-  text-shadow: 0 0 6px rgba(248, 113, 113, 0.8);
+.cli-card-body {
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
+.cli-line {
+  line-height: 1.4;
+}
+
+.cli-bio-text p {
+  margin: 4px 0;
+  color: var(--crt-color);
+  line-height: 1.4;
+}
+
+.cli-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+/* Skills Matrix in CLI */
+.cli-skill-category {
+  margin-bottom: 6px;
+}
+
+.cli-cat-title {
+  color: var(--crt-bright);
+  font-weight: bold;
+  margin-bottom: 2px;
+  letter-spacing: 0.6px;
+}
+
+.cli-skill-item {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  line-height: 1.35;
+}
+
+.cli-skill-name {
+  font-weight: bold;
+  min-width: 200px;
+}
+
+.cli-skill-tier {
+  letter-spacing: 0.5px;
+}
+
+/* Projects in CLI */
+.cli-project-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 4px 0;
+}
+
+.cli-proj-header {
+  font-size: 16px;
+  color: var(--crt-bright);
+}
+
+.cli-proj-desc {
+  color: var(--crt-color);
+  line-height: 1.35;
+}
+
+.cli-proj-meta {
+  font-size: 13px;
+}
+
+.cli-proj-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 3px;
+}
+
+.cli-highlights-list {
+  margin: 4px 0 4px 18px;
+  padding: 0;
+}
+
+.cli-highlights-list li {
+  margin-bottom: 2px;
+  line-height: 1.35;
+}
+
+/* Help & Contact Tables */
+.cli-help-table,
+.cli-contact-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cli-help-tr,
+.cli-contact-tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cli-help-td-cmd {
+  padding: 3px 0;
+  width: 180px;
+}
+
+.cli-help-td-desc {
+  padding: 3px 0;
+  color: var(--crt-color);
+}
+
+.cli-contact-name {
+  padding: 4px 0;
+  width: 140px;
+  color: var(--crt-bright);
+}
+
+.cli-contact-handle {
+  padding: 4px 0;
+  color: var(--crt-color);
+}
+
+.cli-contact-link {
+  padding: 4px 0;
+  text-align: right;
+}
+
+/* Virtual File Display */
+.cli-file-display {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--crt-dim);
+  padding: 6px 10px;
+  margin: 4px 0;
+}
+
+.cli-file-header {
+  color: var(--crt-bright);
+  font-weight: bold;
+  border-bottom: 1px solid var(--crt-dim);
+  padding-bottom: 3px;
+  margin-bottom: 4px;
+}
+
+.cli-file-content {
+  margin: 0;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+/* Suggestion Chips Row */
+.cli-suggest-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+/* =========================================
+   5. INTERACTIVE LIVE PROMPT ROW
+   ========================================= */
 .cli-prompt-line {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--crt-dim);
+  background: rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
 }
 
 .prompt-label {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  white-space: nowrap;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
   user-select: none;
-  font-size: 17px;
+  cursor: text;
+  white-space: nowrap;
 }
 
 .prompt-user {
   color: var(--crt-bright);
-  font-weight: bold;
 }
 
 .prompt-sep {
@@ -985,19 +574,19 @@
 }
 
 .prompt-path {
-  color: var(--crt-accent);
+  color: var(--crt-color);
 }
 
 .prompt-char {
-  color: var(--crt-color);
+  color: var(--crt-bright);
   margin-left: 2px;
 }
 
 .input-container {
   position: relative;
+  flex: 1;
   display: flex;
   align-items: center;
-  flex: 1;
 }
 
 .cli-input {
@@ -1005,186 +594,68 @@
   background: transparent;
   border: none;
   outline: none;
-  font-family: inherit;
-  font-size: 18px;
   color: var(--crt-bright);
-  caret-color: transparent; /* custom block cursor */
-  text-shadow: 0 0 6px var(--crt-glow);
+  font-family: inherit;
+  font-size: 16px;
+  letter-spacing: 0.6px;
+  caret-color: var(--crt-bright);
+  padding: 2px 0;
 }
 
 .cli-input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
-}
-
-.custom-cursor {
-  display: inline-block;
-  width: 10px;
-  height: 19px;
-  background: var(--crt-color);
-  box-shadow: 0 0 8px var(--crt-glow);
-  animation: cursor-blink 0.9s infinite step-start;
-  margin-left: 2px;
-  vertical-align: middle;
-  pointer-events: none;
-}
-
-@keyframes cursor-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  color: var(--crt-dim);
+  opacity: 0.65;
 }
 
 /* =========================================
-   TYPOGRAPHY CALIBRATION FOR 1980s PIXEL FONT
+   6. FONT & SCREEN TUNING
    ========================================= */
-body.font-pixel .hud-btn {
-  font-size: 15px;
+body.font-pixel .cli-output-buffer {
+  font-size: 18px;
+  line-height: 1.25;
 }
 
-body.font-pixel .quick-cmd-btn {
-  font-size: 17px;
+body.font-pixel .cli-prompt-line,
+body.font-pixel .cli-input,
+body.font-pixel .prompt-label {
+  font-size: 18px;
 }
 
-body.font-pixel .term-btn {
-  font-size: 17px;
-}
-
-body.font-pixel .project-tab-btn {
+body.font-pixel .hud-btn,
+body.font-pixel .hud-cmd-pill,
+body.font-pixel .cli-chip {
   font-size: 16px;
 }
 
-body.font-pixel .viewport-header {
-  font-size: 17px;
-}
-
-body.font-pixel .viewport-footer {
+body.font-clean .cli-output-buffer {
   font-size: 14px;
+  line-height: 1.45;
 }
 
-body.font-pixel .dash-title {
-  font-size: 24px;
-}
-
-body.font-pixel .badge-name {
-  font-size: 22px;
-}
-
-body.font-pixel .about-handle {
-  font-size: 28px;
-}
-
-body.font-pixel .project-title-text {
-  font-size: 22px;
-}
-
-body.font-pixel .cli-input {
-  font-size: 21px;
-}
-
-body.font-pixel .cli-status-line {
-  font-size: 15px;
-}
-
-body.font-pixel .help-table {
-  font-size: 16px;
-}
-
-/* =========================================
-   RESPONSIVE ADJUSTMENTS (MOBILE & TABLET)
-   Ensures zero scrolling on all devices
-   ========================================= */
-@media (max-width: 850px) {
+@media (max-width: 768px) {
   .crt-header-bar {
-    font-size: 12px;
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
-    padding-bottom: 4px;
-    margin-bottom: 4px;
   }
 
   .header-meta {
     gap: 8px;
-    width: 100%;
-  }
-
-  .header-controls {
-    width: 100%;
-    gap: 4px;
-  }
-
-  .hud-btn {
-    min-height: 44px;
-    min-width: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    padding: 6px 8px;
-  }
-
-  .quick-cmd-bar {
-    gap: 4px;
-    margin-bottom: 6px;
-    padding-bottom: 4px;
-  }
-
-  .quick-cmd-btn {
-    min-height: 44px;
-    min-width: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    padding: 6px 10px;
-  }
-
-  .term-btn {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 12px;
-    font-size: 14px;
-  }
-
-  .dash-actions-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
-  }
-
-  .skills-grid-container {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-
-  .contact-box-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .viewport-body {
-    padding: 6px 8px;
-  }
-
-  .viewport-header {
-    font-size: 13px;
-    padding: 2px 8px;
-  }
-
-  .viewport-footer {
-    font-size: 11px;
-    padding: 2px 8px;
-  }
-
-  .cli-status-line {
     font-size: 12px;
   }
 
-  .cli-input {
-    font-size: 16px;
+  .hud-btn {
+    min-height: 36px;
+    padding: 3px 8px;
   }
 
-  .prompt-label {
-    font-size: 15px;
+  .hud-cmd-pill {
+    min-height: 36px;
+    padding: 3px 10px;
+  }
+
+  .cli-chip {
+    min-height: 32px;
+    padding: 2px 8px;
   }
 }

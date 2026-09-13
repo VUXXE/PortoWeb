@@ -3,29 +3,29 @@
  */
 
 export class AsciiFire {
-  constructor() {
-    this.container = null;
-    this.intervalId = null;
-    this.isActive = false;
-    this.width = 64;
-    this.height = 24;
-    this.firePixels = [];
-    this.chars = " .:-=+*#%@";
-  }
+  private container: HTMLElement | null = null;
+  private intervalId: number | null = null;
+  public isActive: boolean = false;
+  private readonly width: number = 64;
+  private readonly height: number = 24;
+  private firePixels: number[] = [];
+  private readonly chars: string = " .:-=+*#%@";
 
-  init() {
+  constructor() {}
+
+  public init(): void {
     this.container = document.getElementById('fire-overlay');
     if (!this.container) return;
 
     this.container.addEventListener('click', () => this.stop());
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
       if (this.isActive && (e.key === 'Escape' || e.key === 'q')) {
         this.stop();
       }
     });
   }
 
-  start() {
+  public start(): void {
     if (this.isActive || !this.container) return;
     this.isActive = true;
     this.container.classList.add('is-active');
@@ -38,11 +38,11 @@ export class AsciiFire {
       this.firePixels[(this.height - 1) * this.width + x] = this.chars.length - 1;
     }
 
-    this.intervalId = setInterval(() => this.update(), 45);
+    this.intervalId = window.setInterval(() => this.update(), 45);
   }
 
-  update() {
-    if (!this.isActive) return;
+  private update(): void {
+    if (!this.isActive || !this.container) return;
 
     for (let x = 0; x < this.width; x++) {
       for (let y = 1; y < this.height; y++) {
@@ -72,10 +72,13 @@ export class AsciiFire {
     this.container.textContent = output + "\n[ FIRE DEMO RUNNING // CLICK OR ESC TO RETURN ]";
   }
 
-  stop() {
+  public stop(): void {
     if (!this.isActive) return;
     this.isActive = false;
-    clearInterval(this.intervalId);
+    if (this.intervalId !== null) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
     if (this.container) {
       this.container.classList.remove('is-active');
       this.container.textContent = '';

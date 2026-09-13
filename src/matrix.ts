@@ -4,19 +4,19 @@
  */
 
 export class MatrixScreensaver {
-  constructor() {
-    this.canvas = null;
-    this.ctx = null;
-    this.animId = null;
-    this.isActive = false;
-    this.characters = "ｦｱｳｴｵｶｷｹｺｻｼｽｾｿﾀﾂﾃﾅﾆﾇﾈﾊﾋﾎﾏﾐﾑﾒﾓﾔﾕﾗﾘﾜ1234567890ABCDEF@#$%&*+-=";
-    this.fontSize = 16;
-    this.columns = 0;
-    this.drops = [];
-  }
+  private canvas: HTMLCanvasElement | null = null;
+  private ctx: CanvasRenderingContext2D | null = null;
+  private animId: number | null = null;
+  public isActive: boolean = false;
+  private readonly characters: string = "ｦｱｳｴｵｶｷｹｺｻｼｽｾｿﾀﾂﾃﾅﾆﾇﾈﾊﾋﾎﾏﾐﾑﾒﾓﾔﾕﾗﾘﾜ1234567890ABCDEF@#$%&*+-=";
+  private readonly fontSize: number = 16;
+  private columns: number = 0;
+  private drops: number[] = [];
 
-  init() {
-    this.canvas = document.getElementById('matrix-canvas');
+  constructor() {}
+
+  public init(): void {
+    this.canvas = document.getElementById('matrix-canvas') as HTMLCanvasElement;
     if (!this.canvas) return;
     this.ctx = this.canvas.getContext('2d');
     this.resize();
@@ -27,15 +27,15 @@ export class MatrixScreensaver {
 
     // Exit on click or keypress
     this.canvas.addEventListener('click', () => this.stop());
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
       if (this.isActive && (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ')) {
         this.stop();
       }
     });
   }
 
-  resize() {
-    if (!this.canvas) return;
+  public resize(): void {
+    if (!this.canvas || !this.canvas.parentElement) return;
     const rect = this.canvas.parentElement.getBoundingClientRect();
     this.canvas.width = rect.width;
     this.canvas.height = rect.height;
@@ -46,8 +46,8 @@ export class MatrixScreensaver {
     }
   }
 
-  start() {
-    if (this.isActive) return;
+  public start(): void {
+    if (this.isActive || !this.canvas || !this.ctx) return;
     this.isActive = true;
     this.resize();
     this.canvas.classList.add('is-active');
@@ -59,8 +59,8 @@ export class MatrixScreensaver {
     const fps = 30;
     const frameInterval = 1000 / fps;
 
-    const render = (time) => {
-      if (!this.isActive) return;
+    const render = (time: number) => {
+      if (!this.isActive || !this.ctx || !this.canvas) return;
 
       const delta = time - lastTime;
       if (delta > frameInterval) {
@@ -101,23 +101,19 @@ export class MatrixScreensaver {
     this.animId = requestAnimationFrame(render);
   }
 
-  stop() {
+  public stop(): void {
     if (!this.isActive) return;
     this.isActive = false;
-    cancelAnimationFrame(this.animId);
+    if (this.animId !== null) {
+      cancelAnimationFrame(this.animId);
+      this.animId = null;
+    }
     if (this.canvas) {
       this.canvas.classList.remove('is-active');
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      if (this.ctx) {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      }
     }
-  }
-
-  toggle() {
-    if (this.isActive) {
-      this.stop();
-    } else {
-      this.start();
-    }
-    return this.isActive;
   }
 }
 

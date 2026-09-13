@@ -3,15 +3,15 @@
  * 100% self-contained audio synthesis: zero external sound files required!
  */
 
-class RetroAudioEngine {
+export class RetroAudioEngine {
+  private ctx: AudioContext | null = null;
+  private muted: boolean = false;
+
   constructor() {
-    this.ctx = null;
-    this.muted = false;
-    this.initialized = false;
     this.loadState();
   }
 
-  loadState() {
+  private loadState(): void {
     try {
       const saved = localStorage.getItem('portoweb_audio_muted');
       if (saved !== null) {
@@ -22,7 +22,7 @@ class RetroAudioEngine {
     }
   }
 
-  saveState() {
+  private saveState(): void {
     try {
       localStorage.setItem('portoweb_audio_muted', String(this.muted));
     } catch {
@@ -30,27 +30,26 @@ class RetroAudioEngine {
     }
   }
 
-  init() {
+  public init(): void {
     if (this.ctx) return;
     try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (AudioCtx) {
         this.ctx = new AudioCtx();
-        this.initialized = true;
       }
     } catch (e) {
       console.warn("Web Audio API not supported", e);
     }
   }
 
-  ensureContext() {
+  public ensureContext(): void {
     if (!this.ctx) this.init();
     if (this.ctx && this.ctx.state === 'suspended') {
       this.ctx.resume();
     }
   }
 
-  toggleMute() {
+  public toggleMute(): boolean {
     this.muted = !this.muted;
     this.saveState();
     if (!this.muted) {
@@ -60,14 +59,14 @@ class RetroAudioEngine {
     return this.muted;
   }
 
-  isMuted() {
+  public isMuted(): boolean {
     return this.muted;
   }
 
   /**
    * Mechanical keyboard tactile click with pitch variation
    */
-  playKeyClick(freqOffset = 0) {
+  public playKeyClick(freqOffset: number = 0): void {
     if (this.muted) return;
     this.ensureContext();
     if (!this.ctx) return;
@@ -76,7 +75,7 @@ class RetroAudioEngine {
       const t = this.ctx.currentTime;
       
       // 1. Noise burst for key switch friction
-      const bufferSize = this.ctx.sampleRate * 0.015; // 15ms
+      const bufferSize = Math.floor(this.ctx.sampleRate * 0.015); // 15ms
       const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) {
@@ -123,7 +122,7 @@ class RetroAudioEngine {
   /**
    * Vintage terminal alert bell (\a) - 880Hz crystal tone
    */
-  playBell() {
+  public playBell(): void {
     if (this.muted) return;
     this.ensureContext();
     if (!this.ctx) return;
@@ -152,7 +151,7 @@ class RetroAudioEngine {
    * CRT Degauss coil discharge
    * Deep 60Hz magnetic surge followed by damped resonant coil ring
    */
-  playDegauss() {
+  public playDegauss(): void {
     if (this.muted) return;
     this.ensureContext();
     if (!this.ctx) return;
@@ -215,7 +214,7 @@ class RetroAudioEngine {
   /**
    * CRT High Voltage Power-Up capacitor charge
    */
-  playPowerOn() {
+  public playPowerOn(): void {
     if (this.muted) return;
     this.ensureContext();
     if (!this.ctx) return;
@@ -238,7 +237,7 @@ class RetroAudioEngine {
       lowOsc.start(t);
       lowOsc.stop(t + 0.5);
 
-      // Subtle high-voltage flyback transformer charge sweep (very quiet & pleasant)
+      // Subtle high-voltage flyback transformer charge sweep
       const flyback = this.ctx.createOscillator();
       const flybackGain = this.ctx.createGain();
       flyback.type = "sine";
@@ -260,7 +259,7 @@ class RetroAudioEngine {
   /**
    * CRT Power Switch Click
    */
-  playPowerSwitch() {
+  public playPowerSwitch(): void {
     if (this.muted) return;
     this.ensureContext();
     if (!this.ctx) return;

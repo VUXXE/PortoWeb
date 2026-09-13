@@ -4,7 +4,9 @@
  * All placeholder fields are explicitly tagged with brackets [LIKE THIS] for easy replacement.
  */
 
-export const PORTFOLIO_DATA = {
+import type { PortfolioData } from './types.js';
+
+export const PORTFOLIO_DATA: PortfolioData = {
   profile: {
     handle: "exu",
     host: "portoweb",
