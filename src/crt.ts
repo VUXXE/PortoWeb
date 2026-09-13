@@ -14,12 +14,12 @@ export class CRTEngine {
   private barrelDisplacement: SVGElement | null = null;
   private powerLed: HTMLElement | null = null;
 
-  // Curvature presets: [id, label, k-factor, svg-scale, border-radius-x, border-radius-y]
+  // Curvature presets: [id, label, k-factor, svg-scale]
   public readonly curvatureLevels: CurvaturePreset[] = [
-    { id: 'flat', label: 'FLAT', k: 0, scale: 0, brX: 10, brY: 10 },
-    { id: 'subtle', label: 'SUBTLE', k: 0.25, scale: 5, brX: 20, brY: 16 },
-    { id: 'authentic', label: 'AUTHENTIC', k: 0.45, scale: 8, brX: 36, brY: 26 },
-    { id: 'heavy', label: 'HEAVY', k: 0.70, scale: 12, brX: 50, brY: 36 }
+    { id: 'flat', label: 'FLAT', k: 0, scale: 0 },
+    { id: 'subtle', label: 'SUBTLE', k: 0.25, scale: 5 },
+    { id: 'authentic', label: 'AUTHENTIC', k: 0.45, scale: 8 },
+    { id: 'heavy', label: 'HEAVY', k: 0.70, scale: 12 }
   ];
   public currentCurvatureIndex: number = 2; // Default: Authentic
 
@@ -187,9 +187,7 @@ export class CRTEngine {
     }
 
     if (this.screenElement) {
-      // Curved CRT tube convex border radii
-      this.screenElement.style.borderRadius = `${config.brX}px / ${config.brY}px`;
-      
+      this.screenElement.style.borderRadius = '0';
       this.screenElement.classList.remove('has-barrel', 'curvature-subtle', 'curvature-authentic', 'curvature-heavy');
       if (config.scale > 0) {
         this.screenElement.classList.add('has-barrel', `curvature-${config.id}`);

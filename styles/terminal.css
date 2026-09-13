@@ -167,7 +167,7 @@
   font-family: inherit;
   font-size: 13px;
   letter-spacing: 0.5px;
-  border-radius: 2px;
+  border-radius: 0;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -201,7 +201,7 @@
   transition: all 0.1s ease;
   text-decoration: underline;
   text-decoration-style: dotted;
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .cli-file-chip:hover {
@@ -236,7 +236,7 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  border-radius: 2px;
+  border-radius: 0;
   transition: all 0.12s ease;
   user-select: none;
 }
@@ -257,7 +257,7 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  border-radius: 2px;
+  border-radius: 0;
   transition: all 0.12s ease;
   user-select: none;
 }
@@ -304,7 +304,7 @@
 .cli-card-box {
   margin: 3px 0;
   background: rgba(0, 0, 0, 0.25);
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .cli-box-header,

@@ -11,8 +11,6 @@ export interface CurvaturePreset {
   label: string;
   k: number;
   scale: number;
-  brX: number;
-  brY: number;
 }
 
 export interface Profile {
