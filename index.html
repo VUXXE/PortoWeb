@@ -53,85 +53,30 @@
 
       <!-- Screen Content (Distorted by Barrel Shader) -->
       <div class="crt-content" id="crt-content">
-        
-        <!-- CRT Header Status Bar & Integrated HUD Controls -->
-        <header class="crt-header-bar">
-          <div class="header-meta">
-            <span class="meta-item">SYS: <strong>PORTO-OS</strong></span>
-            <span class="meta-item">USER: <strong>guest@portoweb</strong></span>
-            <span class="meta-item">TTY: <strong>tty0 (9600)</strong></span>
-            <span class="meta-item"><strong id="status-clock">00:00:00 UTC</strong></span>
-          </div>
-
-          <!-- Integrated CRT Controls -->
-          <div class="header-controls" aria-label="CRT Controls">
-            <button type="button" class="hud-btn" id="btn-theme" title="Cycle Phosphor Color">
-              THEME: <strong id="status-theme">GREEN</strong>
-            </button>
-            <button type="button" class="hud-btn" id="btn-font" title="Toggle 1980s Pixel Font vs Clean Monospace">
-              FONT: <strong id="status-font">PIXEL 80s</strong>
-            </button>
-            <button type="button" class="hud-btn" id="btn-curvature" title="Adjust Barrel Distortion">
-              BARREL: <strong id="status-curvature">AUTHENTIC</strong>
-            </button>
-            <button type="button" class="hud-btn" id="btn-scanlines" title="Toggle CRT Raster Scanlines">
-              SCANLINES: <strong id="status-scanlines">OFF</strong>
-            </button>
-            <button type="button" class="hud-btn control-active" id="btn-audio" title="Toggle Mechanical Audio">
-              AUDIO: <strong id="status-audio">ON</strong>
-            </button>
-            <button type="button" class="hud-btn" id="btn-degauss" title="Electromagnetic Degauss Coil">
-              DEGAUSS
-            </button>
-            <button type="button" class="hud-btn" id="btn-power" title="Terminal Power Toggle">
-              <span class="power-indicator led-active" id="power-led" aria-hidden="true"></span>
-              POWER
-            </button>
-          </div>
-        </header>
-
-        <!-- Quick Navigation Command Pills -->
-        <nav class="quick-cmd-bar" aria-label="Quick Terminal Commands">
-          <button type="button" class="hud-cmd-pill" data-cmd="help">[ help ]</button>
-          <button type="button" class="hud-cmd-pill" data-cmd="bio">[ bio ]</button>
-          <button type="button" class="hud-cmd-pill" data-cmd="skills">[ skills ]</button>
-          <button type="button" class="hud-cmd-pill" data-cmd="projects">[ projects ]</button>
-          <button type="button" class="hud-cmd-pill" data-cmd="history">[ history ]</button>
-          <button type="button" class="hud-cmd-pill" data-cmd="contact">[ contact ]</button>
-          <button type="button" class="hud-cmd-pill" data-cmd="resume">[ resume ]</button>
-          <button type="button" class="hud-cmd-pill" data-cmd="ls">[ ls ]</button>
-          <button type="button" class="hud-cmd-pill" data-cmd="clear">[ clear ]</button>
-        </nav>
-
-        <!-- Pure Interactive CLI Terminal Window -->
-        <div class="cli-terminal-window" id="cli-terminal-window">
-          <!-- Streaming Command History & Output Buffer -->
-          <div class="cli-output-buffer" id="cli-output-buffer" role="log" aria-live="polite"></div>
-
-          <!-- Live Interactive Shell Prompt -->
-          <div class="cli-prompt-line" id="cli-prompt-line">
-            <label for="cli-input" class="prompt-label">
-              <span class="prompt-user">guest@portoweb</span>
-              <span class="prompt-sep">:</span>
-              <span class="prompt-path">~</span>
-              <span class="prompt-char">$</span>
-            </label>
-            <div class="input-container">
-              <input 
-                type="text" 
-                id="cli-input" 
-                class="cli-input" 
-                autocomplete="off" 
-                autocorrect="off" 
-                autocapitalize="off" 
-                spellcheck="false" 
-                aria-label="Terminal command input"
-                placeholder="type a command (e.g. help, bio, projects) or click any pill above..."
-              />
+        <!-- Pure Fullscreen Interactive CLI Terminal Shell -->
+        <div class="cli-shell" id="cli-shell">
+          <div class="cli-output-buffer" id="cli-output-buffer" role="log" aria-live="polite">
+            <!-- Active Interactive Prompt Line -->
+            <div class="cli-prompt-line" id="cli-prompt-line">
+              <label for="cli-input" class="prompt-label">
+                <span class="prompt-user">guest@portoweb</span><span class="prompt-sep">:</span><span class="prompt-path">~</span><span class="prompt-char">$</span>
+              </label>
+              <div class="input-container">
+                <input 
+                  type="text" 
+                  id="cli-input" 
+                  class="cli-input" 
+                  autocomplete="off" 
+                  autocorrect="off" 
+                  autocapitalize="off" 
+                  spellcheck="false" 
+                  aria-label="Terminal command input"
+                  autofocus
+                />
+              </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </main>

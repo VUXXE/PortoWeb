@@ -1,165 +1,34 @@
-/* Retro CRT Pure Interactive CLI Shell Stylesheet */
+/* Retro CRT Pure Fullscreen CLI Shell Stylesheet */
 
 /* =========================================
-   1. CRT HEADER HUD & HARDWARE CONTROLS
+   1. FULLSCREEN TERMINAL SHELL
    ========================================= */
-.crt-header-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 6px;
-  margin-bottom: 6px;
-  border-bottom: 1px solid var(--crt-dim);
-  font-size: 14px;
-  letter-spacing: 0.8px;
-  color: var(--crt-dim);
-  user-select: none;
-  flex-shrink: 0;
-}
-
-.header-meta {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.meta-item strong {
-  color: var(--crt-color);
-}
-
-.header-controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.hud-btn {
-  background: rgba(0, 0, 0, 0.4);
-  color: var(--crt-color);
-  border: 1px solid var(--crt-dim);
-  padding: 2px 7px;
-  font-family: inherit;
-  font-size: 13px;
-  letter-spacing: 0.5px;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.12s ease;
-  user-select: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  min-height: 28px;
-}
-
-.hud-btn:hover {
-  background: var(--crt-color);
-  color: var(--crt-bg);
-  box-shadow: 0 0 8px var(--crt-glow);
-  text-shadow: none;
-}
-
-.hud-btn:focus-visible {
-  outline: 2px solid var(--crt-bright);
-  outline-offset: 2px;
-  box-shadow: 0 0 10px var(--crt-glow);
-}
-
-.hud-btn strong {
-  color: var(--crt-bright);
-}
-
-.hud-btn.control-active {
-  border-color: var(--crt-color);
-}
-
-.power-indicator {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #22c55e;
-  box-shadow: 0 0 6px #22c55e;
-  display: inline-block;
-  transition: background-color 0.3s ease;
-}
-
-.power-indicator:not(.led-active) {
-  background: #ef4444;
-  box-shadow: 0 0 6px #ef4444;
-}
-
-/* Quick Navigation Command Chips Bar in HUD */
-.quick-cmd-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 6px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  flex-shrink: 0;
-}
-
-.hud-cmd-pill {
-  background: rgba(0, 0, 0, 0.35);
-  color: var(--crt-color);
-  border: 1px solid var(--crt-dim);
-  padding: 2px 8px;
-  font-family: inherit;
-  font-size: 14px;
-  letter-spacing: 0.6px;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.1s ease;
-  user-select: none;
-  min-height: 28px;
-  display: inline-flex;
-  align-items: center;
-}
-
-.hud-cmd-pill:hover {
-  background: var(--crt-color);
-  color: var(--crt-bg);
-  border-color: var(--crt-bright);
-  box-shadow: 0 0 8px var(--crt-glow);
-  text-shadow: none;
-}
-
-.hud-cmd-pill:focus-visible {
-  outline: 2px solid var(--crt-bright);
-  outline-offset: 1px;
-}
-
-/* =========================================
-   2. PURE CLI TERMINAL WINDOW & BUFFER
-   ========================================= */
-.cli-terminal-window {
-  flex: 1;
-  min-height: 0;
+.cli-shell {
   width: 100%;
+  height: 100%;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* STRICTLY NON-SCROLLABLE AT CONTAINER LEVEL */
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid var(--crt-color);
-  border-radius: 2px;
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.6);
-  padding: 8px 12px;
+  overflow: hidden; /* STRICTLY NON-SCROLLABLE CONTAINER */
+  background: transparent;
 }
 
 /* Output Buffer: Streams downward, auto-scrolls to prompt, NO visible scrollbars */
 .cli-output-buffer {
   flex: 1;
   min-height: 0;
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding-right: 2px;
-  font-size: 15px;
-  line-height: 1.4;
+  gap: 4px;
+  padding: 4px 6px;
+  font-size: 16px;
+  line-height: 1.35;
 }
 
 .cli-output-buffer::-webkit-scrollbar {
@@ -170,16 +39,86 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex-shrink: 0;
 }
 
-/* CLI Text Formatting */
+/* =========================================
+   2. INTERACTIVE LIVE PROMPT LINE
+   ========================================= */
+.cli-prompt-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.prompt-label {
+  display: inline-flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  user-select: none;
+  cursor: text;
+  white-space: nowrap;
+}
+
+.prompt-user {
+  color: var(--crt-bright);
+}
+
+.prompt-sep {
+  color: var(--crt-dim);
+}
+
+.prompt-path {
+  color: var(--crt-color);
+}
+
+.prompt-char {
+  color: var(--crt-bright);
+  margin-left: 2px;
+}
+
+.input-container {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.cli-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--crt-bright);
+  font-family: inherit;
+  font-size: 16px;
+  letter-spacing: 0.6px;
+  caret-color: var(--crt-bright);
+  padding: 0;
+  margin: 0;
+}
+
+.cli-input::placeholder {
+  color: var(--crt-dim);
+  opacity: 0.65;
+}
+
+/* =========================================
+   3. CLI TEXT & LINE FORMATTING
+   ========================================= */
 .cli-row {
   word-break: break-word;
+  line-height: 1.35;
 }
 
 .cli-prompt-echo {
   color: var(--crt-color);
-  padding: 2px 0;
+  padding: 1px 0;
 }
 
 .cli-prompt-echo strong {
@@ -214,17 +153,17 @@
   overflow: hidden;
   white-space: nowrap;
   font-size: 13px;
-  margin: 3px 0;
+  margin: 2px 0;
 }
 
 /* =========================================
-   3. CLICKABLE SHELL CHIPS & CONTROLS
+   4. IN-BUFFER CLICKABLE CHIPS & LINKS
    ========================================= */
 .cli-chip {
   background: rgba(0, 0, 0, 0.5);
   color: var(--crt-bright);
   border: 1px solid var(--crt-dim);
-  padding: 1px 7px;
+  padding: 1px 6px;
   font-family: inherit;
   font-size: 13px;
   letter-spacing: 0.5px;
@@ -255,7 +194,7 @@
   background: transparent;
   color: var(--crt-color);
   border: 1px solid var(--crt-dim);
-  padding: 2px 8px;
+  padding: 1px 6px;
   font-family: inherit;
   font-size: 14px;
   cursor: pointer;
@@ -331,10 +270,10 @@
 }
 
 /* =========================================
-   4. FORMATTED ASCII CARD BOXES
+   5. ASCII CARDS & BOX DRAWING
    ========================================= */
 .cli-banner-container {
-  padding: 4px 0;
+  padding: 2px 0;
 }
 
 .cli-ascii-logo {
@@ -354,7 +293,7 @@
 }
 
 .cli-quick-links {
-  margin: 6px 0;
+  margin: 4px 0;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -363,7 +302,7 @@
 }
 
 .cli-card-box {
-  margin: 4px 0;
+  margin: 3px 0;
   background: rgba(0, 0, 0, 0.25);
   border-radius: 2px;
 }
@@ -379,10 +318,10 @@
 }
 
 .cli-card-body {
-  padding: 6px 10px;
+  padding: 5px 10px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
 }
 
 .cli-line {
@@ -390,7 +329,7 @@
 }
 
 .cli-bio-text p {
-  margin: 4px 0;
+  margin: 3px 0;
   color: var(--crt-color);
   line-height: 1.4;
 }
@@ -403,9 +342,9 @@
   padding-top: 4px;
 }
 
-/* Skills Matrix in CLI */
+/* Skills Matrix */
 .cli-skill-category {
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .cli-cat-title {
@@ -431,12 +370,12 @@
   letter-spacing: 0.5px;
 }
 
-/* Projects in CLI */
+/* Projects */
 .cli-project-row {
   display: flex;
   flex-direction: column;
   gap: 3px;
-  padding: 4px 0;
+  padding: 3px 0;
 }
 
 .cli-proj-header {
@@ -462,7 +401,7 @@
 }
 
 .cli-highlights-list {
-  margin: 4px 0 4px 18px;
+  margin: 3px 0 3px 18px;
   padding: 0;
 }
 
@@ -484,28 +423,28 @@
 }
 
 .cli-help-td-cmd {
-  padding: 3px 0;
-  width: 180px;
+  padding: 2px 0;
+  width: 200px;
 }
 
 .cli-help-td-desc {
-  padding: 3px 0;
+  padding: 2px 0;
   color: var(--crt-color);
 }
 
 .cli-contact-name {
-  padding: 4px 0;
+  padding: 3px 0;
   width: 140px;
   color: var(--crt-bright);
 }
 
 .cli-contact-handle {
-  padding: 4px 0;
+  padding: 3px 0;
   color: var(--crt-color);
 }
 
 .cli-contact-link {
-  padding: 4px 0;
+  padding: 3px 0;
   text-align: right;
 }
 
@@ -514,15 +453,15 @@
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--crt-dim);
   padding: 6px 10px;
-  margin: 4px 0;
+  margin: 3px 0;
 }
 
 .cli-file-header {
   color: var(--crt-bright);
   font-weight: bold;
   border-bottom: 1px solid var(--crt-dim);
-  padding-bottom: 3px;
-  margin-bottom: 4px;
+  padding-bottom: 2px;
+  margin-bottom: 3px;
 }
 
 .cli-file-content {
@@ -538,77 +477,11 @@
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  padding: 4px 0;
+  padding: 3px 0;
 }
 
 /* =========================================
-   5. INTERACTIVE LIVE PROMPT ROW
-   ========================================= */
-.cli-prompt-line {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-top: 6px;
-  border-top: 1px solid var(--crt-dim);
-  background: rgba(0, 0, 0, 0.25);
-  flex-shrink: 0;
-}
-
-.prompt-label {
-  display: inline-flex;
-  align-items: center;
-  font-size: 16px;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  user-select: none;
-  cursor: text;
-  white-space: nowrap;
-}
-
-.prompt-user {
-  color: var(--crt-bright);
-}
-
-.prompt-sep {
-  color: var(--crt-dim);
-}
-
-.prompt-path {
-  color: var(--crt-color);
-}
-
-.prompt-char {
-  color: var(--crt-bright);
-  margin-left: 2px;
-}
-
-.input-container {
-  position: relative;
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.cli-input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--crt-bright);
-  font-family: inherit;
-  font-size: 16px;
-  letter-spacing: 0.6px;
-  caret-color: var(--crt-bright);
-  padding: 2px 0;
-}
-
-.cli-input::placeholder {
-  color: var(--crt-dim);
-  opacity: 0.65;
-}
-
-/* =========================================
-   6. FONT & SCREEN TUNING
+   6. FONT MODES & RESPONSIVE
    ========================================= */
 body.font-pixel .cli-output-buffer {
   font-size: 18px;
@@ -621,8 +494,6 @@ body.font-pixel .prompt-label {
   font-size: 18px;
 }
 
-body.font-pixel .hud-btn,
-body.font-pixel .hud-cmd-pill,
 body.font-pixel .cli-chip {
   font-size: 16px;
 }
@@ -633,28 +504,17 @@ body.font-clean .cli-output-buffer {
 }
 
 @media (max-width: 768px) {
-  .crt-header-bar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-
-  .header-meta {
-    gap: 8px;
-    font-size: 12px;
-  }
-
-  .hud-btn {
-    min-height: 36px;
-    padding: 3px 8px;
-  }
-
-  .hud-cmd-pill {
-    min-height: 36px;
-    padding: 3px 10px;
+  .cli-output-buffer {
+    padding: 2px;
+    font-size: 14px;
   }
 
   .cli-chip {
+    min-height: 32px;
+    padding: 2px 8px;
+  }
+
+  .cli-file-chip {
     min-height: 32px;
     padding: 2px 8px;
   }

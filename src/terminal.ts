@@ -13,7 +13,7 @@ import type { CommandDefinition, Project } from './types.js';
 export class Terminal {
   private outputBuffer: HTMLElement | null = null;
   private inputElement: HTMLInputElement | null = null;
-  private statusClock: HTMLElement | null = null;
+  private promptLine: HTMLElement | null = null;
 
   private readonly promptUser: string = "guest";
   private readonly promptHost: string = PORTFOLIO_DATA.profile.host;
@@ -56,6 +56,7 @@ export class Terminal {
     { cmd: 'scanlines', args: '[on|off]', desc: 'Toggle CRT scanlines' },
     { cmd: 'degauss', desc: 'Trigger CRT magnetic degauss coil pulse' },
     { cmd: 'audio', args: '[on|off]', desc: 'Toggle mechanical keyboard sound synth' },
+    { cmd: 'power', aliases: ['exit', 'shutdown'], desc: 'Toggle CRT monitor power off/on' },
     { cmd: 'matrix', desc: 'Launch Matrix digital rain screensaver' },
     { cmd: 'fire', desc: 'Launch 1990s demoscene Doom fire demo' },
     { cmd: 'clear', aliases: ['cls'], desc: 'Clear the terminal output buffer' },
@@ -71,7 +72,7 @@ export class Terminal {
   public init(): void {
     this.outputBuffer = document.getElementById('cli-output-buffer');
     this.inputElement = document.getElementById('cli-input') as HTMLInputElement;
-    this.statusClock = document.getElementById('status-clock');
+    this.promptLine = document.getElementById('cli-prompt-line');
 
     if (!this.outputBuffer || !this.inputElement) return;
 
@@ -104,18 +105,6 @@ export class Terminal {
       this.inputElement.addEventListener('input', () => audio.playKeyClick());
     }
 
-    // Quick Command Pills in HUD
-    const quickButtons = document.querySelectorAll('.hud-cmd-pill');
-    quickButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const cmd = btn.getAttribute('data-cmd');
-        if (cmd) {
-          this.executeCommand(cmd);
-          this.focusInput();
-        }
-      });
-    });
-
     // Delegation for in-buffer clickable commands and files
     if (this.outputBuffer) {
       this.outputBuffer.addEventListener('click', (e) => {
@@ -139,18 +128,6 @@ export class Terminal {
           }
         }
       });
-    }
-
-    // Live clock in HUD
-    if (this.statusClock) {
-      const updateClock = () => {
-        const now = new Date();
-        if (this.statusClock) {
-          this.statusClock.textContent = now.toISOString().substring(11, 19) + ' UTC';
-        }
-      };
-      updateClock();
-      setInterval(updateClock, 1000);
     }
   }
 
@@ -355,6 +332,13 @@ export class Terminal {
         this.cmdAudio(args);
         break;
 
+      case 'power':
+      case 'exit':
+      case 'shutdown':
+        crt.togglePower();
+        this.appendOutput(`<div class="cli-row cli-info">[SYS]: Terminal monitor powered off. Click screen or press any key to power on.</div>`);
+        break;
+
       case 'matrix':
         matrix.start();
         this.appendOutput(`<div class="cli-row cli-info">[SYS]: Matrix digital rain initiated. Click screen or press ESC to return.</div>`);
@@ -387,7 +371,7 @@ export class Terminal {
         this.appendOutput(`
           <div class="cli-row cli-error">
             bash: command not found: <strong>${this.escapeHtml(cmd)}</strong>.
-            Type <button type="button" class="cli-chip" data-cmd="help">help</button> or click quick commands above.
+            Type <button type="button" class="cli-chip" data-cmd="help">help</button> for available commands.
           </div>
         `);
         break;
@@ -401,7 +385,11 @@ export class Terminal {
     const div = document.createElement('div');
     div.className = 'cli-output-entry';
     div.innerHTML = html;
-    this.outputBuffer.appendChild(div);
+    if (this.promptLine && this.promptLine.parentElement === this.outputBuffer) {
+      this.outputBuffer.insertBefore(div, this.promptLine);
+    } else {
+      this.outputBuffer.appendChild(div);
+    }
     this.scrollToBottom();
   }
 
@@ -413,7 +401,8 @@ export class Terminal {
 
   public clearScreen(): void {
     if (this.outputBuffer) {
-      this.outputBuffer.innerHTML = '';
+      const entries = this.outputBuffer.querySelectorAll('.cli-output-entry');
+      entries.forEach(e => e.remove());
       this.printPromptHeader();
     }
   }
@@ -433,18 +422,20 @@ export class Terminal {
         <div class="cli-divider">================================================================================</div>
         <div class="cli-sys-info">
           <strong>PORTO-OS</strong> (UNIX System V Release 4 // Model 84-CRT Terminal)<br>
-          Connected as <strong>${this.promptUser}@${this.promptHost}.local</strong> (tty0) on ${new Date().toDateString()}.<br>
-          Full click-and-type parity active. Click any underlined command or type in shell below.
+          Connected as <strong>${this.promptUser}@${this.promptHost}.local</strong> (tty0) on ${new Date().toUTCString()}.<br>
+          Type <button type="button" class="cli-chip" data-cmd="help">help</button> to see all commands, or click any command below to explore.
         </div>
         <div class="cli-quick-links">
-          QUICK EXPLORE:
+          QUICK COMMANDS:
           <button type="button" class="cli-chip" data-cmd="bio">bio</button>
           <button type="button" class="cli-chip" data-cmd="skills">skills</button>
           <button type="button" class="cli-chip" data-cmd="projects">projects</button>
           <button type="button" class="cli-chip" data-cmd="history">history</button>
           <button type="button" class="cli-chip" data-cmd="contact">contact</button>
           <button type="button" class="cli-chip" data-cmd="resume">resume</button>
+          <button type="button" class="cli-chip" data-cmd="ls">ls</button>
           <button type="button" class="cli-chip" data-cmd="help">help</button>
+          <button type="button" class="cli-chip" data-cmd="clear">clear</button>
         </div>
         <div class="cli-divider">================================================================================</div>
       </div>
