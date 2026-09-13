@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PORTFOLIO // CRT TERMINAL [MODEL 84-CRT]</title>
+  
+  <!-- Retro Monospace Fonts from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+
+  <!-- Modular Stylesheets -->
+  <link rel="stylesheet" href="/styles/reset.css">
+  <link rel="stylesheet" href="/styles/themes.css">
+  <link rel="stylesheet" href="/styles/monitor.css">
+  <link rel="stylesheet" href="/styles/crt.css">
+  <link rel="stylesheet" href="/styles/terminal.css">
+</head>
+<body class="theme-green">
+
+  <!-- Hidden SVG Optical Barrel Distortion Filter -->
+  <svg class="crt-filters" aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none;">
+    <defs>
+      <filter id="crt-barrel-filter" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox">
+        <feImage id="barrel-map-img" x="0%" y="0%" width="100%" height="100%" href="" xlink:href="" result="barrel-map" preserveAspectRatio="none" />
+        <feDisplacementMap 
+          id="barrel-displacement"
+          in="SourceGraphic" 
+          in2="barrel-map" 
+          scale="24" 
+          xChannelSelector="R" 
+          yChannelSelector="G" 
+          result="displaced" 
+        />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Main Hardware Monitor Assembly -->
+  <main class="monitor-wrapper" role="main">
+    
+    <div class="monitor-casing">
+      
+      <!-- Top Ventilation Slots -->
+      <div class="monitor-vent-top" aria-hidden="true">
+        <div class="vent-slot"></div>
+        <div class="vent-slot"></div>
+        <div class="vent-slot"></div>
+        <div class="vent-slot"></div>
+        <div class="vent-slot"></div>
+        <div class="vent-slot"></div>
+        <div class="vent-slot"></div>
+        <div class="vent-slot"></div>
+      </div>
+
+      <!-- Sunken Screen Well Holding the CRT Cathode Tube -->
+      <div class="screen-well">
+        <div class="crt-screen-container">
+          
+          <!-- The Convex Glass CRT Screen -->
+          <div class="crt-screen scanlines-active has-barrel" id="crt-screen" tabindex="0" aria-label="CRT Terminal Screen">
+            
+            <!-- Atmospheric Overlays -->
+            <div class="crt-vignette" aria-hidden="true"></div>
+            <div class="crt-glare" aria-hidden="true"></div>
+            <div class="crt-scanlines" aria-hidden="true"></div>
+
+            <!-- Screensaver Canvas Overlays -->
+            <canvas id="matrix-canvas" aria-hidden="true"></canvas>
+            <div id="fire-overlay" aria-hidden="true"></div>
+
+            <!-- Screen Content (Distorted by Barrel Shader) -->
+            <div class="crt-content" id="crt-content">
+              
+              <!-- CRT Header Status Bar -->
+              <header class="crt-header-bar">
+                <div class="header-meta">
+                  <span class="meta-item">SYS: <strong>PORTO-OS</strong></span>
+                  <span class="meta-item">USER: <strong>guest@portoweb</strong></span>
+                  <span class="meta-item">TTY: <strong>tty0 (9600)</strong></span>
+                </div>
+                <div class="header-meta">
+                  <span class="meta-item">THEME: <strong id="status-theme">GREEN</strong></span>
+                  <span class="meta-item">BARREL: <strong id="status-curvature">AUTHENTIC</strong></span>
+                  <span class="meta-item">AUDIO: <strong id="status-audio">ON</strong></span>
+                  <span class="meta-item"><strong id="status-clock">00:00:00 UTC</strong></span>
+                </div>
+              </header>
+
+              <!-- Quick Navigation Command Chips -->
+              <nav class="quick-cmd-bar" aria-label="Quick Terminal Commands">
+                <button type="button" class="quick-cmd-btn" data-cmd="about">[ 1: ABOUT ]</button>
+                <button type="button" class="quick-cmd-btn" data-cmd="skills">[ 2: SKILLS ]</button>
+                <button type="button" class="quick-cmd-btn" data-cmd="projects">[ 3: PROJECTS ]</button>
+                <button type="button" class="quick-cmd-btn" data-cmd="experience">[ 4: HISTORY ]</button>
+                <button type="button" class="quick-cmd-btn" data-cmd="contact">[ 5: CONTACT ]</button>
+                <button type="button" class="quick-cmd-btn" data-cmd="resume">[ 6: RESUME ]</button>
+                <button type="button" class="quick-cmd-btn" data-cmd="matrix">[ 7: MATRIX ]</button>
+                <button type="button" class="quick-cmd-btn" data-cmd="degauss">[ 8: DEGAUSS ]</button>
+                <button type="button" class="quick-cmd-btn" data-cmd="help">[ 9: HELP ]</button>
+              </nav>
+
+              <!-- Terminal Output Buffer -->
+              <div class="terminal-output" id="terminal-output" role="log" aria-live="polite"></div>
+
+              <!-- Interactive Prompt Input Line -->
+              <div class="cli-prompt-line">
+                <label for="cli-input" class="prompt-label">
+                  <span class="prompt-user">guest@portoweb</span>
+                  <span class="prompt-sep">:</span>
+                  <span class="prompt-path">~</span>
+                  <span class="prompt-char">$</span>
+                </label>
+                <div class="input-container">
+                  <input 
+                    type="text" 
+                    id="cli-input" 
+                    class="cli-input" 
+                    autocomplete="off" 
+                    autocorrect="off" 
+                    autocapitalize="off" 
+                    spellcheck="false" 
+                    aria-label="Terminal command input"
+                  />
+                  <span class="custom-cursor" aria-hidden="true"></span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Monitor Chin Hardware Controls -->
+      <footer class="monitor-chin">
+        
+        <!-- Retro Brand Badge -->
+        <div class="brand-plate">
+          <span class="brand-title">TELEVIDEO 950</span>
+          <span class="brand-sub">VIDEO DISPLAY TERMINAL</span>
+        </div>
+
+        <!-- Speaker Grille Cutouts -->
+        <div class="speaker-grille" aria-hidden="true">
+          <div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div>
+          <div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div>
+          <div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div>
+          <div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div><div class="speaker-hole"></div>
+        </div>
+
+        <!-- Hardware Knobs and Buttons -->
+        <div class="control-cluster">
+          <button type="button" class="bezel-btn" id="btn-degauss" title="Electromagnetic Degauss Coil">DEGAUSS</button>
+          <button type="button" class="bezel-btn" id="btn-theme" title="Cycle Phosphor Color">PHOSPHOR</button>
+          <button type="button" class="bezel-btn" id="btn-curvature" title="Adjust Barrel Distortion">CURVATURE</button>
+          <button type="button" class="bezel-btn control-active" id="btn-audio" title="Toggle Mechanical Audio">SOUND FX</button>
+          
+          <!-- Power Section -->
+          <div class="power-section">
+            <div class="power-led led-active" id="power-led" title="Cathode Tube High Voltage Indicator"></div>
+            <button type="button" class="btn-power-switch" id="btn-power" title="Main AC Power Toggle">POWER</button>
+          </div>
+        </div>
+
+      </footer>
+
+    </div>
+
+    <!-- Monitor Desk Pedestal Stand -->
+    <div class="monitor-stand" aria-hidden="true"></div>
+
+  </main>
+
+  <!-- Application Entrypoint -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,575 @@
+/* Interactive Terminal Shell & Output Formatting */
+
+/* Top Status Header Bar inside CRT */
+.crt-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+  border-bottom: 1px dashed var(--crt-dim);
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: var(--crt-dim);
+  user-select: none;
+}
+
+.header-meta {
+  display: flex;
+  gap: 16px;
+}
+
+.meta-item strong {
+  color: var(--crt-color);
+}
+
+/* Quick Navigation Command Chips */
+.quick-cmd-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.quick-cmd-btn {
+  background: transparent;
+  color: var(--crt-color);
+  border: 1px solid var(--crt-dim);
+  padding: 4px 10px;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  letter-spacing: 1px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  user-select: none;
+}
+
+.quick-cmd-btn:hover {
+  background: var(--crt-color);
+  color: var(--crt-bg);
+  box-shadow: 0 0 10px var(--crt-glow);
+}
+
+/* Terminal Lines & Log Output */
+.terminal-output {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.term-line {
+  word-break: break-word;
+  white-space: pre-wrap;
+  line-height: 1.35;
+}
+
+.boot-line {
+  color: var(--crt-dim);
+  font-size: 16px;
+}
+
+.ascii-banner {
+  color: var(--crt-bright);
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  line-height: 1.05;
+  margin: 10px 0;
+  text-shadow: 0 0 8px var(--crt-glow);
+  overflow-x: auto;
+}
+
+/* Welcome Box */
+.welcome-banner {
+  border: 1px solid var(--crt-dim);
+  padding: 12px 16px;
+  margin: 10px 0 16px 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.welcome-text {
+  font-size: 20px;
+  color: var(--crt-bright);
+  margin-bottom: 6px;
+}
+
+.welcome-sub {
+  color: var(--crt-color);
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+
+.welcome-cmd-hint {
+  color: var(--crt-dim);
+  font-size: 16px;
+}
+
+/* Interactive CLI Input Line */
+.cli-prompt-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 8px;
+}
+
+.prompt-label {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.prompt-user {
+  color: var(--crt-bright);
+  font-weight: bold;
+}
+
+.prompt-sep {
+  color: var(--crt-dim);
+}
+
+.prompt-path {
+  color: var(--crt-accent);
+}
+
+.prompt-char {
+  color: var(--crt-color);
+  margin-left: 2px;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.cli-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  color: var(--crt-bright);
+  caret-color: transparent; /* custom cursor */
+  text-shadow: 0 0 6px var(--crt-glow);
+}
+
+/* Authentic CRT Blinking Block Cursor */
+.custom-cursor {
+  display: inline-block;
+  width: 11px;
+  height: 20px;
+  background: var(--crt-color);
+  box-shadow: 0 0 8px var(--crt-glow);
+  animation: cursor-blink 0.9s infinite step-start;
+  margin-left: 2px;
+  vertical-align: middle;
+  pointer-events: none;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Command Boxes (about, skills, projects, contact) */
+.cmd-box {
+  border: 1px solid var(--crt-color);
+  padding: 16px 20px;
+  margin: 12px 0;
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+.box-title {
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: var(--crt-bright);
+  border-bottom: 1px solid var(--crt-dim);
+  padding-bottom: 6px;
+  margin-bottom: 14px;
+  text-shadow: 0 0 6px var(--crt-glow);
+}
+
+.box-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+.status-pill {
+  color: var(--crt-bright);
+  border: 1px solid var(--crt-color);
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
+/* About Section */
+.about-hero {
+  margin-bottom: 12px;
+}
+
+.about-name {
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: var(--crt-bright);
+}
+
+.about-title {
+  font-size: 19px;
+  color: var(--crt-color);
+}
+
+.about-loc {
+  font-size: 15px;
+  color: var(--crt-dim);
+}
+
+.about-body {
+  margin-bottom: 16px;
+}
+
+.bio-para {
+  margin-bottom: 8px;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+/* Action Buttons inside Command Box */
+.box-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.term-btn {
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--crt-color);
+  border: 1px solid var(--crt-color);
+  padding: 6px 14px;
+  font-family: 'VT323', monospace;
+  font-size: 17px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.term-btn:hover {
+  background: var(--crt-color);
+  color: var(--crt-bg);
+  box-shadow: 0 0 12px var(--crt-glow);
+}
+
+/* Skills Formatting */
+.skill-category {
+  margin-bottom: 16px;
+}
+
+.skill-cat-title {
+  font-size: 17px;
+  letter-spacing: 1px;
+  color: var(--crt-bright);
+  margin-bottom: 8px;
+}
+
+.skill-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 17px;
+  font-family: 'VT323', monospace;
+}
+
+.skill-name {
+  min-width: 180px;
+  color: var(--crt-color);
+}
+
+.skill-meter {
+  color: var(--crt-bright);
+  letter-spacing: 1px;
+}
+
+.skill-pct {
+  color: var(--crt-color);
+  min-width: 40px;
+}
+
+.skill-exp {
+  color: var(--crt-dim);
+  font-size: 14px;
+}
+
+/* Project Cards */
+.project-card {
+  border: 1px dashed var(--crt-dim);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.project-card:hover {
+  border-color: var(--crt-color);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.project-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.project-num {
+  color: var(--crt-dim);
+  font-size: 16px;
+}
+
+.project-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--crt-bright);
+  letter-spacing: 1px;
+}
+
+.project-year {
+  margin-left: auto;
+  color: var(--crt-dim);
+  font-size: 15px;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.tag-badge {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--crt-dim);
+  padding: 1px 6px;
+  font-size: 13px;
+  color: var(--crt-color);
+  border-radius: 2px;
+}
+
+.project-desc {
+  font-size: 17px;
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+
+.project-highlights {
+  list-style: none;
+  margin-bottom: 12px;
+  padding-left: 14px;
+  font-size: 16px;
+  color: var(--crt-color);
+}
+
+.project-highlights li::before {
+  content: "• ";
+  color: var(--crt-dim);
+  margin-right: 4px;
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 16px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dotted rgba(255, 255, 255, 0.08);
+}
+
+/* Timeline & Experience */
+.timeline-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 17px;
+}
+
+.timeline-header {
+  color: var(--crt-bright);
+}
+
+.timeline-body {
+  color: var(--crt-dim);
+  padding-left: 4px;
+  font-size: 16px;
+}
+
+/* Contact Matrix */
+.contact-matrix {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+}
+
+.contact-name {
+  color: var(--crt-bright);
+}
+
+.contact-arrow {
+  color: var(--crt-dim);
+}
+
+.contact-prompt-box {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--crt-dim);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Links and Clickables */
+.term-link {
+  color: var(--crt-color);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.term-link:hover {
+  color: var(--crt-bright);
+  text-decoration: underline;
+  text-shadow: 0 0 8px var(--crt-glow);
+}
+
+.term-clickable {
+  color: var(--crt-bright);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  transition: all 0.1s ease;
+}
+
+.term-clickable:hover {
+  background: var(--crt-color);
+  color: var(--crt-bg);
+  text-shadow: none;
+}
+
+/* Command Help Table */
+.term-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 17px;
+  margin: 8px 0;
+}
+
+.term-table td {
+  padding: 4px 8px;
+  vertical-align: top;
+}
+
+.cmd-cell {
+  width: 160px;
+  color: var(--crt-bright);
+  font-weight: bold;
+}
+
+.desc-cell {
+  color: var(--crt-color);
+}
+
+.table-footer {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--crt-dim);
+  font-style: italic;
+}
+
+/* Virtual File List */
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 6px 0;
+  font-size: 16px;
+}
+
+.cmd-hint {
+  font-size: 14px;
+  color: var(--crt-dim);
+  margin-top: 6px;
+}
+
+/* Alert Classes */
+.cmd-info {
+  color: var(--crt-color);
+}
+
+.cmd-success {
+  color: var(--crt-bright);
+}
+
+.cmd-warning {
+  color: #fbbf24;
+}
+
+.cmd-error {
+  color: #f87171;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 850px) {
+  .crt-header-bar {
+    font-size: 13px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .header-meta {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .quick-cmd-btn {
+    font-size: 14px;
+    padding: 3px 6px;
+  }
+  .skill-row {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .skill-name {
+    min-width: 140px;
+  }
+  .cli-input {
+    font-size: 17px;
+  }
+  .cmd-cell {
+    width: 110px;
+  }
+}

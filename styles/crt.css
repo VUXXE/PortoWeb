@@ -1,0 +1,289 @@
+/* CRT Screen Visuals, Barrel Distortion, Scanlines & Phosphor FX */
+
+.crt-screen-container {
+  position: relative;
+  width: 100%;
+  height: 640px;
+  overflow: hidden;
+  background: #000;
+  border-radius: 28px;
+}
+
+/* The Curved CRT Cathode Tube */
+.crt-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: var(--crt-bg);
+  color: var(--crt-color);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px 32px 32px 32px;
+  border-radius: 38px / 26px;
+  box-shadow: 
+    inset 0 0 120px rgba(0, 0, 0, 0.98),
+    inset 0 0 40px rgba(0, 0, 0, 0.95),
+    inset 0 0 6px var(--crt-glow),
+    0 0 15px rgba(0, 0, 0, 0.9);
+  transition: border-radius 0.3s ease;
+  scroll-behavior: smooth;
+}
+
+/* 1. Optical Barrel Distortion Filter */
+.crt-screen.has-barrel .crt-content {
+  filter: url(#crt-barrel-filter);
+  transform-origin: center center;
+}
+
+/* 2. Glass Curvature Vignette (Dark edge falloff) */
+.crt-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  background: 
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.45) 80%, rgba(0, 0, 0, 0.95) 100%);
+}
+
+/* 3. Convex Glass Surface Specular Reflection / Glare */
+.crt-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 16;
+  background: 
+    linear-gradient(125deg, 
+      rgba(255, 255, 255, 0.05) 0%, 
+      rgba(255, 255, 255, 0.02) 18%, 
+      transparent 38%, 
+      transparent 70%, 
+      rgba(255, 255, 255, 0.015) 100%
+    );
+}
+
+/* 4. Horizontal Scanlines & Aperture Grille */
+.crt-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 14;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.crt-screen.scanlines-active .crt-scanlines {
+  opacity: 1;
+  background: 
+    /* Horizontal raster scanline bars */
+    linear-gradient(
+      rgba(18, 16, 16, 0) 50%, 
+      var(--crt-scanline-color) 50%
+    ),
+    /* Vertical RGB subpixel aperture grille */
+    linear-gradient(
+      90deg, 
+      rgba(255, 0, 0, 0.025), 
+      rgba(0, 255, 0, 0.02), 
+      rgba(0, 0, 255, 0.025)
+    );
+  background-size: 100% 3px, 3px 100%;
+}
+
+/* 5. Subtle Phosphor Bloom & Text Glow */
+.crt-content {
+  position: relative;
+  z-index: 5;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-shadow: 
+    0 0 2px var(--crt-color),
+    0 0 8px var(--crt-glow),
+    0 0 16px var(--crt-glow-soft);
+  animation: crt-flicker 0.15s infinite;
+}
+
+/* 6. Screensaver Canvas (Matrix Rain) */
+#matrix-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 25;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: rgba(0, 0, 0, 0.92);
+}
+
+#matrix-canvas.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* 7. ASCII Fire Overlay */
+#fire-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 26;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: rgba(0, 0, 0, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: pre;
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  line-height: 1.1;
+  color: var(--crt-color);
+  text-shadow: 0 0 8px var(--crt-glow);
+  text-align: center;
+}
+
+#fire-overlay.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* ANIMATIONS */
+
+/* 60Hz Phosphor Flicker */
+@keyframes crt-flicker {
+  0% { opacity: 0.985; }
+  50% { opacity: 1; }
+  100% { opacity: 0.99; }
+}
+
+/* CRT Electromagnetic Degauss Pulse */
+.crt-screen.is-degaussing {
+  animation: degauss-shake 1.1s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes degauss-shake {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    filter: brightness(2.5) contrast(1.8) hue-rotate(90deg);
+  }
+  15% {
+    transform: translate(-14px, 10px) rotate(-1.5deg) scale(1.04);
+    filter: brightness(2.2) hue-rotate(180deg);
+  }
+  30% {
+    transform: translate(12px, -8px) rotate(1.2deg) scale(0.97);
+    filter: brightness(1.8) hue-rotate(270deg);
+  }
+  45% {
+    transform: translate(-8px, 6px) rotate(-0.8deg) scale(1.02);
+    filter: brightness(1.5) hue-rotate(360deg);
+  }
+  60% {
+    transform: translate(5px, -4px) rotate(0.5deg) scale(0.99);
+    filter: brightness(1.3);
+  }
+  75% {
+    transform: translate(-3px, 2px) rotate(-0.2deg);
+    filter: brightness(1.15);
+  }
+  90% {
+    transform: translate(1px, -1px);
+    filter: brightness(1.05);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    filter: brightness(1) contrast(1);
+  }
+}
+
+/* CRT Power Off: Line & Dot Collapse */
+.crt-screen.crt-power-off {
+  animation: crt-turn-off 0.55s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes crt-turn-off {
+  0% {
+    transform: scale(1, 1);
+    filter: brightness(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1, 0.003);
+    filter: brightness(4);
+    opacity: 1;
+    background: #fff;
+  }
+  75% {
+    transform: scale(0.005, 0.003);
+    filter: brightness(10);
+    opacity: 1;
+    background: #fff;
+  }
+  100% {
+    transform: scale(0, 0);
+    filter: brightness(0);
+    opacity: 0;
+    background: #000;
+  }
+}
+
+/* CRT Power On Warmup */
+.crt-screen.crt-power-on {
+  animation: crt-turn-on 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes crt-turn-on {
+  0% {
+    transform: scale(0, 0);
+    filter: brightness(8);
+    opacity: 0;
+  }
+  30% {
+    transform: scale(0.01, 0.004);
+    filter: brightness(6);
+    opacity: 1;
+    background: #fff;
+  }
+  60% {
+    transform: scale(1, 0.004);
+    filter: brightness(3);
+    opacity: 1;
+    background: var(--crt-color);
+  }
+  85% {
+    transform: scale(1, 1.02);
+    filter: brightness(1.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1, 1);
+    filter: brightness(1);
+    opacity: 1;
+  }
+}
+
+/* Respect Accessibility Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .crt-content {
+    animation: none !important;
+  }
+  .crt-screen.is-degaussing {
+    animation: none !important;
+  }
+}
+
+/* Mobile Screen Height Adjustments */
+@media (max-width: 850px) {
+  .crt-screen-container {
+    height: 540px;
+    border-radius: 18px;
+  }
+  .crt-screen {
+    padding: 16px 16px 24px 16px;
+    border-radius: 20px / 14px;
+  }
+}

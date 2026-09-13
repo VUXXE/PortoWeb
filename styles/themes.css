@@ -1,0 +1,64 @@
+/* Phosphor Color Themes */
+
+:root {
+  /* Common CRT chassis colors */
+  --bezel-color: #242528;
+  --bezel-shadow: #121315;
+  --bezel-highlight: #3c3e44;
+  --bezel-texture: rgba(255, 255, 255, 0.02);
+  --bezel-groove: #0d0e10;
+  --badge-gold: #c5a059;
+  --badge-gold-light: #f3dfa2;
+}
+
+/* 1. Classic P1 Green Phosphor (Default) */
+body.theme-green {
+  --crt-bg: #030804;
+  --crt-color: #33ff33;
+  --crt-bright: #adffad;
+  --crt-dim: #136613;
+  --crt-glow: rgba(51, 255, 51, 0.45);
+  --crt-glow-soft: rgba(51, 255, 51, 0.18);
+  --crt-accent: #66ff66;
+  --crt-scanline-color: rgba(0, 0, 0, 0.45);
+  --crt-aperture-glow: rgba(51, 255, 51, 0.04);
+}
+
+/* 2. Vintage P3 Amber Phosphor (DEC VT220 style) */
+body.theme-amber {
+  --crt-bg: #0a0501;
+  --crt-color: #ffb000;
+  --crt-bright: #ffe299;
+  --crt-dim: #7a4f00;
+  --crt-glow: rgba(255, 176, 0, 0.48);
+  --crt-glow-soft: rgba(255, 176, 0, 0.2);
+  --crt-accent: #ffc94d;
+  --crt-scanline-color: rgba(0, 0, 0, 0.45);
+  --crt-aperture-glow: rgba(255, 176, 0, 0.04);
+}
+
+/* 3. P4 Monochrome White / Cold Ice-Blue Phosphor */
+body.theme-white {
+  --crt-bg: #040608;
+  --crt-color: #d8f0f8;
+  --crt-bright: #ffffff;
+  --crt-dim: #5c7e8e;
+  --crt-glow: rgba(216, 240, 248, 0.4);
+  --crt-glow-soft: rgba(216, 240, 248, 0.15);
+  --crt-accent: #8fe0ff;
+  --crt-scanline-color: rgba(0, 0, 0, 0.42);
+  --crt-aperture-glow: rgba(216, 240, 248, 0.04);
+}
+
+/* 4. Cyberpunk Neon (Cyan with magenta highlights) */
+body.theme-cyber {
+  --crt-bg: #07030c;
+  --crt-color: #00ffcc;
+  --crt-bright: #ffffff;
+  --crt-dim: #007a62;
+  --crt-glow: rgba(0, 255, 204, 0.45);
+  --crt-glow-soft: rgba(255, 0, 119, 0.22);
+  --crt-accent: #ff0077;
+  --crt-scanline-color: rgba(0, 0, 0, 0.48);
+  --crt-aperture-glow: rgba(0, 255, 204, 0.05);
+}

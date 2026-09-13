@@ -1,0 +1,249 @@
+/* Retro Monitor Chassis & Bezel Styling */
+
+.monitor-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Outer Molded Housing (Bezel) */
+.monitor-casing {
+  position: relative;
+  width: 100%;
+  background: 
+    linear-gradient(180deg, #32353b 0%, #202226 60%, #18191c 100%);
+  border-radius: 28px 28px 20px 20px;
+  padding: 28px 34px 20px 34px;
+  box-shadow: 
+    0 25px 60px -10px rgba(0, 0, 0, 0.95),
+    0 10px 20px rgba(0, 0, 0, 0.7),
+    inset 0 2px 4px rgba(255, 255, 255, 0.15),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.8);
+  border: 1px solid #3c4048;
+}
+
+/* Top Air Ventilation Grilles */
+.monitor-vent-top {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.vent-slot {
+  width: 32px;
+  height: 5px;
+  background: #0d0e11;
+  border-radius: 3px;
+  box-shadow: 
+    inset 0 1px 2px #000,
+    0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+/* Screen Inset Frame (the sunken well holding the glass) */
+.screen-well {
+  position: relative;
+  background: #0f1013;
+  padding: 14px 18px;
+  border-radius: 20px;
+  box-shadow: 
+    inset 0 10px 25px rgba(0, 0, 0, 0.95),
+    inset 0 0 15px rgba(0, 0, 0, 0.85),
+    0 2px 4px rgba(255, 255, 255, 0.06);
+  border: 2px solid #1c1d22;
+}
+
+/* Monitor Chin & Controls */
+.monitor-chin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 18px;
+  padding: 10px 14px 4px 14px;
+  border-top: 2px solid #191a1e;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Vintage Brand Badge */
+.brand-plate {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #18191d 0%, #2a2c33 50%, #151619 100%);
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: 1px solid #454954;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.7),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.brand-title {
+  font-family: 'Share Tech Mono', 'VT323', monospace;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #e2e8f0;
+  text-shadow: 0 1px 2px #000;
+}
+
+.brand-sub {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #94a3b8;
+}
+
+/* Bezel Speaker Grille Cutouts */
+.speaker-grille {
+  display: grid;
+  grid-template-columns: repeat(8, 4px);
+  gap: 4px;
+}
+
+.speaker-hole {
+  width: 4px;
+  height: 4px;
+  background: #0b0c0e;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 1px #000;
+}
+
+/* Controls Cluster */
+.control-cluster {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Tactile Push Buttons */
+.bezel-btn {
+  background: linear-gradient(180deg, #383b42 0%, #24262c 100%);
+  color: #cbd5e1;
+  border: 1px solid #15161a;
+  padding: 6px 10px;
+  font-family: 'VT323', monospace;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 
+    0 3px 0 #121316,
+    0 4px 5px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: all 0.08s ease;
+  user-select: none;
+}
+
+.bezel-btn:hover {
+  background: linear-gradient(180deg, #43474f 0%, #2c2f37 100%);
+  color: #fff;
+}
+
+.bezel-btn:active {
+  transform: translateY(2px);
+  box-shadow: 
+    0 1px 0 #121316,
+    0 2px 3px rgba(0, 0, 0, 0.5),
+    inset 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.bezel-btn.control-active {
+  color: var(--crt-color);
+  text-shadow: 0 0 5px var(--crt-glow);
+  border-color: var(--crt-dim);
+}
+
+/* Power Switch & LED */
+.power-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+  padding-left: 12px;
+  border-left: 2px solid #1c1d22;
+}
+
+.power-led {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3a1515;
+  border: 1px solid #150505;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.8);
+  transition: all 0.3s ease;
+}
+
+.power-led.led-active {
+  background: #22c55e;
+  border-color: #15803d;
+  box-shadow: 
+    0 0 8px #22c55e,
+    0 0 16px rgba(34, 197, 94, 0.6),
+    inset 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+.btn-power-switch {
+  background: linear-gradient(180deg, #b91c1c 0%, #7f1d1d 100%);
+  color: #fff;
+  border: 1px solid #450a0a;
+  padding: 6px 12px;
+  font-family: 'VT323', monospace;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 
+    0 3px 0 #450a0a,
+    0 4px 6px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.08s ease;
+}
+
+.btn-power-switch:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #450a0a;
+}
+
+/* Monitor Pedestal Stand */
+.monitor-stand {
+  width: 320px;
+  height: 28px;
+  background: linear-gradient(180deg, #202227 0%, #151619 100%);
+  border-radius: 0 0 12px 12px;
+  box-shadow: 
+    0 15px 30px rgba(0, 0, 0, 0.9),
+    inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  border: 1px solid #2d3036;
+  border-top: none;
+}
+
+/* Mobile Responsive Tweaks for Monitor */
+@media (max-width: 850px) {
+  .monitor-casing {
+    padding: 16px 14px 16px 14px;
+    border-radius: 16px;
+  }
+  .screen-well {
+    padding: 8px 8px;
+    border-radius: 14px;
+  }
+  .monitor-chin {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  .speaker-grille {
+    display: none;
+  }
+  .control-cluster {
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .monitor-stand {
+    display: none;
+  }
+}
