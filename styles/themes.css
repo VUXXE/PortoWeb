@@ -15,26 +15,26 @@
 body.theme-green {
   --crt-bg: #030804;
   --crt-color: #33ff33;
-  --crt-bright: #adffad;
-  --crt-dim: #136613;
-  --crt-glow: rgba(51, 255, 51, 0.45);
-  --crt-glow-soft: rgba(51, 255, 51, 0.18);
+  --crt-bright: #e6ffe6;
+  --crt-dim: #29a847; /* High-contrast readable green on dark bg (WCAG AAA) */
+  --crt-glow: rgba(51, 255, 51, 0.22); /* Tight glow: zero blurry haze */
+  --crt-glow-soft: rgba(51, 255, 51, 0.06);
   --crt-accent: #66ff66;
-  --crt-scanline-color: rgba(0, 0, 0, 0.45);
-  --crt-aperture-glow: rgba(51, 255, 51, 0.04);
+  --crt-scanline-color: rgba(0, 0, 0, 0.14);
+  --crt-aperture-glow: rgba(51, 255, 51, 0.02);
 }
 
 /* 2. Vintage P3 Amber Phosphor (DEC VT220 style) */
 body.theme-amber {
   --crt-bg: #0a0501;
   --crt-color: #ffb000;
-  --crt-bright: #ffe299;
-  --crt-dim: #7a4f00;
-  --crt-glow: rgba(255, 176, 0, 0.48);
-  --crt-glow-soft: rgba(255, 176, 0, 0.2);
+  --crt-bright: #fff2cc;
+  --crt-dim: #c98500; /* High-contrast readable amber on dark bg (WCAG AAA) */
+  --crt-glow: rgba(255, 176, 0, 0.22);
+  --crt-glow-soft: rgba(255, 176, 0, 0.06);
   --crt-accent: #ffc94d;
-  --crt-scanline-color: rgba(0, 0, 0, 0.45);
-  --crt-aperture-glow: rgba(255, 176, 0, 0.04);
+  --crt-scanline-color: rgba(0, 0, 0, 0.14);
+  --crt-aperture-glow: rgba(255, 176, 0, 0.02);
 }
 
 /* 3. P4 Monochrome White / Cold Ice-Blue Phosphor */
@@ -42,12 +42,12 @@ body.theme-white {
   --crt-bg: #040608;
   --crt-color: #d8f0f8;
   --crt-bright: #ffffff;
-  --crt-dim: #5c7e8e;
-  --crt-glow: rgba(216, 240, 248, 0.4);
-  --crt-glow-soft: rgba(216, 240, 248, 0.15);
+  --crt-dim: #8ab4c7; /* High-contrast readable slate-blue on dark bg (WCAG AAA) */
+  --crt-glow: rgba(216, 240, 248, 0.18);
+  --crt-glow-soft: rgba(216, 240, 248, 0.05);
   --crt-accent: #8fe0ff;
-  --crt-scanline-color: rgba(0, 0, 0, 0.42);
-  --crt-aperture-glow: rgba(216, 240, 248, 0.04);
+  --crt-scanline-color: rgba(0, 0, 0, 0.12);
+  --crt-aperture-glow: rgba(216, 240, 248, 0.02);
 }
 
 /* 4. Cyberpunk Neon (Cyan with magenta highlights) */
@@ -55,10 +55,10 @@ body.theme-cyber {
   --crt-bg: #07030c;
   --crt-color: #00ffcc;
   --crt-bright: #ffffff;
-  --crt-dim: #007a62;
-  --crt-glow: rgba(0, 255, 204, 0.45);
-  --crt-glow-soft: rgba(255, 0, 119, 0.22);
+  --crt-dim: #1fd6b2; /* High-contrast readable teal on dark bg (WCAG AAA) */
+  --crt-glow: rgba(0, 255, 204, 0.20);
+  --crt-glow-soft: rgba(255, 0, 119, 0.06);
   --crt-accent: #ff0077;
-  --crt-scanline-color: rgba(0, 0, 0, 0.48);
-  --crt-aperture-glow: rgba(0, 255, 204, 0.05);
+  --crt-scanline-color: rgba(0, 0, 0, 0.14);
+  --crt-aperture-glow: rgba(0, 255, 204, 0.02);
 }

@@ -39,6 +39,8 @@ export class Terminal {
       { cmd: 'prev', num: 'P', desc: 'Switch to previous project card' },
       { cmd: 'theme', num: 'T', desc: 'Set phosphor color [green|amber|white|cyber]' },
       { cmd: 'barrel', num: 'B', desc: 'Set CRT barrel distortion [flat|subtle|authentic|heavy]' },
+      { cmd: 'scanlines', num: 'S', desc: 'Toggle CRT raster scanlines on/off' },
+      { cmd: 'a11y', num: '', desc: 'Activate maximum readability mode (flat, scanlines off)' },
       { cmd: 'degauss', num: 'D', desc: 'Trigger CRT magnetic degauss coil pulse' },
       { cmd: 'audio', num: 'A', desc: 'Toggle CRT mechanical sound synthesizer' },
       { cmd: 'ls', num: '', desc: 'List files in virtual directory' },
@@ -500,6 +502,19 @@ export class Terminal {
       case 'degauss':
         this.setStatus('[SYS]: INITIATING ELECTROMAGNETIC DEGAUSS COIL DISCHARGE...');
         crt.degauss();
+        return;
+
+      case 'scanlines':
+      case 'scanline':
+        const scanlinesState = crt.toggleScanlines();
+        this.setStatus(`[SYS]: CRT Scanlines: ${scanlinesState ? 'ENABLED (SUBTLE)' : 'DISABLED (CLEAN A11Y MODE)'}`);
+        return;
+
+      case 'a11y':
+      case 'clean':
+        crt.setCurvatureByName('flat');
+        if (crt.scanlinesEnabled) crt.toggleScanlines();
+        this.setStatus('[SYS]: A11Y HIGH-LEGIBILITY MODE ACTIVE // FLAT SCREEN // SCANLINES OFF');
         return;
 
       case 'audio':

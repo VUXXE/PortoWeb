@@ -37,7 +37,7 @@
   color: var(--crt-color);
   border: 1px solid var(--crt-dim);
   padding: 2px 7px;
-  font-family: 'VT323', monospace;
+  font-family: 'Share Tech Mono', monospace;
   font-size: 13px;
   letter-spacing: 0.5px;
   border-radius: 2px;
@@ -100,7 +100,7 @@
   color: var(--crt-color);
   border: 1px solid var(--crt-dim);
   padding: 3px 8px;
-  font-family: 'VT323', monospace;
+  font-family: 'Share Tech Mono', monospace;
   font-size: 15px;
   letter-spacing: 0.6px;
   border-radius: 2px;
@@ -194,7 +194,7 @@
   color: var(--crt-color);
   border: 1px solid var(--crt-color);
   padding: 4px 10px;
-  font-family: 'VT323', monospace;
+  font-family: 'Share Tech Mono', monospace;
   font-size: 15px;
   letter-spacing: 0.5px;
   cursor: pointer;
@@ -566,7 +566,7 @@
   color: var(--crt-color);
   border: 1px solid var(--crt-dim);
   padding: 3px 8px;
-  font-family: 'VT323', monospace;
+  font-family: 'Share Tech Mono', monospace;
   font-size: 14px;
   border-radius: 2px;
   cursor: pointer;
@@ -905,7 +905,7 @@
   color: var(--crt-bright);
   border: 1px solid var(--crt-dim);
   padding: 1px 6px;
-  font-family: 'VT323', monospace;
+  font-family: 'Share Tech Mono', monospace;
   font-size: 14px;
   cursor: pointer;
   border-radius: 2px;
@@ -1005,7 +1005,7 @@
   background: transparent;
   border: none;
   outline: none;
-  font-family: 'VT323', monospace;
+  font-family: 'Share Tech Mono', monospace;
   font-size: 18px;
   color: var(--crt-bright);
   caret-color: transparent; /* custom block cursor */

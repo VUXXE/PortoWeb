@@ -67,30 +67,30 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 14;
+  z-index: 4; /* Below .crt-content (z-index: 5) so scanlines never occlude or cut through text */
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.25s ease;
 }
 
 .crt-screen.scanlines-active .crt-scanlines {
-  opacity: 1;
+  opacity: 0.16; /* Ultra-subtle texture; zero interference with text legibility */
   background: 
     /* Horizontal raster scanline bars */
     linear-gradient(
-      rgba(18, 16, 16, 0) 50%, 
+      transparent 50%, 
       var(--crt-scanline-color) 50%
     ),
     /* Vertical RGB subpixel aperture grille */
     linear-gradient(
       90deg, 
-      rgba(255, 0, 0, 0.025), 
-      rgba(0, 255, 0, 0.02), 
-      rgba(0, 0, 255, 0.025)
+      rgba(255, 0, 0, 0.015), 
+      rgba(0, 255, 0, 0.015), 
+      rgba(0, 0, 255, 0.015)
     );
-  background-size: 100% 3px, 3px 100%;
+  background-size: 100% 4px, 4px 100%;
 }
 
-/* 5. Subtle Phosphor Bloom & Text Glow */
+/* 5. Clean Phosphor Rendering (Zero Eye Strain & High Legibility) */
 .crt-content {
   position: relative;
   z-index: 5;
@@ -104,11 +104,10 @@
   -moz-osx-font-smoothing: grayscale;
   text-rendering: geometricPrecision;
   transform: translateZ(0);
+  /* Crisp phosphor contrast without thick blurry bloom */
   text-shadow: 
-    0 0 2px var(--crt-color),
-    0 0 8px var(--crt-glow),
-    0 0 16px var(--crt-glow-soft);
-  animation: crt-flicker 0.15s infinite;
+    0 0 1px var(--crt-glow),
+    0 0 3px var(--crt-glow-soft);
 }
 
 /* 6. Screensaver Canvas (Matrix Rain) */
@@ -278,9 +277,13 @@
 @media (prefers-reduced-motion: reduce) {
   .crt-content {
     animation: none !important;
+    filter: none !important;
   }
   .crt-screen.is-degaussing {
     animation: none !important;
+  }
+  .crt-scanlines {
+    display: none !important;
   }
 }
 

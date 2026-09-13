@@ -40,7 +40,7 @@
   <main class="crt-screen-container" role="main">
     
     <!-- The Convex Glass CRT Screen -->
-    <div class="crt-screen scanlines-active has-barrel" id="crt-screen" tabindex="0" aria-label="CRT Terminal Screen">
+    <div class="crt-screen has-barrel" id="crt-screen" tabindex="0" aria-label="CRT Terminal Screen">
       
       <!-- Atmospheric Overlays -->
       <div class="crt-vignette" aria-hidden="true"></div>
@@ -70,6 +70,9 @@
             </button>
             <button type="button" class="hud-btn" id="btn-curvature" title="Adjust Barrel Distortion">
               BARREL: <strong id="status-curvature">AUTHENTIC</strong>
+            </button>
+            <button type="button" class="hud-btn" id="btn-scanlines" title="Toggle CRT Raster Scanlines">
+              SCANLINES: <strong id="status-scanlines">OFF</strong>
             </button>
             <button type="button" class="hud-btn control-active" id="btn-audio" title="Toggle Mechanical Audio">
               AUDIO: <strong id="status-audio">ON</strong>

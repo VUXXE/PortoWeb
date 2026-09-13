@@ -27,8 +27,8 @@ export class CRTEngine {
     this.currentThemeIndex = 0; // Default: Green Phosphor
 
     this.isPoweredOn = true;
-    this.scanlinesEnabled = true;
-    this.flickerEnabled = true;
+    this.scanlinesEnabled = false; // Disabled by default for maximum readability & a11y
+    this.flickerEnabled = false;
   }
 
   init() {
@@ -65,6 +65,11 @@ export class CRTEngine {
           this.currentCurvatureIndex = idx;
         }
       }
+
+      const savedScanlines = localStorage.getItem('portoweb_crt_scanlines');
+      if (savedScanlines !== null) {
+        this.scanlinesEnabled = savedScanlines === 'true';
+      }
     } catch {
       // Ignore storage errors
     }
@@ -74,6 +79,7 @@ export class CRTEngine {
     try {
       localStorage.setItem('portoweb_crt_theme', this.themes[this.currentThemeIndex]);
       localStorage.setItem('portoweb_crt_curvature', String(this.currentCurvatureIndex));
+      localStorage.setItem('portoweb_crt_scanlines', String(this.scanlinesEnabled));
     } catch {
       // Ignore
     }
@@ -244,6 +250,18 @@ export class CRTEngine {
     } else {
       this.screenElement.classList.remove('scanlines-active');
     }
+
+    const label = document.getElementById('status-scanlines');
+    if (label) {
+      label.textContent = this.scanlinesEnabled ? 'ON' : 'OFF';
+    }
+
+    const btn = document.getElementById('btn-scanlines');
+    if (btn) {
+      btn.classList.toggle('control-active', this.scanlinesEnabled);
+    }
+
+    this.savePreferences();
   }
 
   /**
@@ -315,6 +333,11 @@ export class CRTEngine {
     const btnCurvature = document.getElementById('btn-curvature');
     if (btnCurvature) {
       btnCurvature.addEventListener('click', () => this.cycleCurvature());
+    }
+
+    const btnScanlines = document.getElementById('btn-scanlines');
+    if (btnScanlines) {
+      btnScanlines.addEventListener('click', () => this.toggleScanlines());
     }
 
     const btnAudio = document.getElementById('btn-audio');
