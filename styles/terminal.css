@@ -280,7 +280,8 @@
   font-family: inherit;
   color: var(--crt-bright);
   font-size: calc(12px * var(--terminal-scale, 2.0));
-  line-height: 1.15;
+  line-height: 1.05;
+  letter-spacing: 0;
   margin: 0;
   white-space: pre;
   overflow-x: auto;

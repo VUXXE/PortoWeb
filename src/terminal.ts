@@ -62,6 +62,7 @@ export class Terminal {
     { cmd: 'fire', desc: 'Launch 1990s demoscene Doom fire demo' },
     { cmd: 'clear', aliases: ['cls'], desc: 'Clear the terminal output buffer' },
     { cmd: 'banner', aliases: ['motd'], desc: 'Print system login banner' },
+    { cmd: 'logo', desc: 'Display brand ASCII logo' },
     { cmd: 'whoami', desc: 'Print current user identity' },
     { cmd: 'date', desc: 'Print current UTC timestamp' },
     { cmd: 'echo', args: '<text>', desc: 'Echo back text to the console' },
@@ -308,6 +309,10 @@ export class Terminal {
         this.printBootBanner();
         break;
 
+      case 'logo':
+        this.cmdLogo();
+        break;
+
       case 'theme':
         this.cmdTheme(args);
         break;
@@ -445,6 +450,14 @@ export class Terminal {
           <button type="button" class="cli-chip" data-cmd="clear">clear</button>
         </div>
         <div class="cli-divider">================================================================================</div>
+      </div>
+    `);
+  }
+
+  private cmdLogo(): void {
+    this.appendOutput(`
+      <div class="cli-banner-container">
+        <pre class="cli-ascii-logo">${PORTFOLIO_DATA.asciiLogo.trim()}</pre>
       </div>
     `);
   }
