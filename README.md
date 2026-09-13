@@ -34,7 +34,7 @@ npm run preview
 * Modeled after 1980s industrial video display terminals (**TeleVideo 950**, **DEC VT100**).
 * **Molded Front Bezel**: Chamfered edges, heat ventilation slots, speaker cutouts, and vintage metallic badge.
 * **Working Hardware Controls**:
-  - **`DEGAUSS`**: Discharges the CRT electromagnetic coil — vibrates the screen, flashes chromatic aberration, and settles back into crisp focus with sound.
+  - **`DEGAUSS`**: Discharges the CRT electromagnetic coil: vibrates the screen, flashes chromatic aberration, and settles back into crisp focus with sound.
   - **`PHOSPHOR`**: Cycles between 4 authentic monochrome phosphor colorways:
     - **P1 Green** (`#33ff33` classic terminal glow)
     - **P3 Amber** (`#ffb000` warm DEC VT220 orange)

@@ -143,10 +143,13 @@
 
 .bezel-btn:active {
   transform: translateY(2px);
-  box-shadow: 
-    0 1px 0 #121316,
-    0 2px 3px rgba(0, 0, 0, 0.5),
-    inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 0 #121316;
+}
+
+.bezel-btn:focus-visible {
+  outline: 2px solid var(--crt-color);
+  outline-offset: 3px;
+  box-shadow: 0 0 10px var(--crt-glow);
 }
 
 .bezel-btn.control-active {
@@ -207,6 +210,12 @@
   box-shadow: 0 1px 0 #450a0a;
 }
 
+.btn-power-switch:focus-visible {
+  outline: 2px solid #ef4444;
+  outline-offset: 3px;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.7);
+}
+
 /* Monitor Pedestal Stand */
 .monitor-stand {
   width: 320px;
@@ -232,15 +241,32 @@
   }
   .monitor-chin {
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
     justify-content: center;
   }
   .speaker-grille {
     display: none;
   }
   .control-cluster {
-    gap: 6px;
+    gap: 8px;
     flex-wrap: wrap;
+    justify-content: center;
+  }
+  .bezel-btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px 14px;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-power-switch {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px 16px;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
   }
   .monitor-stand {

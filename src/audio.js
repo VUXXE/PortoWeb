@@ -1,6 +1,6 @@
 /**
  * Synthesized Web Audio Engine for Vintage CRT Computer Terminal
- * 100% self-contained audio synthesis — zero external sound files required!
+ * 100% self-contained audio synthesis: zero external sound files required!
  */
 
 class RetroAudioEngine {

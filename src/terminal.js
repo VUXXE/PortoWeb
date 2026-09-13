@@ -127,8 +127,11 @@ export class Terminal {
         this.inputElement.value = '';
       }
     } else if (e.key === 'Tab') {
-      e.preventDefault();
-      this.handleTabCompletion();
+      if (!e.shiftKey && this.inputElement.value.trim().length > 0) {
+        e.preventDefault();
+        this.handleTabCompletion();
+      }
+      // If input is empty, let native Tab focus cycle to navigation buttons
     } else if (e.key === 'l' && e.ctrlKey) {
       e.preventDefault();
       this.clear();
@@ -388,7 +391,7 @@ export class Terminal {
   }
 
   cmdSkills() {
-    let out = `<div class="cmd-box"><div class="box-title">TECHNICAL PROFICIENCY MATRIX</div>`;
+    let out = `<div class="cmd-box"><div class="box-title">TECHNICAL PROFICIENCY &amp; PRODUCTION TOOLING</div>`;
 
     PORTFOLIO_DATA.skills.forEach(group => {
       out += `<div class="skill-category">
@@ -396,16 +399,12 @@ export class Terminal {
         <div class="skill-grid">`;
 
       group.items.forEach(skill => {
-        const totalBars = 16;
-        const filledBars = Math.round((skill.level / 100) * totalBars);
-        const emptyBars = totalBars - filledBars;
-        const barStr = '█'.repeat(filledBars) + '░'.repeat(emptyBars);
-
+        const tierBadge = `[${skill.tier}]`.padEnd(11);
         out += `<div class="skill-row">
+          <span class="skill-tier">${tierBadge}</span>
           <span class="skill-name">${skill.name.padEnd(24)}</span>
-          <span class="skill-meter">[${barStr}]</span>
-          <span class="skill-pct">${String(skill.level).padStart(3)}%</span>
-          <span class="skill-exp">${skill.exp}</span>
+          <span class="skill-exp">${skill.exp.padEnd(8)}</span>
+          <span class="skill-focus">${skill.focus}</span>
         </div>`;
       });
 
@@ -526,12 +525,12 @@ export class Terminal {
   <div class="box-title">CURRICULUM VITAE // RESUME</div>
   <div class="resume-summary">
     <p><strong>Candidate:</strong> ${PORTFOLIO_DATA.profile.handle} (${PORTFOLIO_DATA.profile.title})</p>
-    <p><strong>Specializations:</strong> High-performance web applications, graphics pipelines, distributed systems, modern frontend architecture.</p>
-    <p><strong>Experience:</strong> 6+ years professional engineering across startups and scale-ups.</p>
+    <p><strong>Specializations:</strong> Full-stack web architecture, real-time networking, WebGL/Canvas graphics, systems programming.</p>
+    <p><strong>Experience:</strong> 6+ years professional engineering across web platforms and backend services.</p>
   </div>
   <div class="box-actions">
-    <a href="#" onclick="alert('Resume PDF download can be linked here!'); return false;" class="term-btn term-link">[ DOWNLOAD RESUME (PDF) ]</a>
-    <button class="term-btn term-clickable" data-run="skills">[ VIEW DETAILED SKILLS ]</button>
+    <a href="mailto:contact@example.com?subject=Resume%20Request%20for%20${encodeURIComponent(PORTFOLIO_DATA.profile.handle)}" class="term-btn term-link">[ REQUEST FULL RESUME (EMAIL) ]</a>
+    <button class="term-btn term-clickable" data-run="skills">[ VIEW SKILLS MATRIX ]</button>
     <button class="term-btn term-clickable" data-run="projects">[ VIEW PORTFOLIO PROJECTS ]</button>
   </div>
 </div>`;

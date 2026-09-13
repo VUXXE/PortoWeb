@@ -1,60 +1,59 @@
 /**
  * Portfolio Data Configuration
  * Edit this file to customize your portfolio details, projects, skills, and links.
+ * All placeholder fields are explicitly tagged with brackets [LIKE THIS] for easy replacement.
  */
 
 export const PORTFOLIO_DATA = {
   profile: {
     handle: "exu",
     host: "portoweb",
-    title: "Software Engineer & Creative Technologist",
+    title: "Software Engineer & Creative Developer",
     location: "Global / Remote",
-    status: "OPEN FOR CONTRACTS & FULL-TIME ROLES",
+    status: "OPEN FOR CONTRACTS & ROLES",
     systemName: "PORTO-OS / MODEL 84-CRT",
     version: "v3.2.0-RELEASE",
     bio: [
-      "I build high-performance web systems, creative interfaces, and robust backend services.",
-      "Obsessed with system architecture, low-latency applications, graphics programming, and nostalgic retro computing aesthetics.",
-      "When not writing code, exploring vintage hardware, demoscene hacks, and modular synthesizers."
+      "Full-stack and systems developer building web applications, real-time networking tools, and browser graphics.",
+      "Focused on system architecture, protocol design, WebGL/Web Audio experimentation, and vintage computing interfaces.",
+      "Experience spanning TypeScript, Rust, Go, and Linux environment tooling."
     ]
   },
 
   socials: [
-    { name: "GitHub", url: "https://github.com", handle: "@exu" },
-    { name: "LinkedIn", url: "https://linkedin.com", handle: "in/exu" },
-    { name: "Twitter / X", url: "https://x.com", handle: "@exu_dev" },
-    { name: "Email", url: "mailto:contact@example.com", handle: "contact@example.com" }
+    { name: "GitHub", url: "https://github.com", handle: "@[YOUR_GITHUB]" },
+    { name: "LinkedIn", url: "https://linkedin.com", handle: "in/[YOUR_LINKEDIN]" },
+    { name: "Twitter / X", url: "https://x.com", handle: "@[YOUR_HANDLE]" },
+    { name: "Email", url: "mailto:contact@example.com", handle: "[YOUR_EMAIL]@domain.com" }
   ],
 
   skills: [
     {
-      category: "LANGUAGES",
+      category: "LANGUAGES & CORE",
       items: [
-        { name: "TypeScript / JavaScript", level: 95, exp: "6 yrs" },
-        { name: "Rust / C++", level: 75, exp: "3 yrs" },
-        { name: "Python", level: 85, exp: "5 yrs" },
-        { name: "Go", level: 80, exp: "3 yrs" },
-        { name: "SQL (PostgreSQL)", level: 85, exp: "5 yrs" }
+        { name: "TypeScript / JavaScript", tier: "PRIMARY", exp: "6+ yrs", focus: "Node.js, Canvas, Async Pipelines" },
+        { name: "Rust", tier: "ACTIVE", exp: "3 yrs", focus: "Tokio async, CLI tools, Memory safety" },
+        { name: "Python", tier: "PRIMARY", exp: "5 yrs", focus: "Data tooling, Scripting, Automation" },
+        { name: "Go", tier: "ACTIVE", exp: "3 yrs", focus: "Microservices, Concurrency, REST" },
+        { name: "SQL (PostgreSQL)", tier: "PRIMARY", exp: "5 yrs", focus: "Schema design, Indexing, Migrations" }
       ]
     },
     {
-      category: "FRONTEND & GRAPHICS",
+      category: "GRAPHICS & PLATFORM",
       items: [
-        { name: "WebGL / GLSL Shaders", level: 80, exp: "3 yrs" },
-        { name: "Canvas 2D / Web Audio API", level: 90, exp: "4 yrs" },
-        { name: "Modern CSS / SVG FX", level: 95, exp: "7 yrs" },
-        { name: "React / Next.js / Vite", level: 90, exp: "5 yrs" },
-        { name: "Performance & Core Web Vitals", level: 88, exp: "4 yrs" }
+        { name: "WebGL & GLSL", tier: "ACTIVE", exp: "3 yrs", focus: "Fragment shaders, 3D scenes, Math" },
+        { name: "Canvas 2D & Web Audio", tier: "PRIMARY", exp: "4 yrs", focus: "Real-time synthesis, DSP, Visuals" },
+        { name: "Modern CSS & SVG", tier: "PRIMARY", exp: "7 yrs", focus: "Filters, Animations, Responsive layout" },
+        { name: "Web Platform APIs", tier: "PRIMARY", exp: "5 yrs", focus: "Performance, Web Workers, Storage" }
       ]
     },
     {
-      category: "SYSTEMS & CLOUD",
+      category: "SYSTEMS & DEVOPS",
       items: [
-        { name: "Linux / POSIX / Shell", level: 92, exp: "7 yrs" },
-        { name: "Docker / Containerization", level: 85, exp: "4 yrs" },
-        { name: "Distributed Systems & Queues", level: 82, exp: "3 yrs" },
-        { name: "WebSockets / Real-time IPC", level: 90, exp: "4 yrs" },
-        { name: "CI/CD & Cloud Infrastructure", level: 80, exp: "4 yrs" }
+        { name: "Linux & Shell Scripting", tier: "PRIMARY", exp: "7 yrs", focus: "POSIX, Bash, Process debugging" },
+        { name: "Docker & Containers", tier: "ACTIVE", exp: "4 yrs", focus: "Multi-stage builds, Compose, Environments" },
+        { name: "WebSockets & IPC", tier: "PRIMARY", exp: "4 yrs", focus: "Real-time communication, State sync" },
+        { name: "CI/CD Workflows", tier: "ACTIVE", exp: "4 yrs", focus: "GitHub Actions, Automated test runners" }
       ]
     }
   ],
@@ -64,72 +63,76 @@ export const PORTFOLIO_DATA = {
       id: "neural-mesh",
       num: "01",
       title: "NEURAL-MESH // 3D Neural Viz",
-      category: "Graphics / WebGL / AI",
+      category: "Graphics / WebGL",
       year: "2025",
       tags: ["WebGL", "GLSL", "TypeScript", "Web Audio"],
-      description: "Interactive real-time 3D visualization of neural network layer activations, attention matrices, and tensor weight propagation with custom GPU compute shaders.",
+      description: "Interactive real-time 3D visualization of neural network layer activations with custom GPU shaders.",
       highlights: [
-        "Rendered 500k+ dynamic synaptic connection lines at 60 FPS using instanced geometry.",
-        "Synthesized reactive Web Audio sonification based on backpropagation gradients.",
-        "Interactive node explorer with real-time tensor slicing."
+        "Rendered dynamic synaptic connection meshes at 60 FPS using instanced geometry.",
+        "Interactive parameter controls for layer depth, node density, and tensor slicing.",
+        "Reactive audio feedback synthesized using the Web Audio API."
       ],
       links: {
-        demo: "https://demo.example.com/neural-mesh",
-        github: "https://github.com/exu/neural-mesh"
+        demo: "https://github.com/exu/neural-mesh",
+        github: "https://github.com/exu/neural-mesh",
+        demoLabel: "> VIEW PROJECT REPOSITORY"
       }
     },
     {
       id: "hyper-cache",
       num: "02",
-      title: "HYPER-CACHE // Distributed KV Store",
+      title: "HYPER-CACHE // Distributed Key-Value Store",
       category: "Systems / Rust / Networking",
       year: "2024",
       tags: ["Rust", "Raft", "gRPC", "Async Tokio"],
-      description: "High-throughput in-memory key-value database with Raft consensus, zero-allocation serialization, and persistent WAL logs.",
+      description: "In-memory key-value database implementation featuring Raft consensus, WAL logging, and custom memory management.",
       highlights: [
-        "Sustained 420k ops/sec sub-millisecond p99 latency across 5 distributed nodes.",
-        "Custom memory allocator with zero fragmentation under heavy write churn.",
-        "Fault-tolerant leader election and automated cluster split-brain recovery."
+        "Tested consensus and leader election recovery across simulated multi-node network partitions.",
+        "Custom slab allocator designed to eliminate heap fragmentation under write churn.",
+        "Asynchronous replication pipeline built on Tokio."
       ],
       links: {
-        demo: "https://demo.example.com/hyper-cache",
-        github: "https://github.com/exu/hyper-cache"
+        demo: "https://github.com/exu/hyper-cache",
+        github: "https://github.com/exu/hyper-cache",
+        demoLabel: "> VIEW PROJECT REPOSITORY"
       }
     },
     {
-      id: "vhs-synthesizer",
+      id: "analog-84",
       num: "03",
       title: "ANALOG-84 // Virtual Polyphonic Synth",
       category: "Audio / DSP / Web Platform",
       year: "2024",
-      tags: ["Web Audio API", "AudioWorklet", "WASM", "Canvas"],
-      description: "Bespoke 8-voice polyphonic subtractive software synthesizer emulating analog drift, Moog-style ladder filters, and vintage tape saturation.",
+      tags: ["Web Audio API", "AudioWorklet", "Canvas"],
+      description: "8-voice polyphonic subtractive software synthesizer emulating analog oscillator drift and multi-mode filters.",
       highlights: [
-        "Low-latency DSP engine running inside dedicated AudioWorklet thread.",
-        "Real-time oscilloscope and vector CRT Lissajous curve visualizer.",
-        "Full MIDI hardware keyboard support via Web MIDI API."
+        "Low-latency DSP signal processing loop running inside an AudioWorklet thread.",
+        "Real-time vector oscilloscope and Lissajous curve visualizer rendered via HTML Canvas.",
+        "MIDI keyboard device connectivity via the Web MIDI standard."
       ],
       links: {
-        demo: "https://demo.example.com/analog-84",
-        github: "https://github.com/exu/analog-84"
+        demo: "https://github.com/exu/analog-84",
+        github: "https://github.com/exu/analog-84",
+        demoLabel: "> VIEW PROJECT REPOSITORY"
       }
     },
     {
-      id: "retro-kernel",
+      id: "micro-os",
       num: "04",
       title: "MICRO-OS // Bare-Metal x86 Kernel",
       category: "Systems / Assembly / C",
       year: "2023",
       tags: ["x86 Assembly", "C", "QEMU", "OS Dev"],
-      description: "Educational 32-bit protected-mode operating system kernel with multitasking, virtual memory paging, FAT12 file system, and VGA text driver.",
+      description: "Protected-mode educational operating system kernel featuring virtual memory paging and VGA text drivers.",
       highlights: [
-        "Custom bootloader fitting into a 512-byte MBR sector.",
-        "Preemptive round-robin process scheduler and basic system call interface.",
-        "Embedded retro command-line shell with text editor."
+        "Two-stage bootloader designed to fit within a 512-byte MBR sector.",
+        "Preemptive round-robin process scheduler and interrupt handling routines.",
+        "Custom serial driver and built-in interactive debug shell."
       ],
       links: {
-        demo: "https://demo.example.com/micro-os",
-        github: "https://github.com/exu/micro-os"
+        demo: "https://github.com/exu/micro-os",
+        github: "https://github.com/exu/micro-os",
+        demoLabel: "> VIEW PROJECT REPOSITORY"
       }
     }
   ],
@@ -137,21 +140,21 @@ export const PORTFOLIO_DATA = {
   experience: [
     {
       period: "2023 - PRESENT",
-      role: "Senior Systems & Frontend Engineer",
-      company: "Apex Technologies Corp.",
-      description: "Architected high-throughput real-time dashboards and graphics pipelines. Optimized Core Web Vitals across client portals, reducing latency by 45%."
+      role: "Senior Frontend & Systems Engineer",
+      company: "[CURRENT COMPANY / ORGANIZATION]",
+      description: "Building interactive web dashboards and real-time graphics pipelines. Profiling render lifecycles and reducing network round-trip overhead."
     },
     {
       period: "2021 - 2023",
       role: "Full-Stack Engineer",
-      company: "Vektor Labs",
-      description: "Engineered distributed streaming data collectors in Go and Rust. Built interactive data visualizers and client SDKs in TypeScript."
+      company: "[PREVIOUS STARTUP / AGENCY]",
+      description: "Engineered distributed streaming data collectors in Go and Rust. Developed interactive visualizations and client-facing SDKs."
     },
     {
       period: "2019 - 2021",
       role: "Software Developer",
-      company: "BitStream Systems",
-      description: "Developed RESTful APIs, internal automation tooling, and responsive web applications. Maintained Unix server infrastructure."
+      company: "[EARLIER ROLE / CLIENT]",
+      description: "Built web services, automated internal tooling, and maintained Linux application infrastructure."
     }
   ],
 
