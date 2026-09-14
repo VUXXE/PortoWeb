@@ -22,7 +22,10 @@ export class Terminal {
   private historyIndex: number = -1;
 
   private readonly virtualFiles: Record<string, string> = {
-    'bio.txt': PORTFOLIO_DATA.profile.bio.join('\n\n'),
+    'bio.txt': `${PORTFOLIO_DATA.profile.name}\n${PORTFOLIO_DATA.profile.title}\nLocation: ${PORTFOLIO_DATA.profile.location}\nPhone: ${PORTFOLIO_DATA.profile.phone}\n\n` + PORTFOLIO_DATA.profile.bio.join('\n\n'),
+    'education.txt': PORTFOLIO_DATA.education.map(e =>
+      `Institution: ${e.institution} (${e.location})\nDegree     : ${e.degree}\nGPA        : ${e.gpa}\nPeriod     : ${e.period}\nCoursework : ${e.coursework.join(', ')}`
+    ).join('\n\n'),
     'skills.txt': PORTFOLIO_DATA.skills.map(s => 
       `[ ${s.category} ]\n` + s.items.map(i => `  * ${i.name.padEnd(25)} [${i.tier}] ${i.exp.padEnd(7)} : ${i.focus}`).join('\n')
     ).join('\n\n'),
@@ -33,9 +36,9 @@ export class Terminal {
       `[ ${e.period} ] ${e.role} @ ${e.company}\n  ${e.description}`
     ).join('\n\n'),
     'contact.txt': PORTFOLIO_DATA.socials.map(s => 
-      `${s.name.padEnd(12)} : ${s.handle} (${s.url})`
+      `${s.name.padEnd(16)} : ${s.handle} (${s.url})`
     ).join('\n'),
-    'resume.txt': `${PORTFOLIO_DATA.profile.handle.toUpperCase()} - CURRICULUM VITAE\nTitle: ${PORTFOLIO_DATA.profile.title}\nLocation: ${PORTFOLIO_DATA.profile.location}\n\nType "resume" for full interactive layout.`,
+    'resume.txt': `${PORTFOLIO_DATA.profile.name.toUpperCase()}\n${PORTFOLIO_DATA.profile.title}\nLocation: ${PORTFOLIO_DATA.profile.location}\nPhone: ${PORTFOLIO_DATA.profile.phone}\nEmail: hanan7taqiyya@gmail.com\n\nType "resume" for full interactive layout or download official PDF via /cv.pdf.`,
     'logo.svg': PORTFOLIO_DATA.vectorLogo || '',
     'flag.txt': 'CTF{cRt_b4rr3l_d1st0rt10n_1984} // You found the secret terminal flag!'
   };
@@ -43,9 +46,10 @@ export class Terminal {
   private readonly commands: CommandDefinition[] = [
     { cmd: 'help', aliases: ['?'], desc: 'Display all available terminal commands' },
     { cmd: 'bio', aliases: ['about'], desc: 'Developer background, bio and status' },
+    { cmd: 'education', aliases: ['edu', 'academic'], desc: 'Formal academic background and coursework' },
     { cmd: 'skills', aliases: ['stack'], desc: 'Technical proficiencies and skill matrix' },
     { cmd: 'projects', aliases: ['work', 'portfolio'], desc: 'Showcase of selected works and systems' },
-    { cmd: 'project', args: '<1-4|id>', desc: 'View detailed specs of a specific project' },
+    { cmd: 'project', args: '<id|num>', desc: 'View detailed specs of a specific project' },
     { cmd: 'history', aliases: ['exp', 'career'], desc: 'Career history and milestones' },
     { cmd: 'contact', aliases: ['socials', 'email'], desc: 'Communication channels and links' },
     { cmd: 'resume', aliases: ['cv'], desc: 'Curriculum Vitae overview and download' },
@@ -108,15 +112,21 @@ export class Terminal {
       this.inputElement.addEventListener('input', () => audio.playKeyClick());
     }
 
-    // Delegation for in-buffer clickable commands and files
-    if (this.outputBuffer) {
-      this.outputBuffer.addEventListener('click', (e) => {
+    // Delegation for top nav bar, in-buffer clickable commands and files
+    const shell = document.getElementById('cli-shell') || this.outputBuffer;
+    if (shell) {
+      shell.addEventListener('click', (e) => {
         const target = e.target as HTMLElement;
         const cmdBtn = target.closest('[data-cmd]') as HTMLElement | null;
         if (cmdBtn) {
           const cmd = cmdBtn.getAttribute('data-cmd');
           if (cmd) {
+            // Clear screen first when clicking any menu button
+            this.clearScreenOnly();
             this.executeCommand(cmd);
+            if (this.outputBuffer) {
+              this.outputBuffer.scrollTop = 0;
+            }
             this.focusInput();
           }
           return;
@@ -126,7 +136,12 @@ export class Terminal {
         if (fileBtn) {
           const file = fileBtn.getAttribute('data-file');
           if (file) {
+            // Clear screen first when opening a file via click
+            this.clearScreenOnly();
             this.executeCommand(`cat ${file}`);
+            if (this.outputBuffer) {
+              this.outputBuffer.scrollTop = 0;
+            }
             this.focusInput();
           }
         }
@@ -257,6 +272,12 @@ export class Terminal {
       case 'bio':
       case 'about':
         this.cmdBio();
+        break;
+
+      case 'education':
+      case 'edu':
+      case 'academic':
+        this.cmdEducation();
         break;
 
       case 'skills':
@@ -411,18 +432,35 @@ export class Terminal {
     }
   }
 
-  public clearScreen(): void {
+  public clearScreenOnly(): void {
     if (this.outputBuffer) {
       const entries = this.outputBuffer.querySelectorAll('.cli-output-entry');
       entries.forEach(e => e.remove());
-      this.printPromptHeader();
     }
+  }
+
+  public clearScreen(): void {
+    this.clearScreenOnly();
+    this.printPromptHeader();
   }
 
   private printPromptHeader(): void {
     this.appendOutput(`
       <div class="cli-row cli-dim">
-        PORTO-OS Terminal Buffer Cleared // Type <button type="button" class="cli-chip" data-cmd="help">help</button> for available commands.
+        PORTO-OS Terminal Buffer Cleared. Click any command below or type <button type="button" class="cli-chip" data-cmd="help">help</button>.
+      </div>
+      <div class="cli-quick-links">
+        MENU:
+        <button type="button" class="cli-chip" data-cmd="bio">bio</button>
+        <button type="button" class="cli-chip" data-cmd="education">education</button>
+        <button type="button" class="cli-chip" data-cmd="skills">skills</button>
+        <button type="button" class="cli-chip" data-cmd="projects">projects</button>
+        <button type="button" class="cli-chip" data-cmd="history">history</button>
+        <button type="button" class="cli-chip" data-cmd="contact">contact</button>
+        <button type="button" class="cli-chip" data-cmd="resume">resume</button>
+        <button type="button" class="cli-chip" data-cmd="ls">ls</button>
+        <button type="button" class="cli-chip" data-cmd="help">help</button>
+        <button type="button" class="cli-chip" data-cmd="clear">clear</button>
       </div>
     `);
   }
@@ -437,11 +475,12 @@ export class Terminal {
         <div class="cli-sys-info">
           <strong>PORTO-OS</strong> (UNIX System V Release 4 // Model 84-CRT Terminal)<br>
           Connected as <strong>${this.promptUser}@${this.promptHost}.local</strong> (tty0) on ${new Date().toUTCString()}.<br>
-          Type <button type="button" class="cli-chip" data-cmd="help">help</button> to see all commands, or click any command below to explore.
+          Click any command below or type <button type="button" class="cli-chip" data-cmd="help">help</button> to explore.
         </div>
         <div class="cli-quick-links">
           QUICK COMMANDS:
           <button type="button" class="cli-chip" data-cmd="bio">bio</button>
+          <button type="button" class="cli-chip" data-cmd="education">education</button>
           <button type="button" class="cli-chip" data-cmd="skills">skills</button>
           <button type="button" class="cli-chip" data-cmd="projects">projects</button>
           <button type="button" class="cli-chip" data-cmd="history">history</button>
@@ -501,12 +540,16 @@ export class Terminal {
 
   private cmdBio(): void {
     const p = PORTFOLIO_DATA.profile;
+    const edu = PORTFOLIO_DATA.education[0];
     this.appendOutput(`
       <div class="cli-card-box">
         <div class="cli-box-header">┌── [ OPERATOR IDENTITY: ${p.handle.toUpperCase()} ] ───────────────────────────────────────────┐</div>
         <div class="cli-card-body">
+          <div class="cli-line"><strong>NAME</strong>     : <span class="cli-highlight">${p.name}</span></div>
           <div class="cli-line"><strong>ROLE</strong>     : ${p.title}</div>
           <div class="cli-line"><strong>LOCATION</strong> : ${p.location}</div>
+          <div class="cli-line"><strong>CONTACT</strong>  : ${p.phone} // hanan7taqiyya@gmail.com</div>
+          <div class="cli-line"><strong>ACADEMIC</strong> : ${edu.degree} @ ${edu.institution} (GPA: ${edu.gpa})</div>
           <div class="cli-line"><strong>STATUS</strong>   : <span class="cli-highlight">${p.status}</span></div>
           <div class="cli-line"><strong>SYSTEM</strong>   : ${p.systemName} (${p.version})</div>
           <div class="cli-divider">----------------------------------------------------------------------------</div>
@@ -515,13 +558,51 @@ export class Terminal {
           </div>
           <div class="cli-divider">----------------------------------------------------------------------------</div>
           <div class="cli-actions-row">
-            EXPLORE FURTHER: 
+            NAVIGATE: 
+            <button type="button" class="cli-chip" data-cmd="education">education</button>
             <button type="button" class="cli-chip" data-cmd="skills">skills</button>
             <button type="button" class="cli-chip" data-cmd="projects">projects</button>
+            <button type="button" class="cli-chip" data-cmd="history">history</button>
             <button type="button" class="cli-chip" data-cmd="contact">contact</button>
+            <button type="button" class="cli-chip" data-cmd="resume">resume</button>
+            <button type="button" class="cli-chip" data-cmd="clear">clear</button>
           </div>
         </div>
         <div class="cli-box-footer">└──────────────────────────────────────────────────────────────────────────┘</div>
+      </div>
+    `);
+  }
+
+  private cmdEducation(): void {
+    const items = PORTFOLIO_DATA.education.map(e => `
+      <div class="cli-edu-item">
+        <div class="cli-line"><strong>INSTITUTION</strong> : <span class="cli-highlight">${e.institution}</span> (${e.location})</div>
+        <div class="cli-line"><strong>DEGREE</strong>      : ${e.degree}</div>
+        <div class="cli-line"><strong>GPA</strong>         : <span class="cli-highlight">${e.gpa}</span></div>
+        <div class="cli-line"><strong>PERIOD</strong>      : ${e.period}</div>
+        <div class="cli-divider">----------------------------------------------------------------------------</div>
+        <div class="cli-line"><strong>RELEVANT COURSEWORK:</strong></div>
+        <div class="cli-dim">${e.coursework.join(' // ')}</div>
+      </div>
+    `).join('<div class="cli-divider">----------------------------------------------------------------------------</div>');
+
+    this.appendOutput(`
+      <div class="cli-card-box">
+        <div class="cli-box-header">┌── [ FORMAL EDUCATION & ACADEMICS ] ───────────────────────────────────────┐</div>
+        <div class="cli-card-body">
+          ${items}
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-actions-row">
+            NAVIGATE:
+            <button type="button" class="cli-chip" data-cmd="skills">skills</button>
+            <button type="button" class="cli-chip" data-cmd="projects">projects</button>
+            <button type="button" class="cli-chip" data-cmd="resume">resume</button>
+            <button type="button" class="cli-chip" data-cmd="bio">bio</button>
+            <button type="button" class="cli-chip" data-cmd="contact">contact</button>
+            <button type="button" class="cli-chip" data-cmd="clear">clear</button>
+          </div>
+        </div>
+        <div class="cli-box-footer">└── [ TYPE "resume" FOR CURRICULUM VITAE OVERVIEW ] ────────────────────────┘</div>
       </div>
     `);
   }
@@ -553,6 +634,17 @@ export class Terminal {
         <div class="cli-box-header">┌── [ TECHNICAL PROFICIENCY MATRIX ] ────────────────────────────────────────┐</div>
         <div class="cli-card-body">
           ${cats}
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-actions-row">
+            NAVIGATE:
+            <button type="button" class="cli-chip" data-cmd="education">education</button>
+            <button type="button" class="cli-chip" data-cmd="projects">projects</button>
+            <button type="button" class="cli-chip" data-cmd="bio">bio</button>
+            <button type="button" class="cli-chip" data-cmd="history">history</button>
+            <button type="button" class="cli-chip" data-cmd="contact">contact</button>
+            <button type="button" class="cli-chip" data-cmd="resume">resume</button>
+            <button type="button" class="cli-chip" data-cmd="clear">clear</button>
+          </div>
         </div>
         <div class="cli-box-footer">└── [ TYPE "projects" TO SEE SYSTEMS IMPLEMENTED WITH THIS STACK ] ─────────┘</div>
       </div>
@@ -582,15 +674,26 @@ export class Terminal {
         <div class="cli-box-header">┌── [ SELECTED WORKS & SYSTEMS DECK ] ──────────────────────────────────────┐</div>
         <div class="cli-card-body">
           ${cards}
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-actions-row">
+            NAVIGATE:
+            <button type="button" class="cli-chip" data-cmd="skills">skills</button>
+            <button type="button" class="cli-chip" data-cmd="education">education</button>
+            <button type="button" class="cli-chip" data-cmd="bio">bio</button>
+            <button type="button" class="cli-chip" data-cmd="history">history</button>
+            <button type="button" class="cli-chip" data-cmd="contact">contact</button>
+            <button type="button" class="cli-chip" data-cmd="resume">resume</button>
+            <button type="button" class="cli-chip" data-cmd="clear">clear</button>
+          </div>
         </div>
-        <div class="cli-box-footer">└── [ TYPE "project <1-4>" FOR DEEP ARCHITECTURE SPECS ] ───────────────────┘</div>
+        <div class="cli-box-footer">└── [ TYPE "project <1-${PORTFOLIO_DATA.projects.length}>" FOR DEEP ARCHITECTURE SPECS ] ───────────────────┘</div>
       </div>
     `);
   }
 
   private cmdProject(args: string): void {
     if (!args) {
-      this.appendOutput(`<div class="cli-row cli-warn">Usage: project &lt;1-4|id&gt; (e.g. <button type="button" class="cli-chip" data-cmd="project 1">project 1</button> or <button type="button" class="cli-chip" data-cmd="project neural-mesh">project neural-mesh</button>)</div>`);
+      this.appendOutput(`<div class="cli-row cli-warn">Usage: project &lt;1-${PORTFOLIO_DATA.projects.length}|id&gt; (e.g. <button type="button" class="cli-chip" data-cmd="project 1">project 1</button> or <button type="button" class="cli-chip" data-cmd="project mesh">project mesh</button>)</div>`);
       return;
     }
 
@@ -624,8 +727,18 @@ export class Terminal {
           </ul>
           <div class="cli-divider">----------------------------------------------------------------------------</div>
           <div class="cli-actions-row">
+            <button type="button" class="cli-chip" data-cmd="projects">&laquo; all projects</button>
             <a href="${target.links.github}" target="_blank" rel="noopener noreferrer" class="cli-btn-primary">[ ↗ OPEN SOURCE REPOSITORY ]</a>
             <a href="${target.links.demo}" target="_blank" rel="noopener noreferrer" class="cli-btn-secondary">[ ↗ LAUNCH LIVE DEMO ]</a>
+          </div>
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-actions-row">
+            NAVIGATE:
+            <button type="button" class="cli-chip" data-cmd="projects">projects</button>
+            <button type="button" class="cli-chip" data-cmd="education">education</button>
+            <button type="button" class="cli-chip" data-cmd="skills">skills</button>
+            <button type="button" class="cli-chip" data-cmd="contact">contact</button>
+            <button type="button" class="cli-chip" data-cmd="clear">clear</button>
           </div>
         </div>
         <div class="cli-box-footer">└── [ TYPE "projects" TO RETURN TO PROJECT CATALOG ] ───────────────────────┘</div>
@@ -647,6 +760,16 @@ export class Terminal {
         <div class="cli-box-header">┌── [ CAREER HISTORY & TIMELINE ] ──────────────────────────────────────────┐</div>
         <div class="cli-card-body">
           ${items}
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-actions-row">
+            NAVIGATE:
+            <button type="button" class="cli-chip" data-cmd="resume">resume</button>
+            <button type="button" class="cli-chip" data-cmd="education">education</button>
+            <button type="button" class="cli-chip" data-cmd="projects">projects</button>
+            <button type="button" class="cli-chip" data-cmd="skills">skills</button>
+            <button type="button" class="cli-chip" data-cmd="contact">contact</button>
+            <button type="button" class="cli-chip" data-cmd="clear">clear</button>
+          </div>
         </div>
         <div class="cli-box-footer">└── [ TYPE "resume" FOR CURRICULUM VITAE OVERVIEW ] ────────────────────────┘</div>
       </div>
@@ -675,6 +798,16 @@ export class Terminal {
               ${rows}
             </tbody>
           </table>
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-actions-row">
+            NAVIGATE:
+            <button type="button" class="cli-chip" data-cmd="projects">projects</button>
+            <button type="button" class="cli-chip" data-cmd="skills">skills</button>
+            <button type="button" class="cli-chip" data-cmd="education">education</button>
+            <button type="button" class="cli-chip" data-cmd="bio">bio</button>
+            <button type="button" class="cli-chip" data-cmd="resume">resume</button>
+            <button type="button" class="cli-chip" data-cmd="clear">clear</button>
+          </div>
         </div>
         <div class="cli-box-footer">└──────────────────────────────────────────────────────────────────────────┘</div>
       </div>
@@ -682,19 +815,45 @@ export class Terminal {
   }
 
   private cmdResume(): void {
+    const p = PORTFOLIO_DATA.profile;
+    const edu = PORTFOLIO_DATA.education[0];
     this.appendOutput(`
       <div class="cli-card-box">
-        <div class="cli-box-header">┌── [ CURRICULUM VITAE OVERVIEW ] ──────────────────────────────────────────┐</div>
+        <div class="cli-box-header">┌── [ CURRICULUM VITAE: ${p.name.toUpperCase()} ] ─────────────────────────┐</div>
         <div class="cli-card-body">
-          <div class="cli-line"><strong>${PORTFOLIO_DATA.profile.handle.toUpperCase()}</strong> // ${PORTFOLIO_DATA.profile.title}</div>
-          <div class="cli-line">Location: ${PORTFOLIO_DATA.profile.location} // Status: ${PORTFOLIO_DATA.profile.status}</div>
+          <div class="cli-line"><strong>${p.name}</strong> // <span class="cli-highlight">${p.title}</span></div>
+          <div class="cli-line">Contact : ${p.phone} // hanan7taqiyya@gmail.com // github.com/VUXXE // ${p.location}</div>
           <div class="cli-divider">----------------------------------------------------------------------------</div>
-          <div class="cli-line"><strong>CORE COMPETENCIES:</strong></div>
-          <div class="cli-line">TypeScript, Rust, Python, Go, WebGL/GLSL, Linux Systems, Distributed Tooling.</div>
+          <div class="cli-line"><strong>SUMMARY:</strong></div>
+          <div class="cli-bio-text"><p>${p.bio.join(' ')}</p></div>
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-line"><strong>EDUCATION:</strong></div>
+          <div class="cli-line"><strong>${edu.institution}</strong> (${edu.location})</div>
+          <div class="cli-line">${edu.degree} | GPA: <span class="cli-highlight">${edu.gpa}</span> | ${edu.period}</div>
+          <div class="cli-dim">Coursework: ${edu.coursework.join(', ')}</div>
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-line"><strong>TECHNICAL SKILLS:</strong></div>
+          <div class="cli-line">Languages  : Go, Rust, TypeScript, JavaScript, Java, Python, SQL, HTML5/CSS3</div>
+          <div class="cli-line">Frameworks : React 19, Next.js, TanStack Start, SvelteKit (Svelte 5 Runes), Go Fiber v2, GORM, Tauri v2, FlatLaf</div>
+          <div class="cli-line">Databases  : Cloudflare D1/SQLite, MySQL 8.0, PostgreSQL, Cloudflare R2, Drizzle ORM, HikariCP</div>
+          <div class="cli-line">Cloud/Infra: Cloudflare Workers, Durable Objects, Docker, Linux (Arch/CachyOS), Git/GitHub Actions, OCI</div>
+          <div class="cli-line">Concepts   : Clean Architecture, Better Auth, Real-Time State Sync (LWW), Baileys APIs, RESTful APIs</div>
           <div class="cli-divider">----------------------------------------------------------------------------</div>
           <div class="cli-actions-row">
-            <button type="button" class="cli-btn-primary" onclick="window.print()">[ 📥 PRINT / EXPORT CV ]</button>
-            <a href="mailto:contact@example.com" class="cli-btn-secondary">[ ✉ INQUIRE BY EMAIL ]</a>
+            <a href="/cv.pdf" download="Asy-Syahid_Abdurrahman_Hanan_Taqiyya_CV.pdf" class="cli-btn-primary">[ 📥 DOWNLOAD OFFICIAL PDF ]</a>
+            <button type="button" class="cli-btn-secondary" onclick="window.print()">[ 🖨 PRINT VIEW ]</button>
+            <a href="mailto:hanan7taqiyya@gmail.com" class="cli-btn-secondary">[ ✉ EMAIL ]</a>
+            <a href="https://wa.me/6285157839155" target="_blank" rel="noopener noreferrer" class="cli-btn-secondary">[ 💬 WHATSAPP ]</a>
+          </div>
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-actions-row">
+            NAVIGATE:
+            <button type="button" class="cli-chip" data-cmd="education">education</button>
+            <button type="button" class="cli-chip" data-cmd="projects">projects</button>
+            <button type="button" class="cli-chip" data-cmd="skills">skills</button>
+            <button type="button" class="cli-chip" data-cmd="history">history</button>
+            <button type="button" class="cli-chip" data-cmd="contact">contact</button>
+            <button type="button" class="cli-chip" data-cmd="clear">clear</button>
           </div>
         </div>
         <div class="cli-box-footer">└──────────────────────────────────────────────────────────────────────────┘</div>

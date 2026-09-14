@@ -18,29 +18,11 @@
 </head>
 <body class="theme-green font-pixel">
 
-  <!-- Hidden SVG Optical Barrel Distortion Filter -->
-  <svg class="crt-filters" aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none;">
-    <defs>
-      <filter id="crt-barrel-filter" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox" color-interpolation-filters="sRGB">
-        <feImage id="barrel-map-img" x="0%" y="0%" width="100%" height="100%" href="" xlink:href="" result="barrel-map" preserveAspectRatio="none" style="image-rendering: auto;" />
-        <feDisplacementMap 
-          id="barrel-displacement"
-          in="SourceGraphic" 
-          in2="barrel-map" 
-          scale="8" 
-          xChannelSelector="R" 
-          yChannelSelector="G" 
-          result="displaced" 
-        />
-      </filter>
-    </defs>
-  </svg>
-
   <!-- Full-Page Immersive CRT Terminal Screen -->
   <main class="crt-screen-container" role="main">
     
     <!-- The Convex Glass CRT Screen -->
-    <div class="crt-screen has-barrel" id="crt-screen" tabindex="0" aria-label="CRT Terminal Screen">
+    <div class="crt-screen curvature-authentic" id="crt-screen" tabindex="0" aria-label="CRT Terminal Screen">
       
       <!-- Atmospheric Overlays -->
       <div class="crt-vignette" aria-hidden="true"></div>

@@ -208,17 +208,11 @@ export class CRTEngine {
     }
 
     if (this.screenElement) {
-      this.screenElement.style.borderRadius = '0';
-      this.screenElement.classList.remove('has-barrel', 'curvature-subtle', 'curvature-authentic', 'curvature-heavy');
+      this.screenElement.classList.remove('has-barrel', 'curvature-flat', 'curvature-subtle', 'curvature-authentic', 'curvature-heavy');
+      this.screenElement.classList.add(`curvature-${config.id}`);
       if (config.scale > 0) {
-        this.screenElement.classList.add('has-barrel', `curvature-${config.id}`);
+        this.screenElement.classList.add('has-barrel');
       }
-    }
-
-    if (this.contentElement) {
-      this.contentElement.style.filter = 'none';
-      void this.contentElement.offsetWidth;
-      this.contentElement.style.filter = '';
     }
 
     // Update UI indicator

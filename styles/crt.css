@@ -18,18 +18,42 @@
   background-color: var(--crt-bg);
   color: var(--crt-color);
   overflow: hidden; /* STRICTLY NON-SCROLLABLE */
-  border-radius: 0;
+  border-radius: 16px;
   padding: 18px 30px 18px 30px;
   box-shadow: 
     inset 0 0 140px rgba(0, 0, 0, 0.98),
     inset 0 0 45px rgba(0, 0, 0, 0.92),
     inset 0 0 4px var(--crt-glow);
+  transition: border-radius 0.25s ease;
 }
 
-/* 1. Optical Barrel Distortion Filter */
-.crt-screen.has-barrel .crt-content {
-  filter: url(#crt-barrel-filter);
-  transform-origin: center center;
+/* 1. CRT Curvature & Vignette Levels */
+.crt-screen.curvature-flat {
+  border-radius: 0;
+}
+.crt-screen.curvature-flat .crt-vignette {
+  opacity: 0.15;
+}
+
+.crt-screen.curvature-subtle {
+  border-radius: 10px;
+}
+.crt-screen.curvature-subtle .crt-vignette {
+  background: radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.35) 85%, rgba(0, 0, 0, 0.9) 100%);
+}
+
+.crt-screen.curvature-authentic {
+  border-radius: 18px;
+}
+.crt-screen.curvature-authentic .crt-vignette {
+  background: radial-gradient(ellipse at 50% 50%, transparent 52%, rgba(0, 0, 0, 0.45) 80%, rgba(0, 0, 0, 0.96) 100%);
+}
+
+.crt-screen.curvature-heavy {
+  border-radius: 28px;
+}
+.crt-screen.curvature-heavy .crt-vignette {
+  background: radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0, 0, 0, 0.6) 75%, rgba(0, 0, 0, 0.99) 100%);
 }
 
 /* 2. Glass Curvature Vignette (Dark edge falloff) */
@@ -39,12 +63,8 @@
   pointer-events: none;
   z-index: 15;
   background: 
-    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.45) 80%, rgba(0, 0, 0, 0.95) 100%);
-}
-
-.crt-screen.curvature-heavy .crt-vignette {
-  background: 
-    radial-gradient(ellipse at 50% 50%, transparent 48%, rgba(0, 0, 0, 0.55) 75%, rgba(0, 0, 0, 0.98) 100%);
+    radial-gradient(ellipse at 50% 50%, transparent 52%, rgba(0, 0, 0, 0.45) 80%, rgba(0, 0, 0, 0.96) 100%);
+  transition: opacity 0.25s ease, background 0.25s ease;
 }
 
 /* 3. Convex Glass Surface Specular Reflection / Glare */

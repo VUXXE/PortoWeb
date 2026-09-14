@@ -13,11 +13,22 @@ export interface CurvaturePreset {
   scale: number;
 }
 
+export interface EducationItem {
+  institution: string;
+  location: string;
+  degree: string;
+  gpa: string;
+  period: string;
+  coursework: string[];
+}
+
 export interface Profile {
+  name: string;
   handle: string;
   host: string;
   title: string;
   location: string;
+  phone?: string;
   status: string;
   systemName: string;
   version: string;
@@ -69,6 +80,7 @@ export interface ExperienceItem {
 
 export interface PortfolioData {
   profile: Profile;
+  education: EducationItem[];
   socials: SocialLink[];
   skills: SkillCategory[];
   projects: Project[];

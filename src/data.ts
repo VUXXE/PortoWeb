@@ -1,140 +1,219 @@
 /**
  * Portfolio Data Configuration
- * Edit this file to customize your portfolio details, projects, skills, and links.
- * All placeholder fields are explicitly tagged with brackets [LIKE THIS] for easy replacement.
+ * Configured with authentic project, skill, and contact information from GitHub: @VUXXE.
  */
 
 import type { PortfolioData } from './types.js';
 
 export const PORTFOLIO_DATA: PortfolioData = {
   profile: {
-    handle: "exu",
+    name: "Asy-Syahid Abdurrahman Hanan Taqiyya",
+    handle: "vuxxe",
     host: "portoweb",
-    title: "Software Engineer & Creative Developer",
-    location: "Global / Remote",
-    status: "OPEN FOR CONTRACTS & ROLES",
+    title: "Software Engineer (Full-Stack & Systems)",
+    location: "Jakarta, Indonesia",
+    phone: "+62 851-5783-9155",
+    status: "OPEN FOR COLLABORATION & CONTRACTS",
     systemName: "PORTO-OS / MODEL 84-CRT",
     version: "v3.2.0-RELEASE",
     bio: [
-      "Full-stack and systems developer building web applications, real-time networking tools, and browser graphics.",
-      "Focused on system architecture, protocol design, WebGL/Web Audio experimentation, and vintage computing interfaces.",
-      "Experience spanning TypeScript, Rust, Go, and Linux environment tooling."
+      "Informatics undergraduate and Software Engineer focused on full-stack product engineering, edge architectures, and real-time systems.",
+      "Experienced in React/TanStack Start apps on Cloudflare (D1/R2), memory-efficient desktop apps in Rust/Tauri & Java, messaging bridges in Node.js/Baileys, and clean-architecture APIs in Go.",
+      "Passionate about building low-overhead, local-first software and production-grade tools."
     ]
   },
 
+  education: [
+    {
+      institution: "Universitas Indraprasta PGRI (UNINDRA)",
+      location: "Jakarta, Indonesia",
+      degree: "Bachelor of Science in Informatics Engineering (Teknik Informatika)",
+      gpa: "3.49 / 4.00",
+      period: "2023 - Present (Expected 2027)",
+      coursework: [
+        "Data Structures & Algorithms",
+        "Database Systems",
+        "Operating Systems",
+        "Computer Networks",
+        "Computer Architecture",
+        "Compiler Design",
+        "Object-Oriented Programming"
+      ]
+    }
+  ],
+
   socials: [
-    { name: "GitHub", url: "https://github.com", handle: "@[YOUR_GITHUB]" },
-    { name: "LinkedIn", url: "https://linkedin.com", handle: "in/[YOUR_LINKEDIN]" },
-    { name: "Twitter / X", url: "https://x.com", handle: "@[YOUR_HANDLE]" },
-    { name: "Email", url: "mailto:contact@example.com", handle: "[YOUR_EMAIL]@domain.com" }
+    { name: "GitHub", url: "https://github.com/VUXXE", handle: "@VUXXE" },
+    { name: "Email", url: "mailto:hanan7taqiyya@gmail.com", handle: "hanan7taqiyya@gmail.com" },
+    { name: "Phone / WhatsApp", url: "https://wa.me/6285157839155", handle: "+62 851-5783-9155" },
+    { name: "Live App (Mesh)", url: "https://mesh.asy.web.id/", handle: "mesh.asy.web.id" },
+    { name: "Live App (Baswara)", url: "https://baswara.bdrrhmnhnn.workers.dev", handle: "baswara.workers.dev" }
   ],
 
   skills: [
     {
-      category: "LANGUAGES & CORE",
+      category: "LANGUAGES",
       items: [
-        { name: "TypeScript / JavaScript", tier: "PRIMARY", exp: "6+ yrs", focus: "Node.js, Canvas, Async Pipelines" },
-        { name: "Rust", tier: "ACTIVE", exp: "3 yrs", focus: "Tokio async, CLI tools, Memory safety" },
-        { name: "Python", tier: "PRIMARY", exp: "5 yrs", focus: "Data tooling, Scripting, Automation" },
-        { name: "Go", tier: "ACTIVE", exp: "3 yrs", focus: "Microservices, Concurrency, REST" },
-        { name: "SQL (PostgreSQL)", tier: "PRIMARY", exp: "5 yrs", focus: "Schema design, Indexing, Migrations" }
+        { name: "Go", tier: "PRIMARY", exp: "2+ yrs", focus: "Clean Architecture, Fiber v2, GORM, Concurrency" },
+        { name: "Rust", tier: "ACTIVE", exp: "2 yrs", focus: "Tauri v2, OS System Integration, Low Memory" },
+        { name: "TypeScript / JavaScript", tier: "PRIMARY", exp: "4+ yrs", focus: "SvelteKit (Svelte 5 Runes), React 19, Node.js" },
+        { name: "Java", tier: "ACTIVE", exp: "3 yrs", focus: "Java 21, Swing GUI, FlatLaf, HikariCP, BCrypt" },
+        { name: "Python", tier: "ACTIVE", exp: "2 yrs", focus: "Scripting, Systems, Tooling" },
+        { name: "SQL & HTML5/CSS3", tier: "PRIMARY", exp: "4 yrs", focus: "Relational Queries, Modern CSS, Canvas" }
       ]
     },
     {
-      category: "GRAPHICS & PLATFORM",
+      category: "FRAMEWORKS & LIBRARIES",
       items: [
-        { name: "WebGL & GLSL", tier: "ACTIVE", exp: "3 yrs", focus: "Fragment shaders, 3D scenes, Math" },
-        { name: "Canvas 2D & Web Audio", tier: "PRIMARY", exp: "4 yrs", focus: "Real-time synthesis, DSP, Visuals" },
-        { name: "Modern CSS & SVG", tier: "PRIMARY", exp: "7 yrs", focus: "Filters, Animations, Responsive layout" },
-        { name: "Web Platform APIs", tier: "PRIMARY", exp: "5 yrs", focus: "Performance, Web Workers, Storage" }
+        { name: "React 19 & Next.js", tier: "PRIMARY", exp: "3 yrs", focus: "TanStack Start, Edge SSR, Tailwind CSS v4" },
+        { name: "SvelteKit (Svelte 5)", tier: "PRIMARY", exp: "2 yrs", focus: "Runes reactive model, Canvas, Real-Time" },
+        { name: "Go Fiber v2 & GORM", tier: "PRIMARY", exp: "2 yrs", focus: "High throughput APIs, Middleware, RBAC" },
+        { name: "Tauri v2", tier: "ACTIVE", exp: "2 yrs", focus: "Lightweight Desktop, Webview IPC, OS Daemons" },
+        { name: "FlatLaf (Java)", tier: "ACTIVE", exp: "2 yrs", focus: "Modern Desktop Look and Feel, Swing UI" }
       ]
     },
     {
-      category: "SYSTEMS & DEVOPS",
+      category: "DATABASES & STORAGE",
       items: [
-        { name: "Linux & Shell Scripting", tier: "PRIMARY", exp: "7 yrs", focus: "POSIX, Bash, Process debugging" },
-        { name: "Docker & Containers", tier: "ACTIVE", exp: "4 yrs", focus: "Multi-stage builds, Compose, Environments" },
-        { name: "WebSockets & IPC", tier: "PRIMARY", exp: "4 yrs", focus: "Real-time communication, State sync" },
-        { name: "CI/CD Workflows", tier: "ACTIVE", exp: "4 yrs", focus: "GitHub Actions, Automated test runners" }
+        { name: "Cloudflare D1 / SQLite", tier: "PRIMARY", exp: "2 yrs", focus: "Edge SQL, Durable Objects embedded storage" },
+        { name: "MySQL 8.0 & PostgreSQL", tier: "PRIMARY", exp: "4 yrs", focus: "Pessimistic row-locking, Transactional ACID" },
+        { name: "Cloudflare R2", tier: "PRIMARY", exp: "2 yrs", focus: "S3-compatible Object Storage, Asset Hosting" },
+        { name: "Drizzle ORM & HikariCP", tier: "PRIMARY", exp: "3 yrs", focus: "Type-safe schemas, High-speed connection pools" }
+      ]
+    },
+    {
+      category: "CLOUD & INFRASTRUCTURE",
+      items: [
+        { name: "Cloudflare Workers & DO", tier: "PRIMARY", exp: "2 yrs", focus: "Serverless edge, Distributed state, WebSockets" },
+        { name: "Linux (Arch / CachyOS)", tier: "PRIMARY", exp: "4 yrs", focus: "POSIX, Systemd, OS Daemons, Shell Tooling" },
+        { name: "Docker & Containers", tier: "ACTIVE", exp: "3 yrs", focus: "Multi-stage builds, Isolated runtime environments" },
+        { name: "Git & GitHub Actions", tier: "PRIMARY", exp: "4 yrs", focus: "CI/CD automation, Cross-platform releases" },
+        { name: "Oracle Cloud (OCI)", tier: "ACTIVE", exp: "2 yrs", focus: "Compute instances, Cloud infrastructure" }
+      ]
+    },
+    {
+      category: "CONCEPTS & ARCHITECTURE",
+      items: [
+        { name: "Clean Architecture", tier: "PRIMARY", exp: "2 yrs", focus: "Domain boundaries, Decoupled layers, Testability" },
+        { name: "Real-Time State Sync", tier: "PRIMARY", exp: "2 yrs", focus: "Monotonic Last-Write-Wins (LWW), WebSockets" },
+        { name: "Better Auth", tier: "PRIMARY", exp: "1 yr", focus: "Email/password sessions, Edge auth in D1" },
+        { name: "Baileys WhatsApp APIs", tier: "PRIMARY", exp: "2 yrs", focus: "Web protocol reverse engineering, Session handling" },
+        { name: "RESTful APIs & RBAC", tier: "PRIMARY", exp: "3 yrs", focus: "JWT Auth, Rate limiting, Row-level security" }
       ]
     }
   ],
 
   projects: [
     {
-      id: "neural-mesh",
+      id: "mesh",
       num: "01",
-      title: "NEURAL-MESH // 3D Neural Viz",
-      category: "Graphics / WebGL",
-      year: "2025",
-      tags: ["WebGL", "GLSL", "TypeScript", "Web Audio"],
-      description: "Interactive real-time 3D visualization of neural network layer activations with custom GPU shaders.",
+      title: "MESH // Real-Time Collaborative Vector Whiteboard",
+      category: "Realtime / Edge / Canvas",
+      year: "2026",
+      tags: ["TypeScript", "SvelteKit (Svelte 5)", "Cloudflare Workers", "Durable Objects", "SQLite", "Docker"],
+      description: "Edge-native, serverless vector whiteboard deployed on Cloudflare Workers with zero reverse proxy or CORS overhead.",
       highlights: [
-        "Rendered dynamic synaptic connection meshes at 60 FPS using instanced geometry.",
-        "Interactive parameter controls for layer depth, node density, and tensor slicing.",
-        "Reactive audio feedback synthesized using the Web Audio API."
+        "Engineered an edge-native, serverless vector whiteboard deployed on Cloudflare Workers with zero reverse proxy or CORS overhead.",
+        "Implemented distributed room coordination via Durable Objects with embedded SQLite persistence and monotonic Last-Write-Wins (LWW) conflict resolution.",
+        "Developed a dual-layer HTML5 canvas engine with a committed static buffer and 60 FPS interactive overlay featuring RDP path smoothing."
       ],
       links: {
-        demo: "https://github.com/exu/neural-mesh",
-        github: "https://github.com/exu/neural-mesh",
-        demoLabel: "> VIEW PROJECT REPOSITORY"
+        demo: "https://mesh.asy.web.id/",
+        github: "https://github.com/VUXXE/Mesh",
+        demoLabel: "> LAUNCH LIVE WHITEBOARD"
       }
     },
     {
-      id: "hyper-cache",
+      id: "whatsapp-tauri",
       num: "02",
-      title: "HYPER-CACHE // Distributed Key-Value Store",
-      category: "Systems / Rust / Networking",
-      year: "2024",
-      tags: ["Rust", "Raft", "gRPC", "Async Tokio"],
-      description: "In-memory key-value database implementation featuring Raft consensus, WAL logging, and custom memory management.",
+      title: "WHATSAPP-TAURI // High-Performance Desktop Client",
+      category: "Desktop / Systems / Rust",
+      year: "2026",
+      tags: ["Rust", "Tauri v2", "Webview", "Linux/Windows/macOS APIs"],
+      description: "Lightweight, cross-platform WhatsApp desktop application with Tauri v2 and Rust, reducing binary size to ~5.7MB (30x smaller than Electron).",
       highlights: [
-        "Tested consensus and leader election recovery across simulated multi-node network partitions.",
-        "Custom slab allocator designed to eliminate heap fragmentation under write churn.",
-        "Asynchronous replication pipeline built on Tokio."
+        "Built a lightweight, cross-platform WhatsApp desktop application with Tauri v2 and Rust, reducing binary size to ~5.7MB (30x smaller than Electron).",
+        "Cut memory footprint to ~120MB baseline RAM and achieved zero background idle CPU usage by offloading to native OS webview event loops.",
+        "Integrated system-level notifications directly with OS daemons (libnotify on Linux, Windows Toast, macOS NSUserNotificationCenter)."
       ],
       links: {
-        demo: "https://github.com/exu/hyper-cache",
-        github: "https://github.com/exu/hyper-cache",
-        demoLabel: "> VIEW PROJECT REPOSITORY"
+        demo: "https://github.com/VUXXE/whatsapp-tauri/releases",
+        github: "https://github.com/VUXXE/whatsapp-tauri",
+        demoLabel: "> DOWNLOAD RELEASES"
       }
     },
     {
-      id: "analog-84",
+      id: "rakamin-evermos",
       num: "03",
-      title: "ANALOG-84 // Virtual Polyphonic Synth",
-      category: "Audio / DSP / Web Platform",
-      year: "2024",
-      tags: ["Web Audio API", "AudioWorklet", "Canvas"],
-      description: "8-voice polyphonic subtractive software synthesizer emulating analog oscillator drift and multi-mode filters.",
+      title: "RAKAMIN-EVERMOS // Clean Architecture E-Commerce API",
+      category: "Backend / Microservices / Go",
+      year: "2026",
+      tags: ["Go (1.25+)", "Fiber v2", "MySQL 8.0", "GORM", "Docker", "JWT"],
+      description: "Scalable e-commerce RESTful API in Go adhering strictly to Clean Architecture and multi-tenant domain boundaries.",
       highlights: [
-        "Low-latency DSP signal processing loop running inside an AudioWorklet thread.",
-        "Real-time vector oscilloscope and Lissajous curve visualizer rendered via HTML Canvas.",
-        "MIDI keyboard device connectivity via the Web MIDI standard."
+        "Architected a scalable e-commerce RESTful API in Go adhering to Clean Architecture and strict multi-tenant domain boundaries.",
+        "Implemented atomic checkout transactions with pessimistic row-locking (SELECT FOR UPDATE) to eliminate inventory race conditions.",
+        "Delivered JWT authentication, RBAC middleware, and administrative regional lookup with in-memory caching and 100% test coverage."
       ],
       links: {
-        demo: "https://github.com/exu/analog-84",
-        github: "https://github.com/exu/analog-84",
-        demoLabel: "> VIEW PROJECT REPOSITORY"
+        demo: "https://github.com/VUXXE/Rakamim-Evermost",
+        github: "https://github.com/VUXXE/Rakamim-Evermost",
+        demoLabel: "> VIEW REPOSITORY"
       }
     },
     {
-      id: "micro-os",
+      id: "perpustakaan-freedom",
       num: "04",
-      title: "MICRO-OS // Bare-Metal x86 Kernel",
-      category: "Systems / Assembly / C",
-      year: "2023",
-      tags: ["x86 Assembly", "C", "QEMU", "OS Dev"],
-      description: "Protected-mode educational operating system kernel featuring virtual memory paging and VGA text drivers.",
+      title: "PERPUSTAKAAN-FREEDOM // Desktop Library Management System",
+      category: "Desktop / Java / Systems",
+      year: "2026",
+      tags: ["Java 21", "Java Swing", "FlatLaf", "MySQL 8.0", "HikariCP", "JasperReports", "BCrypt"],
+      description: "Modern desktop library management system (Group Project) featuring automated circulation, fine calculation, and BCrypt security.",
       highlights: [
-        "Two-stage bootloader designed to fit within a 512-byte MBR sector.",
-        "Preemptive round-robin process scheduler and interrupt handling routines.",
-        "Custom serial driver and built-in interactive debug shell."
+        "Led core engineering for a modern desktop library system (Group Project) featuring automated circulation, fine calculation, and BCrypt security.",
+        "Integrated HikariCP high-performance connection pooling, dynamic JasperReports generation, and JFreeChart analytics dashboards.",
+        "Engineered an offline-ready Maven configuration with bundled local repository dependencies for zero-network compilation."
       ],
       links: {
-        demo: "https://github.com/exu/micro-os",
-        github: "https://github.com/exu/micro-os",
-        demoLabel: "> VIEW PROJECT REPOSITORY"
+        demo: "https://github.com/VUXXE/PerpustakaanFreedomFix",
+        github: "https://github.com/VUXXE/PerpustakaanFreedomFix",
+        demoLabel: "> VIEW REPOSITORY"
+      }
+    },
+    {
+      id: "baswara",
+      num: "05",
+      title: "BASWARA // Digital Invitation Builder (Cloudflare Edition)",
+      category: "Full-Stack / Cloudflare / React",
+      year: "2026",
+      tags: ["TypeScript", "TanStack Start (React 19)", "Cloudflare Workers", "D1", "R2", "Drizzle ORM", "Better Auth"],
+      description: "Digital invitation platform (visual builder, RSVP tracking, guest check-in) 100% on Cloudflare Workers with D1 + R2.",
+      highlights: [
+        "Built a digital invitation platform (visual builder, RSVP tracking, guest check-in) 100% on Cloudflare Workers with D1 + R2.",
+        "Implemented Better Auth email/password sessions in D1, R2 asset uploads, and dynamic OG-image/QR generator endpoints."
+      ],
+      links: {
+        demo: "https://baswara.bdrrhmnhnn.workers.dev",
+        github: "https://github.com/VUXXE/baswara-cloudflare",
+        demoLabel: "> VIEW LIVE DEPLOYMENT"
+      }
+    },
+    {
+      id: "whatsapp-bridge",
+      num: "06",
+      title: "WHATSAPP-BRIDGE-CUSTOM // Baileys Group Management API",
+      category: "API / Gateway / Bot",
+      year: "2026",
+      tags: ["Node.js 20+", "Baileys v6", "REST", "WhatsApp Web Protocol"],
+      description: "Baileys-based WhatsApp bridge extended with custom group endpoints and hardened API communication.",
+      highlights: [
+        "Extended a Baileys-based WhatsApp bridge with custom group endpoints: list, invite links, create-group, add-member, promote, update-description.",
+        "Added hardened send/media/poll/location/edit/typing/read APIs with bot/self-chat modes and allowlist-based access control."
+      ],
+      links: {
+        demo: "https://github.com/VUXXE/whatsapp-bridge-custom",
+        github: "https://github.com/VUXXE/whatsapp-bridge-custom",
+        demoLabel: "> VIEW REPOSITORY"
       }
     }
   ],
@@ -142,21 +221,15 @@ export const PORTFOLIO_DATA: PortfolioData = {
   experience: [
     {
       period: "2023 - PRESENT",
-      role: "Senior Frontend & Systems Engineer",
-      company: "[CURRENT COMPANY / ORGANIZATION]",
-      description: "Building interactive web dashboards and real-time graphics pipelines. Profiling render lifecycles and reducing network round-trip overhead."
+      role: "Informatics Engineering Undergraduate (GPA: 3.49 / 4.00)",
+      company: "Universitas Indraprasta PGRI (UNINDRA)",
+      description: "Focusing on Data Structures & Algorithms, Database Systems, Operating Systems, Computer Networks, Computer Architecture, Compiler Design, and Object-Oriented Programming."
     },
     {
-      period: "2021 - 2023",
-      role: "Full-Stack Engineer",
-      company: "[PREVIOUS STARTUP / AGENCY]",
-      description: "Engineered distributed streaming data collectors in Go and Rust. Developed interactive visualizations and client-facing SDKs."
-    },
-    {
-      period: "2019 - 2021",
-      role: "Software Developer",
-      company: "[EARLIER ROLE / CLIENT]",
-      description: "Built web services, automated internal tooling, and maintained Linux application infrastructure."
+      period: "2023 - PRESENT",
+      role: "Software Engineer (Full-Stack & Systems)",
+      company: "Independent Open Source & Distributed Engineering",
+      description: "Building production-grade real-time systems on Cloudflare Workers (Durable Objects, D1, R2), cross-platform desktop software in Rust/Tauri v2 & Java FlatLaf, and high-performance clean architecture backend APIs in Go."
     }
   ],
 
