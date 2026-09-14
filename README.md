@@ -2,7 +2,7 @@
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-asy.web.id-0284c7?style=for-the-badge&logo=cloudflarepages&logoColor=white)](https://asy.web.id/)
 [![Preview URL](https://img.shields.io/badge/Preview-portoweb--c7k.pages.dev-10b981?style=for-the-badge&logo=cloudflare&logoColor=white)](https://portoweb-c7k.pages.dev)
-[![GitHub Repo](https://img.shields.io/badge/GitHub-VUXXE%2FPortoWeb-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/VUXXE/PortoWeb)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-VUXXE%2Fasydev--os-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/VUXXE/asydev-os)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x%20%2F%207.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 
@@ -20,8 +20,8 @@ An authentic vintage DEC VT220 / Model 84-CRT computer terminal portfolio for **
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/VUXXE/PortoWeb.git
-cd PortoWeb
+git clone https://github.com/VUXXE/asydev-os.git
+cd asydev-os
 
 # 2. Install dependencies
 npm install
@@ -113,7 +113,7 @@ npm run preview
 ## 📂 Project Architecture
 
 ```
-PortoWeb/
+asydev-os/
 ├── index.html              # Core HTML shell and CRT glass container
 ├── package.json            # Scripts, Vite and Wrangler toolchains
 ├── tsconfig.json           # TypeScript configuration

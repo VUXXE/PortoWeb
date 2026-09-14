@@ -87,7 +87,7 @@ export class Terminal {
       'contact.txt': PORTFOLIO_DATA.socials.map(s => 
         `${s.name.padEnd(16)} : ${s.handle} (${s.url})`
       ).join('\n'),
-      'github.txt': `GITHUB PROFILES & REPOSITORIES:\nDeveloper Profile : https://github.com/VUXXE (@VUXXE)\nPortfolio Source  : https://github.com/VUXXE/PortoWeb\n\nFEATURED REPOSITORIES:\n* VUXXE/mesh-core-v2         - P2P sync canvas desktop & web app (Rust, Tauri v2, Svelte 5)\n* VUXXE/baswara-cloudflare   - Digital invitation platform on Cloudflare Workers, D1 & R2\n* VUXXE/whatsapp-bridge-custom - Baileys automation REST API bridge\n* VUXXE/PerpustakaanFreedomFix - Java 21 desktop enterprise library management system\n* VUXXE/cachy-dotfiles       - CachyOS/Arch Linux dotfiles and tiling window manager configs\n* VUXXE/PortoWeb             - Retro CRT Model 84 Terminal Portfolio (TypeScript, Vite)\n\nType "github" for interactive list or open directly in your browser.`,
+      'github.txt': `GITHUB PROFILES & REPOSITORIES:\nDeveloper Profile : https://github.com/VUXXE (@VUXXE)\nPortfolio Source  : https://github.com/VUXXE/asydev-os\n\nFEATURED REPOSITORIES:\n* VUXXE/mesh-core-v2         - P2P sync canvas desktop & web app (Rust, Tauri v2, Svelte 5)\n* VUXXE/baswara-cloudflare   - Digital invitation platform on Cloudflare Workers, D1 & R2\n* VUXXE/whatsapp-bridge-custom - Baileys automation REST API bridge\n* VUXXE/PerpustakaanFreedomFix - Java 21 desktop enterprise library management system\n* VUXXE/cachy-dotfiles       - CachyOS/Arch Linux dotfiles and tiling window manager configs\n* VUXXE/asydev-os            - Retro CRT Model 84 Terminal Portfolio (TypeScript, Vite)\n\nType "github" for interactive list or open directly in your browser.`,
       'resume.txt': `${PORTFOLIO_DATA.profile.name.toUpperCase()}\n${PORTFOLIO_DATA.profile.title}\nLocation: ${PORTFOLIO_DATA.profile.location}\nPhone: ${PORTFOLIO_DATA.profile.phone}\nEmail: hanan7taqiyya@gmail.com\n\nType "resume" for full interactive layout or download official PDF via /cv.pdf.`,
       'logo.svg': PORTFOLIO_DATA.vectorLogo || '',
       'flag.txt': 'CTF{cRt_b4rr3l_d1st0rt10n_1984} // You found the secret terminal flag!'
@@ -819,7 +819,7 @@ export class Terminal {
         <div class="cli-sys-info">
           <strong>ASYDEV-OS</strong> (Full-Stack & Systems Terminal // Model 84-CRT)<br>
           Connected as <strong>${this.promptUser}@${this.promptHost}</strong> (tty0) on ${new Date().toUTCString()}.<br>
-          GitHub: <a href="https://github.com/VUXXE" target="_blank" rel="noopener noreferrer" class="cli-link">github.com/VUXXE ↗</a> | Source: <a href="https://github.com/VUXXE/PortoWeb" target="_blank" rel="noopener noreferrer" class="cli-link">github.com/VUXXE/PortoWeb ↗</a><br>
+          GitHub: <a href="https://github.com/VUXXE" target="_blank" rel="noopener noreferrer" class="cli-link">github.com/VUXXE ↗</a> | Source: <a href="https://github.com/VUXXE/asydev-os" target="_blank" rel="noopener noreferrer" class="cli-link">github.com/VUXXE/asydev-os ↗</a><br>
           Click any command below or type <button type="button" class="cli-chip" data-cmd="help">help</button> to explore.
         </div>
         <div class="cli-quick-links">
@@ -1245,7 +1245,7 @@ export class Terminal {
         <div class="cli-box-header">┌── [ GITHUB: @VUXXE // DEVELOPER PROFILE & REPOSITORIES ] ────────────────┐</div>
         <div class="cli-card-body">
           <div class="cli-line">Developer Profile : <a href="https://github.com/VUXXE" target="_blank" rel="noopener noreferrer" class="cli-link">https://github.com/VUXXE ↗</a> (@VUXXE)</div>
-          <div class="cli-line">Portfolio Source  : <a href="https://github.com/VUXXE/PortoWeb" target="_blank" rel="noopener noreferrer" class="cli-link">https://github.com/VUXXE/PortoWeb ↗</a></div>
+          <div class="cli-line">Portfolio Source  : <a href="https://github.com/VUXXE/asydev-os" target="_blank" rel="noopener noreferrer" class="cli-link">https://github.com/VUXXE/asydev-os ↗</a></div>
           <div class="cli-divider">----------------------------------------------------------------------------</div>
           <div class="cli-line"><strong>FEATURED OPEN-SOURCE REPOSITORIES:</strong></div>
           <table class="cli-contact-table">
@@ -1276,16 +1276,16 @@ export class Terminal {
                 <td class="cli-contact-link"><a href="https://github.com/VUXXE/cachy-dotfiles" target="_blank" rel="noopener noreferrer" class="cli-link">[ Repo ↗ ]</a></td>
               </tr>
               <tr class="cli-contact-tr">
-                <td class="cli-contact-name"><strong>VUXXE/PortoWeb</strong></td>
+                <td class="cli-contact-name"><strong>VUXXE/asydev-os</strong></td>
                 <td class="cli-contact-handle">Retro CRT Terminal Portfolio (ASYDEV-OS)</td>
-                <td class="cli-contact-link"><a href="https://github.com/VUXXE/PortoWeb" target="_blank" rel="noopener noreferrer" class="cli-link">[ Repo ↗ ]</a></td>
+                <td class="cli-contact-link"><a href="https://github.com/VUXXE/asydev-os" target="_blank" rel="noopener noreferrer" class="cli-link">[ Repo ↗ ]</a></td>
               </tr>
             </tbody>
           </table>
           <div class="cli-divider">----------------------------------------------------------------------------</div>
           <div class="cli-actions-row">
             <a href="https://github.com/VUXXE" target="_blank" rel="noopener noreferrer" class="cli-btn-primary">[ 🌐 OPEN GITHUB PROFILE ↗ ]</a>
-            <a href="https://github.com/VUXXE/PortoWeb" target="_blank" rel="noopener noreferrer" class="cli-btn-secondary">[ ⭐ STAR THIS REPO ↗ ]</a>
+            <a href="https://github.com/VUXXE/asydev-os" target="_blank" rel="noopener noreferrer" class="cli-btn-secondary">[ ⭐ STAR THIS REPO ↗ ]</a>
           </div>
           <div class="cli-divider">----------------------------------------------------------------------------</div>
           <div class="cli-actions-row">
