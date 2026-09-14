@@ -41,7 +41,7 @@
             <!-- Active Interactive Prompt Line -->
             <div class="cli-prompt-line" id="cli-prompt-line">
               <label for="cli-input" class="prompt-label">
-                <span class="prompt-user">guest@asy.web.id</span><span class="prompt-sep">:</span><span class="prompt-path">~</span><span class="prompt-char">$</span>
+                <span class="prompt-user">guest@asy.web.id</span><span class="prompt-sep">:</span><span class="prompt-path" id="prompt-path">~</span><span class="prompt-char">$</span>
               </label>
               <div class="input-container">
                 <input 
@@ -55,7 +55,29 @@
                   aria-label="Terminal command input"
                   autofocus
                 />
+                <div class="cli-display-line" id="cli-display-line" aria-hidden="true">
+                  <span class="cli-text-before" id="cli-text-before"></span><span class="cli-block-cursor" id="cli-block-cursor"> </span><span class="cli-text-after" id="cli-text-after"></span><span class="cli-ghost-hint" id="cli-ghost-hint"></span>
+                </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Bottom Tmux / VT220 Status Line -->
+          <div class="cli-statusbar" id="cli-statusbar" role="status" aria-label="Terminal status line">
+            <div class="statusbar-left">
+              <span class="statusbar-tag">[ASYDEV-OS]</span>
+              <span class="statusbar-item" id="sb-tty">tty0</span>
+              <span class="statusbar-sep">│</span>
+              <span class="statusbar-item" id="sb-user">guest@asy.web.id</span>
+              <span class="statusbar-sep">│</span>
+              <span class="statusbar-item" id="sb-cwd">~</span>
+            </div>
+            <div class="statusbar-right">
+              <span class="statusbar-item" id="sb-term">DEC VT220</span>
+              <span class="statusbar-sep">│</span>
+              <span class="statusbar-item" id="sb-enc">UTF-8</span>
+              <span class="statusbar-sep">│</span>
+              <span class="statusbar-item" id="sb-clock">00:00:00 UTC</span>
             </div>
           </div>
         </div>

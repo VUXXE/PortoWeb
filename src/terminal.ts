@@ -10,37 +10,87 @@ import { matrix } from './matrix.js';
 import { asciiFire } from './ascii-fire.js';
 import type { CommandDefinition, Project } from './types.js';
 
+export interface VirtualDir {
+  files: Record<string, string>;
+  dirs: Record<string, VirtualDir>;
+}
+
 export class Terminal {
   private outputBuffer: HTMLElement | null = null;
   private inputElement: HTMLInputElement | null = null;
   private promptLine: HTMLElement | null = null;
+  private promptPathEl: HTMLElement | null = null;
+  private textBeforeEl: HTMLElement | null = null;
+  private cursorEl: HTMLElement | null = null;
+  private textAfterEl: HTMLElement | null = null;
+  private ghostHintEl: HTMLElement | null = null;
+  private statusClockEl: HTMLElement | null = null;
+  private statusCwdEl: HTMLElement | null = null;
 
   private readonly promptUser: string = "guest";
   private readonly promptHost: string = PORTFOLIO_DATA.profile.host;
 
   private history: string[] = [];
   private historyIndex: number = -1;
+  private currentGhostSuggestion: string = '';
+  private currentPath: string[] = [];
 
-  private readonly virtualFiles: Record<string, string> = {
-    'bio.txt': `${PORTFOLIO_DATA.profile.name}\n${PORTFOLIO_DATA.profile.title}\nLocation: ${PORTFOLIO_DATA.profile.location}\nPhone: ${PORTFOLIO_DATA.profile.phone}\n\n` + PORTFOLIO_DATA.profile.bio.join('\n\n'),
-    'education.txt': PORTFOLIO_DATA.education.map(e =>
-      `Institution: ${e.institution} (${e.location})\nDegree     : ${e.degree}\nGPA        : ${e.gpa}\nPeriod     : ${e.period}\nCoursework : ${e.coursework.join(', ')}`
-    ).join('\n\n'),
-    'skills.txt': PORTFOLIO_DATA.skills.map(s => 
-      `[ ${s.category} ]\n` + s.items.map(i => `  * ${i.name.padEnd(25)} [${i.tier}] ${i.exp.padEnd(7)} : ${i.focus}`).join('\n')
-    ).join('\n\n'),
-    'projects.txt': PORTFOLIO_DATA.projects.map(p =>
-      `[${p.num}] ${p.title} (${p.year}) - ${p.category}\n    ${p.description}\n    Tags: ${p.tags.join(', ')}\n    URL: ${p.links.github}`
-    ).join('\n\n'),
-    'history.txt': PORTFOLIO_DATA.experience.map(e =>
-      `[ ${e.period} ] ${e.role} @ ${e.company}\n  ${e.description}`
-    ).join('\n\n'),
-    'contact.txt': PORTFOLIO_DATA.socials.map(s => 
-      `${s.name.padEnd(16)} : ${s.handle} (${s.url})`
-    ).join('\n'),
-    'resume.txt': `${PORTFOLIO_DATA.profile.name.toUpperCase()}\n${PORTFOLIO_DATA.profile.title}\nLocation: ${PORTFOLIO_DATA.profile.location}\nPhone: ${PORTFOLIO_DATA.profile.phone}\nEmail: hanan7taqiyya@gmail.com\n\nType "resume" for full interactive layout or download official PDF via /cv.pdf.`,
-    'logo.svg': PORTFOLIO_DATA.vectorLogo || '',
-    'flag.txt': 'CTF{cRt_b4rr3l_d1st0rt10n_1984} // You found the secret terminal flag!'
+  public get currentDirDisplay(): string {
+    return this.currentPath.length === 0 ? '~' : '~/' + this.currentPath.join('/');
+  }
+
+  private readonly virtualFs: VirtualDir = {
+    dirs: {
+      projects: {
+        dirs: {},
+        files: {
+          '01_mesh.txt': `PROJECT: MESH // Decentralized Real-Time Collaborative Canvas\nCategory: Distributed Systems / WebSockets / CRDT (2026)\nTags    : SvelteKit (Svelte 5 Runes), Cloudflare Workers, Durable Objects, D1, WebSockets, LWW CRDT\nLive App: https://mesh.asy.web.id/\nGitHub  : https://github.com/VUXXE/Mesh\n\nHigh-performance real-time collaborative whiteboard canvas.\n- Microsecond multi-cursor tracking and distributed state synchronization.\n- In-memory WebSocket broadcast tree with D1 transactional persistence.\n- Last-Write-Wins (LWW) conflict-resolution heuristics.`,
+          '02_whatsapp_tauri.txt': `PROJECT: WHATSAPP-TAURI // Native WhatsApp Desktop Client\nCategory: Desktop / Systems / Rust (2026)\nTags    : Rust, Tauri v2, Webview, Linux/Windows/macOS\nGitHub  : https://github.com/VUXXE/whatsapp-tauri\nReleases: https://github.com/VUXXE/whatsapp-tauri/releases\n\nUltra-lightweight native WhatsApp desktop application built with Tauri v2 and Rust.\n- 30x smaller binary footprint (~5.7MB vs Electron ~180MB).\n- ~120MB baseline RAM usage with 0% idle background CPU load.\n- Native OS daemon notifications (libnotify on Linux, Windows Toast, macOS NSUserNotificationCenter).`,
+          '03_rakamin_evermos.txt': `PROJECT: RAKAMIN-EVERMOS // Clean Architecture E-Commerce API\nCategory: Backend / Microservices / Go (2026)\nTags    : Go (1.25+), Fiber v2, MySQL 8.0, GORM, Docker, JWT\nGitHub  : https://github.com/VUXXE/Rakamim-Evermost\n\nProduction-ready scalable e-commerce RESTful API in Go adhering to Clean Architecture.\n- Strict multi-tenant domain boundaries and dependency inversion.\n- Pessimistic row-locking (SELECT FOR UPDATE) checkout transactions eliminating race conditions.\n- JWT auth, RBAC middleware, and regional administrative lookup caching with 100% test coverage.`,
+          '04_perpustakaan_freedom.txt': `PROJECT: PERPUSTAKAAN-FREEDOM // Desktop Library Management System\nCategory: Desktop / Java / Systems (2026)\nTags    : Java 21, Java Swing, FlatLaf, MySQL 8.0, HikariCP, JasperReports, BCrypt\nGitHub  : https://github.com/VUXXE/PerpustakaanFreedomFix\n\nModern desktop library management system (UNINDRA Group Project).\n- Automated circulation, tiered fine calculation, and BCrypt security.\n- HikariCP high-performance connection pooling, JasperReports PDF generation, and JFreeChart analytics.\n- Offline-ready Maven build with local repository dependencies.`,
+          '05_baswara.txt': `PROJECT: BASWARA // Digital Invitation Platform (Cloudflare Edition)\nCategory: Full-Stack / Cloudflare / React (2026)\nTags    : TypeScript, TanStack Start (React 19), Cloudflare Workers, D1, R2, Drizzle ORM, Better Auth\nLive App: https://baswara.bdrrhmnhnn.workers.dev\nGitHub  : https://github.com/VUXXE/baswara-cloudflare\n\nDigital invitation platform built 100% on Cloudflare Workers edge architecture.\n- Visual layout builder, RSVP tracking, and QR guest check-in.\n- Better Auth sessions in D1, R2 asset storage, and dynamic OG image generation.`,
+          '06_whatsapp_bridge.txt': `PROJECT: WHATSAPP-BRIDGE-CUSTOM // Baileys Group Management API\nCategory: API / Gateway / Bot (2026)\nTags    : Node.js 20+, Baileys v6, REST, WhatsApp Web Protocol\nGitHub  : https://github.com/VUXXE/whatsapp-bridge-custom\n\nExtended Baileys WhatsApp automation bridge with hardened REST endpoints.\n- Custom group management: invite links, create group, add members, promote, update descriptions.\n- Hardened media/poll/location/edit endpoints with allowlist-based access control.`
+        }
+      },
+      skills: {
+        dirs: {},
+        files: {
+          'languages.txt': `PROGRAMMING LANGUAGES:\n- Go          [CORE]   3+ yrs  : Microservices, REST APIs, high-throughput workers, Clean Architecture\n- Rust        [CORE]   2+ yrs  : Desktop apps (Tauri v2), systems tooling, low-level concurrency\n- TypeScript  [CORE]   3+ yrs  : TanStack Start, React 19, Cloudflare Workers, full-stack SPAs\n- JavaScript  [CORE]   4+ yrs  : Modern ES2024+, Node.js runtime, Baileys API integration\n- Java        [SYSTEM] 2+ yrs  : Desktop Swing (FlatLaf), OOP architecture, Maven, HikariCP\n- Python      [TOOLING]2+ yrs  : Automation scripts, CLI tooling, data extraction\n- SQL         [DATA]   3+ yrs  : MySQL 8.0, PostgreSQL, SQLite, Cloudflare D1\n- HTML5 / CSS [UI]     4+ yrs  : Retro CRT graphics, responsive UI, CSS custom properties`,
+          'frameworks.txt': `FRAMEWORKS & RUNTIMES:\n- React 19 / TanStack Start : Modern edge SSR, Server Functions, high-reactivity UIs\n- Next.js (App Router)      : Full-stack applications, API routes, Server Components\n- SvelteKit (Svelte 5 Runes): Local-first apps, reactive canvas, WebSocket sync\n- Go Fiber v2               : Low-latency REST microservices, middleware pipelines\n- GORM & Drizzle ORM        : Type-safe database queries, schema migrations\n- Tauri v2                  : Ultra-lightweight native cross-platform desktop shells\n- FlatLaf (Java Swing)      : Modern desktop enterprise interfaces`,
+          'databases.txt': `DATABASES & STORAGE:\n- Cloudflare D1             : Globally distributed SQLite at the edge\n- Cloudflare R2             : S3-compatible zero-egress blob storage\n- MySQL 8.0                 : ACID relational database, pessimistic locking, index optimization\n- PostgreSQL                : Enterprise relational storage, JSONB indexing, triggers\n- HikariCP                  : High-performance JDBC connection pooling`,
+          'cloud_infra.txt': `CLOUD & INFRASTRUCTURE:\n- Cloudflare Workers        : V8 isolate serverless edge computing\n- Cloudflare Durable Objects: Stateful real-time WebSocket coordination\n- Docker & Docker Compose   : Containerized service orchestration\n- Linux (Arch / CachyOS)    : Kernel optimization, shell scripting, POSIX system administration\n- Git & GitHub Actions      : CI/CD automation pipelines, releases, semantic versioning\n- Oracle Cloud (OCI)        : Cloud compute instances, networking, security rules`,
+          'concepts.txt': `SYSTEM CONCEPTS & ARCHITECTURE:\n- Clean Architecture        : Strict domain boundaries, dependency inversion, use-case decoupling\n- Local-First & CRDT        : Last-Write-Wins (LWW) real-time state synchronization\n- Real-Time WebSockets      : Bi-directional event streams, heartbeat, backpressure\n- Edge Computing            : Sub-millisecond TTFB via globally distributed serverless isolates\n- Authentication & Security : Better Auth, JWT tokens, RBAC middleware, BCrypt hashing`
+        }
+      },
+      education: {
+        dirs: {},
+        files: {
+          'unindra.txt': `INSTITUTION: Universitas Indraprasta PGRI (UNINDRA)\nLocation   : Jakarta, Indonesia\nDegree     : Bachelor of Science in Informatics Engineering (Teknik Informatika)\nGPA        : 3.49 / 4.00\nPeriod     : 2023 - Present (Expected Graduation: 2027)`,
+          'coursework.txt': `FORMAL ACADEMIC COURSEWORK:\n* Data Structures & Algorithms\n* Database Systems & Design\n* Operating Systems Architecture\n* Computer Networks & Protocols\n* Computer Architecture & Organization\n* Compiler Design & Automata\n* Object-Oriented Programming & Design Patterns`
+        }
+      }
+    },
+    files: {
+      'bio.txt': `${PORTFOLIO_DATA.profile.name}\n${PORTFOLIO_DATA.profile.title}\nLocation: ${PORTFOLIO_DATA.profile.location}\nPhone: ${PORTFOLIO_DATA.profile.phone}\nEmail: hanan7taqiyya@gmail.com\nStatus: ${PORTFOLIO_DATA.profile.status}\n\n` + PORTFOLIO_DATA.profile.bio.join('\n\n'),
+      'education.txt': PORTFOLIO_DATA.education.map(e =>
+        `Institution: ${e.institution} (${e.location})\nDegree     : ${e.degree}\nGPA        : ${e.gpa}\nPeriod     : ${e.period}\nCoursework : ${e.coursework.join(', ')}`
+      ).join('\n\n'),
+      'skills.txt': PORTFOLIO_DATA.skills.map(s => 
+        `[ ${s.category} ]\n` + s.items.map(i => `  * ${i.name.padEnd(25)} [${i.tier}] ${i.exp.padEnd(7)} : ${i.focus}`).join('\n')
+      ).join('\n\n'),
+      'projects.txt': PORTFOLIO_DATA.projects.map(p =>
+        `[${p.num}] ${p.title} (${p.year}) - ${p.category}\n    ${p.description}\n    Tags: ${p.tags.join(', ')}\n    URL: ${p.links.github}`
+      ).join('\n\n'),
+      'experience.txt': PORTFOLIO_DATA.experience.map(e =>
+        `[ ${e.period} ] ${e.role} @ ${e.company}\n  ${e.description}`
+      ).join('\n\n'),
+      'contact.txt': PORTFOLIO_DATA.socials.map(s => 
+        `${s.name.padEnd(16)} : ${s.handle} (${s.url})`
+      ).join('\n'),
+      'resume.txt': `${PORTFOLIO_DATA.profile.name.toUpperCase()}\n${PORTFOLIO_DATA.profile.title}\nLocation: ${PORTFOLIO_DATA.profile.location}\nPhone: ${PORTFOLIO_DATA.profile.phone}\nEmail: hanan7taqiyya@gmail.com\n\nType "resume" for full interactive layout or download official PDF via /cv.pdf.`,
+      'logo.svg': PORTFOLIO_DATA.vectorLogo || '',
+      'flag.txt': 'CTF{cRt_b4rr3l_d1st0rt10n_1984} // You found the secret terminal flag!'
+    }
   };
 
   private readonly commands: CommandDefinition[] = [
@@ -50,11 +100,15 @@ export class Terminal {
     { cmd: 'skills', aliases: ['stack'], desc: 'Technical proficiencies and skill matrix' },
     { cmd: 'projects', aliases: ['work', 'portfolio'], desc: 'Showcase of selected works and systems' },
     { cmd: 'project', args: '<id|num>', desc: 'View detailed specs of a specific project' },
-    { cmd: 'history', aliases: ['exp', 'career'], desc: 'Career history and milestones' },
+    { cmd: 'experience', aliases: ['exp', 'career'], desc: 'Professional career history and milestones' },
     { cmd: 'contact', aliases: ['socials', 'email'], desc: 'Communication channels and links' },
     { cmd: 'resume', aliases: ['cv'], desc: 'Curriculum Vitae overview and download' },
-    { cmd: 'ls', aliases: ['dir'], desc: 'List files in virtual directory' },
+    { cmd: 'ls', aliases: ['dir'], desc: 'List files and directories in current folder' },
+    { cmd: 'cd', args: '[dir]', desc: 'Change directory (e.g. cd projects, cd ..)' },
+    { cmd: 'pwd', desc: 'Print current working directory path' },
+    { cmd: 'tree', desc: 'Display visual tree diagram of virtual filesystem' },
     { cmd: 'cat', args: '<file>', desc: 'Read a virtual file (e.g. cat bio.txt)' },
+    { cmd: 'history', aliases: ['hist'], desc: 'Display shell execution history buffer' },
     { cmd: 'theme', args: '[color]', desc: 'Set phosphor color [green|amber|white|cyber]' },
     { cmd: 'font', args: '[mode]', desc: 'Toggle font [pixel|clean]' },
     { cmd: 'scale', aliases: ['zoom'], args: '[100|150|200|250]', desc: 'Adjust terminal magnification scale (default: 200%)' },
@@ -80,12 +134,100 @@ export class Terminal {
     this.outputBuffer = document.getElementById('cli-output-buffer');
     this.inputElement = document.getElementById('cli-input') as HTMLInputElement;
     this.promptLine = document.getElementById('cli-prompt-line');
+    this.promptPathEl = document.getElementById('prompt-path');
+    this.textBeforeEl = document.getElementById('cli-text-before');
+    this.cursorEl = document.getElementById('cli-block-cursor');
+    this.textAfterEl = document.getElementById('cli-text-after');
+    this.ghostHintEl = document.getElementById('cli-ghost-hint');
+    this.statusClockEl = document.getElementById('sb-clock');
+    this.statusCwdEl = document.getElementById('sb-cwd');
 
     if (!this.outputBuffer || !this.inputElement) return;
 
     this.bindEvents();
+    this.updatePromptPath();
+    this.updateDisplayLine();
+    this.updateClock();
+    window.setInterval(() => this.updateClock(), 1000);
     this.printBootBanner();
     this.focusInput();
+  }
+
+  private updateClock(): void {
+    if (this.statusClockEl) {
+      const now = new Date();
+      this.statusClockEl.textContent = now.toISOString().slice(11, 19) + ' UTC';
+    }
+  }
+
+  public updatePromptPath(): void {
+    const display = this.currentDirDisplay;
+    if (this.promptPathEl) {
+      this.promptPathEl.textContent = display;
+    }
+    if (this.statusCwdEl) {
+      this.statusCwdEl.textContent = display;
+    }
+  }
+
+  public getCurrentDir(): VirtualDir {
+    let curr = this.virtualFs;
+    for (const segment of this.currentPath) {
+      if (!curr.dirs[segment]) return this.virtualFs;
+      curr = curr.dirs[segment];
+    }
+    return curr;
+  }
+
+  private getDirByPath(path: string[]): VirtualDir | null {
+    let curr = this.virtualFs;
+    for (const segment of path) {
+      if (!curr.dirs[segment]) return null;
+      curr = curr.dirs[segment];
+    }
+    return curr;
+  }
+
+  public resolveFile(filePath: string): string | null {
+    const trimmed = filePath.trim();
+    if (!trimmed) return null;
+
+    const current = this.getCurrentDir();
+    if (current.files[trimmed.toLowerCase()] !== undefined) {
+      return current.files[trimmed.toLowerCase()];
+    }
+
+    const parts = trimmed.split('/').filter(Boolean);
+    if (trimmed.startsWith('~') || trimmed.startsWith('/')) {
+      const rootParts = trimmed.startsWith('~') ? parts.slice(1) : (parts[0] === 'home' && parts[1] === 'guest' ? parts.slice(2) : parts);
+      const filename = rootParts.pop();
+      if (!filename) return null;
+      const targetDir = this.getDirByPath(rootParts);
+      if (targetDir && targetDir.files[filename.toLowerCase()] !== undefined) {
+        return targetDir.files[filename.toLowerCase()];
+      }
+    } else if (parts.length > 1) {
+      const targetParts = [...this.currentPath];
+      for (let i = 0; i < parts.length - 1; i++) {
+        const seg = parts[i];
+        if (seg === '..') {
+          targetParts.pop();
+        } else if (seg !== '.') {
+          targetParts.push(seg);
+        }
+      }
+      const filename = parts[parts.length - 1];
+      const targetDir = this.getDirByPath(targetParts);
+      if (targetDir && targetDir.files[filename.toLowerCase()] !== undefined) {
+        return targetDir.files[filename.toLowerCase()];
+      }
+    }
+
+    if (this.virtualFs.files[trimmed.toLowerCase()] !== undefined) {
+      return this.virtualFs.files[trimmed.toLowerCase()];
+    }
+
+    return null;
   }
 
   private focusInput(): void {
@@ -109,10 +251,17 @@ export class Terminal {
     // Input keyboard handling
     if (this.inputElement) {
       this.inputElement.addEventListener('keydown', (e) => this.handleKeyDown(e));
-      this.inputElement.addEventListener('input', () => audio.playKeyClick());
+      this.inputElement.addEventListener('input', () => {
+        audio.playKeyClick();
+        this.updateDisplayLine();
+      });
+      this.inputElement.addEventListener('click', () => this.updateDisplayLine());
+      this.inputElement.addEventListener('keyup', (e) => {
+        if (e.key !== 'Enter') this.updateDisplayLine();
+      });
     }
 
-    // Delegation for top nav bar, in-buffer clickable commands and files
+    // Delegation for in-buffer clickable commands, dirs, and files
     const shell = document.getElementById('cli-shell') || this.outputBuffer;
     if (shell) {
       shell.addEventListener('click', (e) => {
@@ -121,7 +270,6 @@ export class Terminal {
         if (cmdBtn) {
           const cmd = cmdBtn.getAttribute('data-cmd');
           if (cmd) {
-            // Clear screen first when clicking any menu button
             this.clearScreenOnly();
             this.executeCommand(cmd);
             if (this.outputBuffer) {
@@ -132,11 +280,23 @@ export class Terminal {
           return;
         }
 
+        const dirBtn = target.closest('[data-dir]') as HTMLElement | null;
+        if (dirBtn) {
+          const dir = dirBtn.getAttribute('data-dir');
+          if (dir) {
+            this.executeCommand(`cd ${dir}`);
+            if (this.outputBuffer) {
+              this.outputBuffer.scrollTop = this.outputBuffer.scrollHeight;
+            }
+            this.focusInput();
+          }
+          return;
+        }
+
         const fileBtn = target.closest('[data-file]') as HTMLElement | null;
         if (fileBtn) {
           const file = fileBtn.getAttribute('data-file');
           if (file) {
-            // Clear screen first when opening a file via click
             this.clearScreenOnly();
             this.executeCommand(`cat ${file}`);
             if (this.outputBuffer) {
@@ -144,9 +304,81 @@ export class Terminal {
             }
             this.focusInput();
           }
+          return;
         }
       });
     }
+  }
+
+  public updateDisplayLine(): void {
+    if (!this.inputElement) return;
+    const val = this.inputElement.value;
+    const pos = this.inputElement.selectionStart ?? val.length;
+
+    const before = val.slice(0, pos);
+    const at = val.slice(pos, pos + 1);
+    const after = val.slice(pos + 1);
+
+    if (this.textBeforeEl) this.textBeforeEl.textContent = before;
+    if (this.cursorEl) {
+      if (at) {
+        this.cursorEl.textContent = at;
+        this.cursorEl.classList.add('is-character');
+      } else {
+        this.cursorEl.textContent = ' ';
+        this.cursorEl.classList.remove('is-character');
+      }
+    }
+    if (this.textAfterEl) this.textAfterEl.textContent = after;
+
+    if (this.ghostHintEl) {
+      if (pos === val.length && val.trim().length > 0) {
+        const suggestion = this.getGhostSuggestion(val);
+        if (suggestion && suggestion.toLowerCase().startsWith(val.toLowerCase()) && suggestion.length > val.length) {
+          this.currentGhostSuggestion = suggestion;
+          this.ghostHintEl.textContent = suggestion.slice(val.length);
+        } else {
+          this.currentGhostSuggestion = '';
+          this.ghostHintEl.textContent = '';
+        }
+      } else {
+        this.currentGhostSuggestion = '';
+        this.ghostHintEl.textContent = '';
+      }
+    }
+  }
+
+  private getGhostSuggestion(inputVal: string): string {
+    const val = inputVal.trimStart();
+    if (!val) return '';
+
+    if (val.includes(' ')) {
+      const parts = val.split(' ');
+      const cmd = parts[0].toLowerCase();
+      const arg = parts.slice(1).join(' ').toLowerCase();
+
+      if (cmd === 'cd') {
+        const curr = this.getCurrentDir();
+        const dirs = Object.keys(curr.dirs);
+        if (this.currentPath.length > 0) dirs.push('..');
+        const match = dirs.find(d => d.toLowerCase().startsWith(arg));
+        if (match) return `cd ${match}`;
+      } else if (cmd === 'cat') {
+        const curr = this.getCurrentDir();
+        const files = Object.keys(curr.files);
+        const match = files.find(f => f.toLowerCase().startsWith(arg));
+        if (match) return `cat ${match}`;
+      } else if (cmd === 'project') {
+        const ids = PORTFOLIO_DATA.projects.map(p => p.id);
+        const match = ids.find(id => id.toLowerCase().startsWith(arg));
+        if (match) return `project ${match}`;
+      }
+      return '';
+    }
+
+    const allCmds = this.commands.map(c => c.cmd);
+    const match = allCmds.find(c => c.startsWith(val.toLowerCase()));
+    return match || '';
   }
 
   private handleKeyDown(e: KeyboardEvent): void {
@@ -156,6 +388,8 @@ export class Terminal {
       if (this.inputElement) {
         this.inputElement.value = '';
       }
+      this.currentGhostSuggestion = '';
+      this.updateDisplayLine();
       this.executeCommand(rawCmd);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
@@ -169,6 +403,7 @@ export class Terminal {
           this.inputElement.value = this.history[this.historyIndex] || '';
           this.inputElement.setSelectionRange(this.inputElement.value.length, this.inputElement.value.length);
         }
+        this.updateDisplayLine();
       }
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -185,20 +420,85 @@ export class Terminal {
             this.inputElement.value = '';
           }
         }
+        this.updateDisplayLine();
       }
     } else if (e.key === 'Tab') {
       e.preventDefault();
-      this.handleTabCompletion();
+      if (this.currentGhostSuggestion && this.inputElement) {
+        this.inputElement.value = this.currentGhostSuggestion + ' ';
+        this.currentGhostSuggestion = '';
+        this.updateDisplayLine();
+        audio.playKeyClick(200);
+      } else {
+        this.handleTabCompletion();
+      }
+    } else if (e.key === 'ArrowRight') {
+      if (this.inputElement && this.currentGhostSuggestion) {
+        const pos = this.inputElement.selectionStart ?? 0;
+        if (pos === this.inputElement.value.length) {
+          e.preventDefault();
+          this.inputElement.value = this.currentGhostSuggestion + ' ';
+          this.currentGhostSuggestion = '';
+          this.updateDisplayLine();
+          audio.playKeyClick(200);
+          return;
+        }
+      }
+      setTimeout(() => this.updateDisplayLine(), 0);
+    } else if (e.key === 'ArrowLeft' || e.key === 'Home' || e.key === 'End') {
+      setTimeout(() => this.updateDisplayLine(), 0);
     } else if (e.key === 'c' && e.ctrlKey) {
       e.preventDefault();
       if (this.inputElement) {
         const line = this.inputElement.value;
         this.inputElement.value = '';
-        this.appendOutput(`<div class="cli-row cli-prompt-echo"><span class="cli-prompt">${this.promptUser}@${this.promptHost}:~$</span> ${line}^C</div>`);
+        this.currentGhostSuggestion = '';
+        this.updateDisplayLine();
+        this.appendOutput(`<div class="cli-row cli-prompt-echo"><span class="cli-prompt">${this.promptUser}@${this.promptHost}:${this.currentDirDisplay}$</span> ${this.escapeHtml(line)}^C</div>`);
       }
     } else if (e.key === 'l' && e.ctrlKey) {
       e.preventDefault();
       this.clearScreen();
+    } else if (e.key === 'a' && e.ctrlKey) {
+      e.preventDefault();
+      if (this.inputElement) {
+        this.inputElement.setSelectionRange(0, 0);
+        this.updateDisplayLine();
+      }
+    } else if (e.key === 'e' && e.ctrlKey) {
+      e.preventDefault();
+      if (this.inputElement) {
+        const len = this.inputElement.value.length;
+        this.inputElement.setSelectionRange(len, len);
+        this.updateDisplayLine();
+      }
+    } else if (e.key === 'u' && e.ctrlKey) {
+      e.preventDefault();
+      if (this.inputElement) {
+        const pos = this.inputElement.selectionStart ?? 0;
+        const rest = this.inputElement.value.slice(pos);
+        this.inputElement.value = rest;
+        this.inputElement.setSelectionRange(0, 0);
+        this.updateDisplayLine();
+      }
+    } else if (e.key === 'k' && e.ctrlKey) {
+      e.preventDefault();
+      if (this.inputElement) {
+        const pos = this.inputElement.selectionStart ?? 0;
+        this.inputElement.value = this.inputElement.value.slice(0, pos);
+        this.updateDisplayLine();
+      }
+    } else if (e.key === 'w' && e.ctrlKey) {
+      e.preventDefault();
+      if (this.inputElement) {
+        const pos = this.inputElement.selectionStart ?? 0;
+        const before = this.inputElement.value.slice(0, pos);
+        const after = this.inputElement.value.slice(pos);
+        const trimmed = before.replace(/\s*\S+\s*$/, '');
+        this.inputElement.value = trimmed + after;
+        this.inputElement.setSelectionRange(trimmed.length, trimmed.length);
+        this.updateDisplayLine();
+      }
     }
   }
 
@@ -209,12 +509,12 @@ export class Terminal {
 
     const parts = current.split(' ');
     if (parts.length === 1) {
-      // Complete command
       const prefix = parts[0].toLowerCase();
       const allCmds = this.commands.map(c => c.cmd);
       const matches = allCmds.filter(c => c.startsWith(prefix));
       if (matches.length === 1) {
         this.inputElement.value = matches[0] + ' ';
+        this.updateDisplayLine();
         audio.playKeyClick(200);
       } else if (matches.length > 1) {
         this.appendOutput(`<div class="cli-suggest-row">${matches.map(m => `<button type="button" class="cli-chip" data-cmd="${m}">${m}</button>`).join(' ')}</div>`);
@@ -222,13 +522,30 @@ export class Terminal {
       } else {
         audio.playBell();
       }
-    } else if (parts.length === 2 && parts[0].toLowerCase() === 'cat') {
-      // Complete filename
+    } else if (parts.length === 2 && parts[0].toLowerCase() === 'cd') {
       const prefix = parts[1].toLowerCase();
-      const allFiles = Object.keys(this.virtualFiles);
-      const matches = allFiles.filter(f => f.startsWith(prefix));
+      const curr = this.getCurrentDir();
+      const dirs = Object.keys(curr.dirs);
+      if (this.currentPath.length > 0) dirs.push('..');
+      const matches = dirs.filter(d => d.toLowerCase().startsWith(prefix));
+      if (matches.length === 1) {
+        this.inputElement.value = `cd ${matches[0]}`;
+        this.updateDisplayLine();
+        audio.playKeyClick(200);
+      } else if (matches.length > 1) {
+        this.appendOutput(`<div class="cli-suggest-row">${matches.map(m => `<button type="button" class="cli-dir-chip" data-dir="${m}">${m}/</button>`).join(' ')}</div>`);
+        audio.playKeyClick(100);
+      } else {
+        audio.playBell();
+      }
+    } else if (parts.length === 2 && parts[0].toLowerCase() === 'cat') {
+      const prefix = parts[1].toLowerCase();
+      const curr = this.getCurrentDir();
+      const files = Object.keys(curr.files);
+      const matches = files.filter(f => f.toLowerCase().startsWith(prefix));
       if (matches.length === 1) {
         this.inputElement.value = `cat ${matches[0]}`;
+        this.updateDisplayLine();
         audio.playKeyClick(200);
       } else if (matches.length > 1) {
         this.appendOutput(`<div class="cli-suggest-row">${matches.map(m => `<button type="button" class="cli-file-chip" data-file="${m}">${m}</button>`).join(' ')}</div>`);
@@ -242,7 +559,7 @@ export class Terminal {
   public executeCommand(rawCommand: string): void {
     const trimmed = rawCommand.trim();
     if (!trimmed) {
-      this.appendOutput(`<div class="cli-row cli-prompt-echo"><span class="cli-prompt">${this.promptUser}@${this.promptHost}:~$</span></div>`);
+      this.appendOutput(`<div class="cli-row cli-prompt-echo"><span class="cli-prompt">${this.promptUser}@${this.promptHost}:${this.currentDirDisplay}$</span></div>`);
       return;
     }
 
@@ -253,7 +570,7 @@ export class Terminal {
     this.historyIndex = -1;
 
     // Echo executed command line
-    this.appendOutput(`<div class="cli-row cli-prompt-echo"><span class="cli-prompt">${this.promptUser}@${this.promptHost}:~$</span> <strong>${this.escapeHtml(trimmed)}</strong></div>`);
+    this.appendOutput(`<div class="cli-row cli-prompt-echo"><span class="cli-prompt">${this.promptUser}@${this.promptHost}:${this.currentDirDisplay}$</span> <strong>${this.escapeHtml(trimmed)}</strong></div>`);
 
     // Parse command and arguments
     const parts = trimmed.split(' ');
@@ -295,10 +612,27 @@ export class Terminal {
         this.cmdProject(args);
         break;
 
-      case 'history':
+      case 'experience':
       case 'exp':
       case 'career':
+        this.cmdExperience();
+        break;
+
+      case 'history':
+      case 'hist':
         this.cmdHistory();
+        break;
+
+      case 'cd':
+        this.cmdCd(args);
+        break;
+
+      case 'pwd':
+        this.cmdPwd();
+        break;
+
+      case 'tree':
+        this.cmdTree();
         break;
 
       case 'contact':
@@ -455,9 +789,10 @@ export class Terminal {
         <button type="button" class="cli-chip" data-cmd="education">education</button>
         <button type="button" class="cli-chip" data-cmd="skills">skills</button>
         <button type="button" class="cli-chip" data-cmd="projects">projects</button>
-        <button type="button" class="cli-chip" data-cmd="history">history</button>
+        <button type="button" class="cli-chip" data-cmd="experience">experience</button>
         <button type="button" class="cli-chip" data-cmd="contact">contact</button>
         <button type="button" class="cli-chip" data-cmd="resume">resume</button>
+        <button type="button" class="cli-chip" data-cmd="tree">tree</button>
         <button type="button" class="cli-chip" data-cmd="ls">ls</button>
         <button type="button" class="cli-chip" data-cmd="help">help</button>
         <button type="button" class="cli-chip" data-cmd="clear">clear</button>
@@ -483,9 +818,10 @@ export class Terminal {
           <button type="button" class="cli-chip" data-cmd="education">education</button>
           <button type="button" class="cli-chip" data-cmd="skills">skills</button>
           <button type="button" class="cli-chip" data-cmd="projects">projects</button>
-          <button type="button" class="cli-chip" data-cmd="history">history</button>
+          <button type="button" class="cli-chip" data-cmd="experience">experience</button>
           <button type="button" class="cli-chip" data-cmd="contact">contact</button>
           <button type="button" class="cli-chip" data-cmd="resume">resume</button>
+          <button type="button" class="cli-chip" data-cmd="tree">tree</button>
           <button type="button" class="cli-chip" data-cmd="scale">scale (200%)</button>
           <button type="button" class="cli-chip" data-cmd="ls">ls</button>
           <button type="button" class="cli-chip" data-cmd="help">help</button>
@@ -746,7 +1082,7 @@ export class Terminal {
     `);
   }
 
-  private cmdHistory(): void {
+  private cmdExperience(): void {
     const items = PORTFOLIO_DATA.experience.map(exp => `
       <div class="cli-timeline-item">
         <div class="cli-tl-period"><strong>[ ${exp.period} ]</strong></div>
@@ -772,6 +1108,122 @@ export class Terminal {
           </div>
         </div>
         <div class="cli-box-footer">└── [ TYPE "resume" FOR CURRICULUM VITAE OVERVIEW ] ────────────────────────┘</div>
+      </div>
+    `);
+  }
+
+  private cmdHistory(): void {
+    if (this.history.length === 0) {
+      this.appendOutput(`<div class="cli-row cli-dim">No commands in session history buffer.</div>`);
+      return;
+    }
+    const rows = this.history.map((h, i) =>
+      `<div class="cli-row"><span class="cli-dim">${String(i + 1).padStart(4, ' ')}</span>  ${this.escapeHtml(h)}</div>`
+    ).join('');
+    this.appendOutput(`
+      <div class="cli-card-box">
+        <div class="cli-box-header">┌── [ SHELL EXECUTION HISTORY ] ───────────────────────────────────────────┐</div>
+        <div class="cli-card-body">
+          ${rows}
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-dim">Tip: Use ArrowUp / ArrowDown keys to cycle through history. Type "exp" to view professional work experience.</div>
+        </div>
+      </div>
+    `);
+  }
+
+  private cmdCd(targetPath: string): void {
+    const target = targetPath.trim();
+    if (!target || target === '~' || target === '/' || target === '/home/guest') {
+      this.currentPath = [];
+      this.updatePromptPath();
+      return;
+    }
+
+    if (target === '..') {
+      if (this.currentPath.length > 0) {
+        this.currentPath.pop();
+      }
+      this.updatePromptPath();
+      return;
+    }
+
+    if (target === '.') {
+      return;
+    }
+
+    const parts = target.split('/').filter(Boolean);
+    const newPath = target.startsWith('~') || target.startsWith('/') ? [] : [...this.currentPath];
+
+    for (const part of parts) {
+      if (part === '~' || (part === 'home' && newPath.length === 0) || (part === 'guest' && newPath.length === 1 && newPath[0] === 'home')) {
+        continue;
+      }
+      if (part === '..') {
+        if (newPath.length > 0) newPath.pop();
+      } else if (part !== '.') {
+        const testDir = this.getDirByPath(newPath);
+        if (testDir && testDir.dirs[part.toLowerCase()]) {
+          newPath.push(part.toLowerCase());
+        } else {
+          audio.playBell();
+          this.appendOutput(`<div class="cli-row cli-error">bash: cd: ${this.escapeHtml(target)}: No such file or directory</div>`);
+          return;
+        }
+      }
+    }
+
+    this.currentPath = newPath;
+    this.updatePromptPath();
+  }
+
+  private cmdPwd(): void {
+    const full = '/home/guest' + (this.currentPath.length ? '/' + this.currentPath.join('/') : '');
+    this.appendOutput(`<div class="cli-row">${full}</div>`);
+  }
+
+  private cmdTree(): void {
+    let totalDirs = 0;
+    let totalFiles = 0;
+
+    const renderTree = (dir: VirtualDir, prefix: string): string[] => {
+      const lines: string[] = [];
+      const dirKeys = Object.keys(dir.dirs).sort();
+      const fileKeys = Object.keys(dir.files).sort();
+      const totalItems = dirKeys.length + fileKeys.length;
+      let count = 0;
+
+      for (const d of dirKeys) {
+        count++;
+        totalDirs++;
+        const isLast = count === totalItems;
+        const pointer = isLast ? '└── ' : '├── ';
+        lines.push(`${prefix}${pointer}<button type="button" class="cli-dir-chip" data-dir="${d}">${d}/</button>`);
+        const nextPrefix = prefix + (isLast ? '    ' : '│   ');
+        lines.push(...renderTree(dir.dirs[d], nextPrefix));
+      }
+
+      for (const f of fileKeys) {
+        count++;
+        totalFiles++;
+        const isLast = count === totalItems;
+        const pointer = isLast ? '└── ' : '├── ';
+        lines.push(`${prefix}${pointer}<button type="button" class="cli-file-chip" data-file="${f}">${f}</button>`);
+      }
+
+      return lines;
+    };
+
+    const treeLines = renderTree(this.virtualFs, '');
+    this.appendOutput(`
+      <div class="cli-card-box">
+        <div class="cli-box-header">┌── [ VIRTUAL FILESYSTEM TREE: /home/guest ] ─────────────────────────────┐</div>
+        <div class="cli-card-body">
+          <div class="cli-line"><strong>/home/guest</strong></div>
+          <div class="cli-line" style="line-height: 1.6;">${treeLines.join('<br>')}</div>
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-dim">${totalDirs} directories, ${totalFiles} files. Click any directory or file to navigate.</div>
+        </div>
       </div>
     `);
   }
@@ -851,7 +1303,7 @@ export class Terminal {
             <button type="button" class="cli-chip" data-cmd="education">education</button>
             <button type="button" class="cli-chip" data-cmd="projects">projects</button>
             <button type="button" class="cli-chip" data-cmd="skills">skills</button>
-            <button type="button" class="cli-chip" data-cmd="history">history</button>
+            <button type="button" class="cli-chip" data-cmd="experience">experience</button>
             <button type="button" class="cli-chip" data-cmd="contact">contact</button>
             <button type="button" class="cli-chip" data-cmd="clear">clear</button>
           </div>
@@ -862,15 +1314,25 @@ export class Terminal {
   }
 
   private cmdLs(): void {
-    const files = Object.keys(this.virtualFiles).map(f => 
+    const curr = this.getCurrentDir();
+    const dirEntries = Object.keys(curr.dirs).map(d => 
+      `<button type="button" class="cli-dir-chip" data-dir="${d}">${d}/</button>`
+    );
+    const fileEntries = Object.keys(curr.files).map(f => 
       `<button type="button" class="cli-file-chip" data-file="${f}">${f}</button>`
-    ).join('    ');
+    );
+
+    const all = [...dirEntries, ...fileEntries];
+    if (all.length === 0) {
+      this.appendOutput(`<div class="cli-row cli-dim">total 0</div>`);
+      return;
+    }
 
     this.appendOutput(`
       <div class="cli-row">
-        ${files}
+        ${all.join('    ')}
       </div>
-      <div class="cli-row cli-dim">Click any file above or type "cat &lt;filename&gt;" to read.</div>
+      <div class="cli-row cli-dim" style="margin-top: 4px;">Click any directory (blue) or file (green) to navigate.</div>
     `);
   }
 
@@ -880,8 +1342,8 @@ export class Terminal {
       return;
     }
 
-    const content = this.virtualFiles[filename.toLowerCase()];
-    if (content !== undefined) {
+    const content = this.resolveFile(filename);
+    if (content !== null) {
       if (filename.toLowerCase().endsWith('.svg')) {
         this.appendOutput(`
           <div class="cli-file-display">
