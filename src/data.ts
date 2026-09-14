@@ -17,9 +17,9 @@ export const PORTFOLIO_DATA: PortfolioData = {
     systemName: "ASYDEV-OS // MODEL 84-CRT",
     version: "v3.2.0-RELEASE",
     bio: [
-      "Informatics undergraduate and Software Engineer focused on full-stack product engineering, edge architectures, and real-time systems.",
-      "Experienced in React/TanStack Start apps on Cloudflare (D1/R2), memory-efficient desktop apps in Rust/Tauri & Java, messaging bridges in Node.js/Baileys, and clean-architecture APIs in Go.",
-      "Passionate about building low-overhead, local-first software and production-grade tools."
+      "Informatics Engineering undergraduate at Universitas Indraprasta PGRI, working as a Software Engineer focused on full-stack product engineering, edge architectures, and real-time systems.",
+      "Experienced with TypeScript/React/Next.js, Rust/Tauri, Go, and PostgreSQL on Cloudflare (D1/R2). Builds low-overhead, local-first software for production use.",
+      "Open for collaboration and contracts."
     ]
   },
 
