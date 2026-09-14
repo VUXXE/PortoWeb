@@ -1,11 +1,12 @@
 # 📺 ASYDEV-OS // Retro CRT Terminal Portfolio
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-portoweb--c7k.pages.dev-0284c7?style=for-the-badge&logo=cloudflarepages&logoColor=white)](https://portoweb-c7k.pages.dev)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-asy.web.id-0284c7?style=for-the-badge&logo=cloudflarepages&logoColor=white)](https://asy.web.id/)
+[![Preview URL](https://img.shields.io/badge/Preview-portoweb--c7k.pages.dev-10b981?style=for-the-badge&logo=cloudflare&logoColor=white)](https://portoweb-c7k.pages.dev)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-VUXXE%2FPortoWeb-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/VUXXE/PortoWeb)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x%20%2F%207.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 
-An authentic vintage DEC VT220 / Model 84-CRT computer terminal portfolio for **Asy-Syahid Abdurrahman Hanan Taqiyya** (`guest@asy.web.id`). Features real-time CRT convex barrel distortion, raster scanlines, phosphor glow bloom, pure Web Audio mechanical keyboard synthesis, an interactive POSIX virtual filesystem, fish-style ghost autocompletions, and a Tmux statusline.
+An authentic vintage DEC VT220 / Model 84-CRT computer terminal portfolio for **Asy-Syahid Abdurrahman Hanan Taqiyya** (`guest@asy.web.id`) accessible at **[https://asy.web.id](https://asy.web.id/)**. Features real-time CRT convex barrel distortion, raster scanlines, phosphor glow bloom, pure Web Audio mechanical keyboard synthesis, an interactive POSIX virtual filesystem, fish-style ghost autocompletions, and a Tmux statusline.
 
 ---
 
@@ -160,7 +161,8 @@ npm run deploy
 ```
 
 The live application is hosted at:
-**[https://portoweb-c7k.pages.dev](https://portoweb-c7k.pages.dev)**
+- **Primary Domain**: **[https://asy.web.id](https://asy.web.id/)**
+- **Cloudflare Pages Direct**: **[https://portoweb-c7k.pages.dev](https://portoweb-c7k.pages.dev)**
 
 ---
 

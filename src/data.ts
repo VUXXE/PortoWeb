@@ -43,6 +43,7 @@ export const PORTFOLIO_DATA: PortfolioData = {
   ],
 
   socials: [
+    { name: "Portfolio", url: "https://asy.web.id/", handle: "asy.web.id" },
     { name: "GitHub", url: "https://github.com/VUXXE", handle: "@VUXXE" },
     { name: "Email", url: "mailto:hanan7taqiyya@gmail.com", handle: "hanan7taqiyya@gmail.com" },
     { name: "Phone / WhatsApp", url: "https://wa.me/6285157839155", handle: "+62 851-5783-9155" },
