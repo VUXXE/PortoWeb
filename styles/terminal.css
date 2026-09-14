@@ -683,3 +683,16 @@ body.font-clean .cli-chip {
   color: var(--crt-dim);
   opacity: 0.6;
 }
+
+.statusbar-link {
+  color: var(--crt-bright);
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.15s ease;
+}
+
+.statusbar-link:hover {
+  text-decoration: underline;
+  text-shadow: 0 0 calc(6px * var(--terminal-scale, 2.0)) var(--crt-glow);
+}
+

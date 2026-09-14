@@ -87,6 +87,7 @@ export class Terminal {
       'contact.txt': PORTFOLIO_DATA.socials.map(s => 
         `${s.name.padEnd(16)} : ${s.handle} (${s.url})`
       ).join('\n'),
+      'github.txt': `GITHUB PROFILES & REPOSITORIES:\nDeveloper Profile : https://github.com/VUXXE (@VUXXE)\nPortfolio Source  : https://github.com/VUXXE/PortoWeb\n\nFEATURED REPOSITORIES:\n* VUXXE/mesh-core-v2         - P2P sync canvas desktop & web app (Rust, Tauri v2, Svelte 5)\n* VUXXE/baswara-cloudflare   - Digital invitation platform on Cloudflare Workers, D1 & R2\n* VUXXE/whatsapp-bridge-custom - Baileys automation REST API bridge\n* VUXXE/PerpustakaanFreedomFix - Java 21 desktop enterprise library management system\n* VUXXE/cachy-dotfiles       - CachyOS/Arch Linux dotfiles and tiling window manager configs\n* VUXXE/PortoWeb             - Retro CRT Model 84 Terminal Portfolio (TypeScript, Vite)\n\nType "github" for interactive list or open directly in your browser.`,
       'resume.txt': `${PORTFOLIO_DATA.profile.name.toUpperCase()}\n${PORTFOLIO_DATA.profile.title}\nLocation: ${PORTFOLIO_DATA.profile.location}\nPhone: ${PORTFOLIO_DATA.profile.phone}\nEmail: hanan7taqiyya@gmail.com\n\nType "resume" for full interactive layout or download official PDF via /cv.pdf.`,
       'logo.svg': PORTFOLIO_DATA.vectorLogo || '',
       'flag.txt': 'CTF{cRt_b4rr3l_d1st0rt10n_1984} // You found the secret terminal flag!'
@@ -101,6 +102,7 @@ export class Terminal {
     { cmd: 'projects', aliases: ['work', 'portfolio'], desc: 'Showcase of selected works and systems' },
     { cmd: 'project', args: '<id|num>', desc: 'View detailed specs of a specific project' },
     { cmd: 'experience', aliases: ['exp', 'career'], desc: 'Professional career history and milestones' },
+    { cmd: 'github', aliases: ['gh', 'repo'], desc: 'Open GitHub profile and featured repositories' },
     { cmd: 'contact', aliases: ['socials', 'email'], desc: 'Communication channels and links' },
     { cmd: 'resume', aliases: ['cv'], desc: 'Curriculum Vitae overview and download' },
     { cmd: 'ls', aliases: ['dir'], desc: 'List files and directories in current folder' },
@@ -618,6 +620,12 @@ export class Terminal {
         this.cmdExperience();
         break;
 
+      case 'github':
+      case 'gh':
+      case 'repo':
+        this.cmdGithub();
+        break;
+
       case 'history':
       case 'hist':
         this.cmdHistory();
@@ -790,6 +798,7 @@ export class Terminal {
         <button type="button" class="cli-chip" data-cmd="skills">skills</button>
         <button type="button" class="cli-chip" data-cmd="projects">projects</button>
         <button type="button" class="cli-chip" data-cmd="experience">experience</button>
+        <button type="button" class="cli-chip" data-cmd="github">github</button>
         <button type="button" class="cli-chip" data-cmd="contact">contact</button>
         <button type="button" class="cli-chip" data-cmd="resume">resume</button>
         <button type="button" class="cli-chip" data-cmd="tree">tree</button>
@@ -810,6 +819,7 @@ export class Terminal {
         <div class="cli-sys-info">
           <strong>ASYDEV-OS</strong> (Full-Stack & Systems Terminal // Model 84-CRT)<br>
           Connected as <strong>${this.promptUser}@${this.promptHost}</strong> (tty0) on ${new Date().toUTCString()}.<br>
+          GitHub: <a href="https://github.com/VUXXE" target="_blank" rel="noopener noreferrer" class="cli-link">github.com/VUXXE ↗</a> | Source: <a href="https://github.com/VUXXE/PortoWeb" target="_blank" rel="noopener noreferrer" class="cli-link">github.com/VUXXE/PortoWeb ↗</a><br>
           Click any command below or type <button type="button" class="cli-chip" data-cmd="help">help</button> to explore.
         </div>
         <div class="cli-quick-links">
@@ -819,6 +829,7 @@ export class Terminal {
           <button type="button" class="cli-chip" data-cmd="skills">skills</button>
           <button type="button" class="cli-chip" data-cmd="projects">projects</button>
           <button type="button" class="cli-chip" data-cmd="experience">experience</button>
+          <button type="button" class="cli-chip" data-cmd="github">github</button>
           <button type="button" class="cli-chip" data-cmd="contact">contact</button>
           <button type="button" class="cli-chip" data-cmd="resume">resume</button>
           <button type="button" class="cli-chip" data-cmd="tree">tree</button>
@@ -1224,6 +1235,70 @@ export class Terminal {
           <div class="cli-divider">----------------------------------------------------------------------------</div>
           <div class="cli-dim">${totalDirs} directories, ${totalFiles} files. Click any directory or file to navigate.</div>
         </div>
+      </div>
+    `);
+  }
+
+  private cmdGithub(): void {
+    this.appendOutput(`
+      <div class="cli-card-box">
+        <div class="cli-box-header">┌── [ GITHUB: @VUXXE // DEVELOPER PROFILE & REPOSITORIES ] ────────────────┐</div>
+        <div class="cli-card-body">
+          <div class="cli-line">Developer Profile : <a href="https://github.com/VUXXE" target="_blank" rel="noopener noreferrer" class="cli-link">https://github.com/VUXXE ↗</a> (@VUXXE)</div>
+          <div class="cli-line">Portfolio Source  : <a href="https://github.com/VUXXE/PortoWeb" target="_blank" rel="noopener noreferrer" class="cli-link">https://github.com/VUXXE/PortoWeb ↗</a></div>
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-line"><strong>FEATURED OPEN-SOURCE REPOSITORIES:</strong></div>
+          <table class="cli-contact-table">
+            <tbody>
+              <tr class="cli-contact-tr">
+                <td class="cli-contact-name"><strong>VUXXE/mesh-core-v2</strong></td>
+                <td class="cli-contact-handle">Tauri v2, Rust, Svelte 5, Local-First Canvas</td>
+                <td class="cli-contact-link"><a href="https://github.com/VUXXE/mesh-core-v2" target="_blank" rel="noopener noreferrer" class="cli-link">[ Repo ↗ ]</a></td>
+              </tr>
+              <tr class="cli-contact-tr">
+                <td class="cli-contact-name"><strong>VUXXE/baswara-cloudflare</strong></td>
+                <td class="cli-contact-handle">TanStack Start, Cloudflare Workers, D1, R2</td>
+                <td class="cli-contact-link"><a href="https://github.com/VUXXE/baswara-cloudflare" target="_blank" rel="noopener noreferrer" class="cli-link">[ Repo ↗ ]</a></td>
+              </tr>
+              <tr class="cli-contact-tr">
+                <td class="cli-contact-name"><strong>VUXXE/whatsapp-bridge-custom</strong></td>
+                <td class="cli-contact-handle">Node.js, Baileys v6, REST API Gateway</td>
+                <td class="cli-contact-link"><a href="https://github.com/VUXXE/whatsapp-bridge-custom" target="_blank" rel="noopener noreferrer" class="cli-link">[ Repo ↗ ]</a></td>
+              </tr>
+              <tr class="cli-contact-tr">
+                <td class="cli-contact-name"><strong>VUXXE/PerpustakaanFreedomFix</strong></td>
+                <td class="cli-contact-handle">Java 21, Swing FlatLaf, MySQL, HikariCP</td>
+                <td class="cli-contact-link"><a href="https://github.com/VUXXE/PerpustakaanFreedomFix" target="_blank" rel="noopener noreferrer" class="cli-link">[ Repo ↗ ]</a></td>
+              </tr>
+              <tr class="cli-contact-tr">
+                <td class="cli-contact-name"><strong>VUXXE/cachy-dotfiles</strong></td>
+                <td class="cli-contact-handle">Arch Linux / CachyOS, Hyprland & Waybar</td>
+                <td class="cli-contact-link"><a href="https://github.com/VUXXE/cachy-dotfiles" target="_blank" rel="noopener noreferrer" class="cli-link">[ Repo ↗ ]</a></td>
+              </tr>
+              <tr class="cli-contact-tr">
+                <td class="cli-contact-name"><strong>VUXXE/PortoWeb</strong></td>
+                <td class="cli-contact-handle">Retro CRT Terminal Portfolio (ASYDEV-OS)</td>
+                <td class="cli-contact-link"><a href="https://github.com/VUXXE/PortoWeb" target="_blank" rel="noopener noreferrer" class="cli-link">[ Repo ↗ ]</a></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-actions-row">
+            <a href="https://github.com/VUXXE" target="_blank" rel="noopener noreferrer" class="cli-btn-primary">[ 🌐 OPEN GITHUB PROFILE ↗ ]</a>
+            <a href="https://github.com/VUXXE/PortoWeb" target="_blank" rel="noopener noreferrer" class="cli-btn-secondary">[ ⭐ STAR THIS REPO ↗ ]</a>
+          </div>
+          <div class="cli-divider">----------------------------------------------------------------------------</div>
+          <div class="cli-actions-row">
+            NAVIGATE:
+            <button type="button" class="cli-chip" data-cmd="projects">projects</button>
+            <button type="button" class="cli-chip" data-cmd="skills">skills</button>
+            <button type="button" class="cli-chip" data-cmd="experience">experience</button>
+            <button type="button" class="cli-chip" data-cmd="contact">contact</button>
+            <button type="button" class="cli-chip" data-cmd="resume">resume</button>
+            <button type="button" class="cli-chip" data-cmd="clear">clear</button>
+          </div>
+        </div>
+        <div class="cli-box-footer">└── [ TYPE "projects" TO VIEW DETAILED SYSTEM SPECS ] ──────────────────────┘</div>
       </div>
     `);
   }
