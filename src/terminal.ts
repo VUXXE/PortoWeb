@@ -447,7 +447,7 @@ export class Terminal {
   private printPromptHeader(): void {
     this.appendOutput(`
       <div class="cli-row cli-dim">
-        PORTO-OS Terminal Buffer Cleared. Click any command below or type <button type="button" class="cli-chip" data-cmd="help">help</button>.
+        ASYDEV-OS Terminal Buffer Cleared. Click any command below or type <button type="button" class="cli-chip" data-cmd="help">help</button>.
       </div>
       <div class="cli-quick-links">
         MENU:
@@ -473,8 +473,8 @@ export class Terminal {
         </div>
         <div class="cli-divider">================================================================================</div>
         <div class="cli-sys-info">
-          <strong>PORTO-OS</strong> (UNIX System V Release 4 // Model 84-CRT Terminal)<br>
-          Connected as <strong>${this.promptUser}@${this.promptHost}.local</strong> (tty0) on ${new Date().toUTCString()}.<br>
+          <strong>ASYDEV-OS</strong> (Full-Stack & Systems Terminal // Model 84-CRT)<br>
+          Connected as <strong>${this.promptUser}@${this.promptHost}</strong> (tty0) on ${new Date().toUTCString()}.<br>
           Click any command below or type <button type="button" class="cli-chip" data-cmd="help">help</button> to explore.
         </div>
         <div class="cli-quick-links">
@@ -521,7 +521,7 @@ export class Terminal {
 
     this.appendOutput(`
       <div class="cli-help-box">
-        <div class="cli-box-header">┌── [ PORTO-OS COMMAND REFERENCE ] ────────────────────────────────────────┐</div>
+        <div class="cli-box-header">┌── [ ASYDEV-OS COMMAND REFERENCE ] ────────────────────────────────────────┐</div>
         <table class="cli-help-table">
           <thead>
             <tr>

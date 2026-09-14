@@ -9,12 +9,12 @@ export const PORTFOLIO_DATA: PortfolioData = {
   profile: {
     name: "Asy-Syahid Abdurrahman Hanan Taqiyya",
     handle: "vuxxe",
-    host: "portoweb",
+    host: "asy.web.id",
     title: "Software Engineer (Full-Stack & Systems)",
     location: "Jakarta, Indonesia",
     phone: "+62 851-5783-9155",
     status: "OPEN FOR COLLABORATION & CONTRACTS",
-    systemName: "PORTO-OS / MODEL 84-CRT",
+    systemName: "ASYDEV-OS // MODEL 84-CRT",
     version: "v3.2.0-RELEASE",
     bio: [
       "Informatics undergraduate and Software Engineer focused on full-stack product engineering, edge architectures, and real-time systems.",
